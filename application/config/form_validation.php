@@ -179,6 +179,14 @@ $config = array(
 		'rules' => 'trim|required|numeric'
 		)
 	),
+	//get default card of user Method: card/defaultCard
+	'default_card' => array(
+		array(
+		'field' => 'userId',
+		'label' => 'User ID',
+		'rules' => 'required|numeric'
+		)
+	),
 	//card delete validation Method: card/card_delete
 	'card_delete' => array(
 		array(

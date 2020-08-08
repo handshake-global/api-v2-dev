@@ -43,6 +43,80 @@ class Card_model extends CI_Model {
 		return $this->_sorting_card($card,$data['cardId'],$data['userId']);
 	}
 
+	public function default_card($data=[]){
+		if(empty($data))
+			return false;
+			$cards = $this->db->query("
+								 SELECT
+									card.cardId,
+									side,
+									cardImage,
+									cardVideo,
+									videoThumbnail, 
+									userId
+									FROM
+									card_config ,card
+									WHERE card.userId in (".$data['userId'].") and card.cardId = card_config.cardId and card.addedMode != 4 and isDefault = 1
+									group by card.cardId, card_config.side
+							") 
+						->result();
+				$real_card = array();
+				$cards_array = json_decode(json_encode($cards), true);
+
+				foreach($cards as $card):
+					if($card->side==1)
+						$real_card[$card->cardId][] = array('frontImage' =>$card->cardImage,'frontVideo'=>$card->cardVideo,'frontVideoThumbnail'=>ltrim($card->videoThumbnail,'.'));
+					else
+						$real_card[$card->cardId][] = array('backImage' =>$card->cardImage,'backVideo'=>$card->cardVideo,'backVideoThumbnail'=>ltrim($card->videoThumbnail,'.'));
+					if(isset($real_card[$card->cardId][0]) && isset($real_card[$card->cardId][1])){
+						
+						$x = array(
+							'cardId'=>$card->cardId,
+							'frontImage'=>isset($real_card[$card->cardId][0]['frontImage'])?$real_card[$card->cardId][0]['frontImage']:'',	
+							'frontVideo'=>isset($real_card[$card->cardId][0]['frontVideo']) ? $real_card[$card->cardId][0]['frontVideo'] :'',
+							'frontVideoThumbnail'=>isset($real_card[$card->cardId][0]['frontVideoThumbnail']) ? $real_card[$card->cardId][0]['frontVideoThumbnail']:'',	
+							'backImage'=>isset($real_card[$card->cardId][1]['backImage']) ? $real_card[$card->cardId][1]['backImage'] : '',	
+							'backVideo'=> isset($real_card[$card->cardId][1]['backVideo']) ? $real_card[$card->cardId][1]['backVideo']: '',	
+							'backVideoThumbnail'=>isset($real_card[$card->cardId][1]['backVideoThumbnail']) ? $real_card[$card->cardId][1]['backVideoThumbnail']: '',	
+							'userId' => $card->userId
+						);
+						unset($real_card[$card->cardId]);
+						$real_card[$card->cardId] = $x;	
+					}
+					
+					//if only front side exist with current card
+					elseif($this->check($cards_array, array("cardId",'side'), array($card->cardId,"1")) == true && $this->check($cards_array, array("cardId",'side'), array($card->cardId,"2"))==false && isset($real_card[$card->cardId][0])){
+						
+						$x = array(
+							'cardId'=>$card->cardId,
+							'frontImage'=>isset($real_card[$card->cardId][0]['frontImage']) ? $real_card[$card->cardId][0]['frontImage']:'',	
+							'frontVideo'=>isset($real_card[$card->cardId][0]['frontVideo']) ? $real_card[$card->cardId][0]['frontVideo'] : '',
+							'frontVideoThumbnail'=>isset($real_card[$card->cardId][0]['frontVideoThumbnail']) ? $real_card[$card->cardId][0]['frontVideoThumbnail'] : '',	
+							'backImage'=>'',	
+							'backVideo'=>'',	
+							'backVideoThumbnail'=>'',	
+						);
+						unset($real_card[$card->cardId]);
+						$real_card[$card->cardId] = $x;	
+					}
+					//if only back side exist with current card
+					elseif($this->check($cards_array, array("cardId",'side'), array($card->cardId,"1")) == false && $this->check($cards_array, array("cardId",'side'), array($card->cardId,"2"))==true && isset($real_card[$card->cardId][1])){
+						$x = array(
+							'cardId'=>$card->cardId,
+							'frontImage'=>'',	
+							'frontVideo'=>'',
+							'frontVideoThumbnail'=>'',	
+							'backImage'=>isset($real_card[$card->cardId][1]['backImage']) ? $real_card[$card->cardId][1]['backImage'] : '',	
+							'backVideo'=>isset($real_card[$card->cardId][1]['backVideo']) ? $real_card[$card->cardId][1]['backVideo'] : '',	
+							'backVideoThumbnail'=>isset($real_card[$card->cardId][1]['backVideoThumbnail']) ? $real_card[$card->cardId][1]['backVideoThumbnail']: '',
+						);
+						unset($real_card[$card->cardId]);
+						$real_card[$card->cardId] = $x;	
+					}
+				endforeach;
+				return array_values($real_card);	
+	}
+
 	/**
      * fetch cards
      * @return array , card

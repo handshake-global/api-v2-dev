@@ -57,6 +57,9 @@ $route['translate_uri_dashes'] = FALSE;
 //notification routes
 $route['updateFcmToken'] = 'notification/updateFcmToken';
 
+//card 
+$route['defaultCard'] = 'card/defaultCard';
+
 //card bank
 $route['getHomeConnections'] = 'CardBank/getConnections';
 
