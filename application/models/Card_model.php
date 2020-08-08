@@ -245,6 +245,7 @@ class Card_model extends CI_Model {
 	                return $last + $row;
 	            }, array());
 
+				$final_contacts = array_merge($temp,$final_contacts);
 				$users = $this->db->query("
 							SELECT userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
 							where userId in (".implode(',',$final_contacts).") and NOC !=0
