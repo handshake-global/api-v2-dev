@@ -236,7 +236,7 @@ class Card_model extends CI_Model {
 				//getting mutuals
 				foreach ($final_contacts as $key => $value) {
 					 
-					$mutualsContacts[$value][] = array_intersect($this->getMutuals($value),$connections);
+					$mutualsContacts[$value] = array_intersect($this->getMutuals($value),$connections);
 				}
 
 
