@@ -46,6 +46,8 @@ class Card_model extends CI_Model {
 	public function default_card($data=[]){
 		if(empty($data))
 			return false;
+		pr($this->getMutuals($data['userId']));
+		exit;
 			$cards = $this->db->query("
 								 SELECT
 									card.cardId,
