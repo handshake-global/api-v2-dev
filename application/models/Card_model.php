@@ -103,29 +103,8 @@ class Card_model extends CI_Model {
 							group by card.cardId
 							LIMIT ".$this->limit." OFFSET ".$this->offset."
 						")
-						->result_array();
-						echo vd();
-				if(!empty($cards_for_limit)){					
-					$cards =  $this->db->query("
-								SELECT
-								  cardId,
-								  side,
-								  cardImage,
-								  cardVideo,
-								  videoThumbnail,
-								  (select userId from card where cardId = card_config.cardId and addedMode != 4) userId
-								FROM
-								    card_config
-								WHERE cardId in 
-								(".implode(',',array_column($cards_for_limit, 'cardId')).") 
-							")
-							->result();
-					echo vd();
-				exit;			
-				}else{
-					$cards = array();
-				}			
-			}
+						->result();
+				}
 			else{
 				$cards = $this->db->query("
 							SELECT
