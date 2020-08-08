@@ -258,7 +258,10 @@ class Card extends REST_Controller {
     public function media_post() {
         //uploading image if requested in post data
         if (isset($_FILES['media']) && !empty($_FILES['media']['name'])) {
-            $images = do_upload('media', MEDIA_PATH,TRUE,NULL,TRUE);
+            if(isset($_POST['thumb'])==false)
+                $images = do_upload('media', MEDIA_PATH,TRUE,NULL,FALSE);
+            else
+                $images = do_upload('media', MEDIA_PATH,TRUE,NULL,TRUE);
             if (is_array($images) && !empty($images)){
                 $response = [];
                 foreach($images as $image)
