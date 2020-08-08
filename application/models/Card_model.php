@@ -187,7 +187,6 @@ class Card_model extends CI_Model {
 				$real_card[$card->cardId] = $x;	
 			}
 		endforeach;
-		pr($real_card);	
 		return array_values($real_card);	
 	}
 
