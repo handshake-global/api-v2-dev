@@ -113,8 +113,6 @@ class Card_model extends CI_Model {
 			}
 		$real_card = $mutualsContacts = array();
 		$cards_array = json_decode(json_encode($cards), true);
-		pr($cards_array);
-		exit;
 		foreach($cards as $card):
 			if($card->side==1)
 				$real_card[$card->cardId][] = array('frontImage' =>$card->cardImage,'frontVideo'=>$card->cardVideo,'frontVideoThumbnail'=>ltrim($card->videoThumbnail,'.'));
@@ -130,7 +128,8 @@ class Card_model extends CI_Model {
 			// 				->where_in('userId',$mutualsContacts)
 			// 				->get('profile')->result();
 			 
-
+			pr($real_card);
+			exit;
 			//if both side exist with current card
 			if(isset($real_card[$card->cardId][0]) && isset($real_card[$card->cardId][1])){
 				
