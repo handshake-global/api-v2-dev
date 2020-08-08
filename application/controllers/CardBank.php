@@ -397,4 +397,37 @@ class CardBank extends REST_Controller {
             }
         }
     }
+
+    /**
+     * delete connection 
+     *
+     * @access public
+     * @return json
+     */
+    public function deleteConnection_get(){
+    // Call the verification method and store the return value in the variable
+        $request = AUTHORIZATION::verify_request();
+        if(empty($this->delete()))
+            $this->form_validation->set_data(['']);
+        else
+            $this->form_validation->set_data($this->delete());
+        //create card using post data
+        if($this->form_validation->run('deleteConnection') == FALSE){
+          $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
+        }
+        else{
+            if($response = $this->bank_model->deleteConnection($this->delete())){
+                // Prepare the response
+                $statusCode = parent::HTTP_OK;
+                $status = array('statusCode' => $statusCode,'message'=>'Connections');
+                $response = array('status'=>$status,'data'=>$response);
+                $this->response($response, $statusCode);  
+            }   
+            else{
+               $statusCode = parent::HTTP_OK;
+               $status = array('statusCode' => $statusCode,'error'=>'Nothing to delete'); 
+               $this->response(['status' =>$status,], parent::HTTP_OK); 
+            }
+        }
+    }
 }

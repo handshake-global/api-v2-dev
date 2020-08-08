@@ -396,6 +396,23 @@ class Bank_model extends CI_Model
             return false;
         return $this->db->where(array('fromUser'=>$data['userId'],'status'=>0))
                 ->get($this->table)->result();
+    }
+
+     /**
+     * delete card
+     * @return array ,card
+     */
+    public function deleteConnection($data = array())
+    {
+        if (empty($data)) return false;
+        if ($this
+            ->db
+            ->where(array(
+            'bankId' => $data['bankId'],
+        ))->delete($this->table)) return $this
+            ->db
+            ->affected_rows();
+        else return false;
     }            
 }
 

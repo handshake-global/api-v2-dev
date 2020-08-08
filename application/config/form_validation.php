@@ -290,6 +290,14 @@ $config = array(
 		)
 	),
 	//card card bank request validation Method: card/index_post
+	'deleteConnection' => array(
+		array(
+		'field' => 'bankId',
+		'label' => 'Bank ID',
+		'rules' => 'required|numeric'
+		)
+	),
+	//card card bank request validation Method: card/index_post
 	'rejectCardRequest' => array(
 		array(
 		'field' => 'userId',
