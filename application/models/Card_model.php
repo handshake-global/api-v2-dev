@@ -239,7 +239,7 @@ class Card_model extends CI_Model {
 					 
 					$t = array_intersect($this->getMutuals($value),$connections);
 					$mutualsContacts[$value] =$t;
-					$temp[] = $t;
+					$temp[] = array_merge($temp,$t);
 				}
 
 
