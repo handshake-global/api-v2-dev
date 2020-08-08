@@ -158,6 +158,7 @@ class Card_model extends CI_Model {
 				$users = $this->db->query("
 							SELECT userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
 							where userId in ((".implode(',',$final_contacts).")) and NOC !=0
+							order by NOC desc
 							LIMIT ".$this->limit." OFFSET ".$this->offset."
 						")
 						->result_array();
@@ -166,6 +167,7 @@ class Card_model extends CI_Model {
 				$users = $this->db->query("
 							SELECT  userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
 							where userId not in (".$data['userId'].") and NOC !=0
+							order by NOC desc
 							LIMIT ".$this->limit." OFFSET ".$this->offset."
 						")
 						->result_array();
