@@ -53,7 +53,6 @@ class Card_model extends CI_Model {
 									cardImage,
 									cardVideo,
 									videoThumbnail, 
-									userId
 									FROM
 									card_config ,card
 									WHERE card.userId = ".$data['userId']." and card.cardId = card_config.cardId and card.addedMode != 4 and isDefault = 1
@@ -61,7 +60,6 @@ class Card_model extends CI_Model {
 									limit 2
 							") 
 						->result();
-
 
 				$real_card = array();
 				$cards_array = json_decode(json_encode($cards), true);
