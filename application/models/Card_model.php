@@ -241,7 +241,9 @@ class Card_model extends CI_Model {
 					$mutualsContacts[$value] =$t;
 					$temp[] = $t;
 				}
-
+				array_reduce($temp, function($last, $row) {
+	                return $last + $row;
+	            }, array());
 
 				$users = $this->db->query("
 							SELECT userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
