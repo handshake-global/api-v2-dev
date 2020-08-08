@@ -232,11 +232,14 @@ class Card_model extends CI_Model {
 			$final_contacts = $this->suggestions($data['userId']);
  			$connections = !empty($final_contacts['connections']) ? $final_contacts['connections'] : [];
  			$final_contacts = !empty($final_contacts['suggestions']) ? $final_contacts['suggestions'] : [];
+			$temp = [];
 			if(!empty($final_contacts)){
 				//getting mutuals
 				foreach ($final_contacts as $key => $value) {
 					 
-					$mutualsContacts[$value] = array_intersect($this->getMutuals($value),$connections);
+					$t = array_intersect($this->getMutuals($value),$connections);
+					$mutualsContacts[$value] =$t;
+					$temp[] = $t;
 				}
 
 
@@ -259,6 +262,7 @@ class Card_model extends CI_Model {
 				}				
 			}
 			pr($mutualsContacts);
+			pr($temp);
 			return array_values($users);
 		
 	}
