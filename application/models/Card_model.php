@@ -57,29 +57,20 @@ class Card_model extends CI_Model {
 		}
 		if($showcase==false){
 			$cards_for_limit = $this->db->query("
-						SELECT 
-						  cardId
-						FROM
-						    card_config
-						WHERE cardId in 
-						(select cardId from $this->table where userId = ".$data['userId']." and addedMode != 4 ) group by cardId
-						LIMIT ".$this->limit." OFFSET ".$this->offset." 
-						") 
-						->result_array();
-			if(!empty($cards_for_limit)){				
-				$cards =  $this->db->query("
-							SELECT 
-							  cardId,
-							  side,
-							  cardImage,
-							  cardVideo,
-							  videoThumbnail,
-							  (select userId from card where cardId = card_config.cardId) userId
-							FROM
-							    card_config
-							WHERE cardId in (".implode(',',array_column($cards_for_limit, 'cardId')).") 
+								 SELECT
+									card.cardId,
+									side,
+									cardImage,
+									cardVideo,
+									videoThumbnail, 
+									userId
+									FROM
+									card_config ,card
+									WHERE card.userId in (".$data['userId'].") and card.cardId = card_config.cardId and card.addedMode != 4 and card.isDefault = 1
+									group by card.cardId, card_config.side
+									LIMIT ".$this->limit." OFFSET ".$this->offset."
 							") 
-							->result();
+						->result();
 			}else{
 				$cards = array();
 			}				
@@ -100,7 +91,7 @@ class Card_model extends CI_Model {
 							FROM
 							card_config ,card
 							WHERE card.userId in (".implode(',',$final_contacts).") and card.cardId = card_config.cardId and card.addedMode != 4 and card.isDefault = 1
-							group by card.cardId
+							group by card.cardId, card_config.side
 							LIMIT ".$this->limit." OFFSET ".$this->offset."
 						")
 						->result();
@@ -117,7 +108,7 @@ class Card_model extends CI_Model {
 							FROM
 							card_config ,card
 							WHERE card.userId not in (".$data['userId'].") and card.cardId = card_config.cardId and card.addedMode != 4 and card.isDefault = 1
-							group by card.cardId
+							group by card.cardId, card_config.side
 							LIMIT ".$this->limit." OFFSET ".$this->offset." 	
 						")
 						->result();
