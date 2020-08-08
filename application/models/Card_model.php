@@ -136,19 +136,19 @@ class Card_model extends CI_Model {
 						->result_array();
 				if(!empty($cards_for_limit)){			
 					$cards =  $this->db->query("
-								SELECT
-								  cardId,
-								  side,
-								  cardImage,
-								  cardVideo,
-								  videoThumbnail,
-								  (select userId from card where cardId = card_config.cardId and addedMode != 4) userId
-								FROM
-								    card_config
-								WHERE cardId  in 
-								(".implode(',',array_column($cards_for_limit, 'cardId')).")
-							")
+										SELECT
+										card.cardId,
+										side,
+										cardImage,
+										cardVideo,
+										videoThumbnail, 
+										userId
+										FROM
+										card_config ,card
+										WHERE card.cardId  in
+										(".implode(',',array_column($cards_for_limit, 'cardId')).") and card.cardId = card_config.cardId and card.addedMode != 4 ")
 							->result();	
+							echo vd();
 				}else{
 					$cards = array();
 				}				
