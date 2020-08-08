@@ -404,7 +404,7 @@ class CardBank extends REST_Controller {
      * @access public
      * @return json
      */
-    public function deleteConnection_get(){
+    public function deleteConnection_delete(){
     // Call the verification method and store the return value in the variable
         $request = AUTHORIZATION::verify_request();
         if(empty($this->delete()))
