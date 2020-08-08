@@ -144,6 +144,8 @@ class Card_model extends CI_Model {
 		
 		$real_card = $mutualsContacts = array();
 		$cards_array = json_decode(json_encode($cards), true);
+		print_r($cards);
+		exit;
 		foreach($cards as $card):
 			if($card->side==1)
 				$real_card[$card->cardId][] = array('frontImage' =>$card->cardImage,'frontVideo'=>$card->cardVideo,'frontVideoThumbnail'=>ltrim($card->videoThumbnail,'.'));
