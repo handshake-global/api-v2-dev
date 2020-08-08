@@ -419,7 +419,7 @@ class CardBank extends REST_Controller {
             if($response = $this->bank_model->deleteConnection($this->delete())){
                 // Prepare the response
                 $statusCode = parent::HTTP_OK;
-                $status = array('statusCode' => $statusCode,'message'=>'Connections');
+                $status = array('statusCode' => $statusCode,'message'=>'Connection Deleted');
                 $response = array('status'=>$status,'data'=>$response);
                 $this->response($response, $statusCode);  
             }   
