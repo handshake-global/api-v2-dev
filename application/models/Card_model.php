@@ -56,7 +56,7 @@ class Card_model extends CI_Model {
 			$this->offset = $data['pageIndex'] * $this->limit;
 		}
 		if($showcase==false){
-			$cards_for_limit = $this->db->query("
+			$cards = $this->db->query("
 								 SELECT
 									card.cardId,
 									side,
@@ -71,14 +71,13 @@ class Card_model extends CI_Model {
 									LIMIT ".$this->limit." OFFSET ".$this->offset."
 							") 
 						->result();
-			 
 			}				
 		else{
 			$final_contacts = $this->suggestions($data['userId']);
  			$connections = !empty($final_contacts['connections']) ? $final_contacts['connections'] : [];
  			$final_contacts = !empty($final_contacts['suggestions']) ? $final_contacts['suggestions'] : [];
 			if(!empty($final_contacts)){
-				$cards_for_limit = $this->db->query("
+				$cards = $this->db->query("
 							SELECT
 							card.cardId,
 							side,
@@ -112,7 +111,6 @@ class Card_model extends CI_Model {
 						->result();
 				}				
 			}
-							
 		
 		$real_card = $mutualsContacts = array();
 		$cards_array = json_decode(json_encode($cards), true);
