@@ -129,7 +129,6 @@ class Card_model extends CI_Model {
 			// 				->get('profile')->result();
 			 
 			pr($real_card);
-			exit;
 			//if both side exist with current card
 			if(isset($real_card[$card->cardId][0]) && isset($real_card[$card->cardId][1])){
 				
