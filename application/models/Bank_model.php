@@ -408,7 +408,7 @@ class Bank_model extends CI_Model
                 ->join('users', 'card_bank.toUser=users.userId')
                 ->join('user_details', 'card_bank.toUser=user_details.userId','left')
                 ->order_by('users.firstName')
-                ->limit($this->limit,$this->offset);
+                ->limit($this->limit,$this->offset)
                 ->get($this->table)
                 ->result_array(); 
 
