@@ -208,11 +208,6 @@ $config = array(
 		'rules' => 'required|numeric'
 		),
 		array(
-		'field' => 'categoryId',
-		'label' => 'Category ID',
-		'rules' => 'required|numeric'
-		),
-		array(
 		'field' => 'cardId',
 		'label' => 'Card ID',
 		'rules' => 'required|numeric'
