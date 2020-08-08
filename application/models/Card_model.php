@@ -55,8 +55,7 @@ class Card_model extends CI_Model {
 									videoThumbnail, 
 									FROM
 									card_config ,card
-									WHERE card.userId = ".$data['userId']." and card.cardId = card_config.cardId and card.addedMode != 4 and isDefault = 1
-									group by card.cardId, card_config.side
+									WHERE card.userId = ".$data['userId']." and card.cardId = card_config.cardId and card.addedMode != 4 and isDefault = 1 
 									limit 2
 							") 
 						->result();
