@@ -123,34 +123,21 @@ class Card_model extends CI_Model {
 				}			
 			}
 			else{
-				$cards_for_limit = $this->db->query("
+				$cards = $this->db->query("
 							SELECT
-							  cardId
+							card.cardId,
+							side,
+							cardImage,
+							cardVideo,
+							videoThumbnail, 
+							userId
 							FROM
-							    card_config
-							WHERE cardId not in 
-							(select cardId from $this->table where userId = ".$data['userId']." and addedMode != 4 )
-							group by cardId
+							card_config ,card
+							WHERE card.userId not in (".$data['userId'].") and card.cardId = card_config.cardId and card.addedMode != 4
+							group by card.cardId
 							LIMIT ".$this->limit." OFFSET ".$this->offset." 	
 						")
 						->result_array();
-				if(!empty($cards_for_limit)){			
-					$cards =  $this->db->query("
-										SELECT
-										card.cardId,
-										side,
-										cardImage,
-										cardVideo,
-										videoThumbnail, 
-										userId
-										FROM
-										card_config ,card
-										WHERE card.cardId  in
-										(".implode(',',array_column($cards_for_limit, 'cardId')).") and card.cardId = card_config.cardId and card.addedMode != 4 ")
-							->result();	
-							echo vd();
-				}else{
-					$cards = array();
 				}				
 			}
 							
