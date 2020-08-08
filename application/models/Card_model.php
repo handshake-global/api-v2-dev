@@ -57,8 +57,8 @@ class Card_model extends CI_Model {
 									FROM
 									card_config ,card
 									WHERE card.userId in (".$data['userId'].") and card.cardId = card_config.cardId and card.addedMode != 4 and isDefault = 1
-									limit 1
 									group by card.cardId, card_config.side
+									limit 1
 							") 
 						->result();
 				$real_card = array();
