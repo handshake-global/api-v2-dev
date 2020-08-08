@@ -78,7 +78,6 @@ class Card_model extends CI_Model {
 							'backImage'=>isset($real_card[$card->cardId][1]['backImage']) ? $real_card[$card->cardId][1]['backImage'] : '',	
 							'backVideo'=> isset($real_card[$card->cardId][1]['backVideo']) ? $real_card[$card->cardId][1]['backVideo']: '',	
 							'backVideoThumbnail'=>isset($real_card[$card->cardId][1]['backVideoThumbnail']) ? $real_card[$card->cardId][1]['backVideoThumbnail']: '',	
-							'userId' => $card->userId
 						);
 						unset($real_card[$card->cardId]);
 						$real_card[$card->cardId] = $x;	
