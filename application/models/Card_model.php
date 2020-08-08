@@ -157,7 +157,7 @@ class Card_model extends CI_Model {
 			if(!empty($final_contacts)){
 				$users = $this->db->query("
 							SELECT userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
-							where userId in ((".implode(',',$final_contacts)."))
+							where userId in ((".implode(',',$final_contacts).")) and NOC !=0
 							LIMIT ".$this->limit." OFFSET ".$this->offset."
 						")
 						->result_array();
@@ -165,7 +165,7 @@ class Card_model extends CI_Model {
 			else{
 				$users = $this->db->query("
 							SELECT  userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
-							where userId not in (".$data['userId'].")
+							where userId not in (".$data['userId'].") and NOC !=0
 							LIMIT ".$this->limit." OFFSET ".$this->offset."
 						")
 						->result_array();
