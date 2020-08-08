@@ -185,9 +185,9 @@ class Card extends REST_Controller {
                 $this->response($response, $statusCode);  
             }   
             else{
-               $statusCode = parent::HTTP_INTERNAL_SERVER_ERROR;
-               $status = array('statusCode' => $statusCode,'error'=>'something went wrong'); 
-               $this->response(['status' =>$status,], parent::HTTP_INTERNAL_SERVER_ERROR); 
+               $statusCode = parent::HTTP_OK;
+               $status = array('statusCode' => $statusCode,'error'=>'Nothing to delete'); 
+               $this->response(['status' =>$status,], parent::HTTP_OK); 
             }
         }
     }
