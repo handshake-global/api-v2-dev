@@ -394,6 +394,9 @@ class Bank_model extends CI_Model
     public function sentCardRequest($data=NULL){
         if($data == NULL)
             return false;
+        if(isset($data['pageIndex']) && $data['pageIndex']!=0){
+                $this->offset = $data['pageIndex']* $this->limit;
+            }
        $request = $this
                 ->db
                 ->select('card_bank.*,users.userId,
@@ -405,6 +408,7 @@ class Bank_model extends CI_Model
                 ->join('users', 'card_bank.toUser=users.userId')
                 ->join('user_details', 'card_bank.toUser=user_details.userId','left')
                 ->order_by('users.firstName')
+                ->limit($this->limit,$this->offset);
                 ->get($this->table)
                 ->result_array(); 
 
