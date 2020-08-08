@@ -111,7 +111,8 @@ class Card_model extends CI_Model {
 						->result();
 				}				
 			}
-		
+		pr($cards);
+		exit;
 		$real_card = $mutualsContacts = array();
 		$cards_array = json_decode(json_encode($cards), true);
 		foreach($cards as $card):
