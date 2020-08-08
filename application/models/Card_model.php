@@ -519,6 +519,7 @@ class Card_model extends CI_Model {
 			return false;
 		$default = array('isDefault'=>1);
 	 	$this->db->where(array('userId'=>$data['userId']))->update($this->table,$default);
+	 	echo vd();
 	 	if($this->db->affected_rows()>0){
 			$this->db->where(array('userId'=>$data['userId'],'cardId'=>$data['cardId']))->update($this->table,$default);
 			if($this->db->affected_rows()>0)
