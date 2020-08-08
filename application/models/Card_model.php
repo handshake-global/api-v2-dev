@@ -99,7 +99,7 @@ class Card_model extends CI_Model {
 							userId
 							FROM
 							card_config ,card
-							WHERE card.userId in (".implode(',',$final_contacts).") and card.cardId = card_config.cardId and card.addedMode != 4 and isDefault = 1
+							WHERE card.userId in (".implode(',',$final_contacts).") and card.cardId = card_config.cardId and card.addedMode != 4 and card.isDefault = 1
 							group by card.cardId
 							LIMIT ".$this->limit." OFFSET ".$this->offset."
 						")
@@ -116,7 +116,7 @@ class Card_model extends CI_Model {
 							userId
 							FROM
 							card_config ,card
-							WHERE card.userId not in (".$data['userId'].") and card.cardId = card_config.cardId and card.addedMode != 4
+							WHERE card.userId not in (".$data['userId'].") and card.cardId = card_config.cardId and card.addedMode != 4 and card.isDefault = 1
 							group by card.cardId
 							LIMIT ".$this->limit." OFFSET ".$this->offset." 	
 						")
