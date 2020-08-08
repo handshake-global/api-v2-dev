@@ -91,16 +91,17 @@ class Card_model extends CI_Model {
 			if(!empty($final_contacts)){
 				$cards_for_limit = $this->db->query("
 							SELECT
-							  cardId
+							card.cardId,
+							side,
+							cardImage,
+							cardVideo,
+							videoThumbnail, 
+							userId
 							FROM
-							    card_config
-							WHERE cardId in 
-							(
-								select cardId from $this->table where 
-								userId in (".implode(',',$final_contacts).") and isDefault = 1
-							)
-							group by cardId
-							LIMIT ".$this->limit." OFFSET ".$this->offset." 
+							card_config ,card
+							WHERE card.userId in (".implode(',',$final_contacts).") and card.cardId = card_config.cardId and card.addedMode != 4 and isDefault = 1
+							group by card.cardId
+							LIMIT ".$this->limit." OFFSET ".$this->offset."
 						")
 						->result_array();
 				if(!empty($cards_for_limit)){					
