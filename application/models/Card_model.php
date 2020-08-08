@@ -71,10 +71,8 @@ class Card_model extends CI_Model {
 									LIMIT ".$this->limit." OFFSET ".$this->offset."
 							") 
 						->result();
-			}else{
-				$cards = array();
+			 
 			}				
-		}
 		else{
 			$final_contacts = $this->suggestions($data['userId']);
  			$connections = !empty($final_contacts['connections']) ? $final_contacts['connections'] : [];
