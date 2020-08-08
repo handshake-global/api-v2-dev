@@ -185,7 +185,8 @@ class Card_model extends CI_Model {
 					'backImage'=>isset($real_card[$card->cardId][1]['backImage']) ? $real_card[$card->cardId][1]['backImage'] : '',	
 					'backVideo'=> isset($real_card[$card->cardId][1]['backVideo']) ? $real_card[$card->cardId][1]['backVideo']: '',	
 					'backVideoThumbnail'=>isset($real_card[$card->cardId][1]['backVideoThumbnail']) ? $real_card[$card->cardId][1]['backVideoThumbnail']: '',	
-					'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
+					'userId' => $card->userId
+					//'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
 								->where('userId',$card->userId)->get('profile')->row(),
 					//'mutuals' => $mutualsContacts
 								 	
@@ -205,7 +206,8 @@ class Card_model extends CI_Model {
 					'backImage'=>'',	
 					'backVideo'=>'',	
 					'backVideoThumbnail'=>'',	
-					'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
+					'userId' => $card->userId
+					//'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
 								->where('userId',$card->userId)->get('profile')->row(),
 					//'mutuals' =>$mutualsContacts			
 				);
@@ -222,7 +224,8 @@ class Card_model extends CI_Model {
 					'backImage'=>isset($real_card[$card->cardId][1]['backImage']) ? $real_card[$card->cardId][1]['backImage'] : '',	
 					'backVideo'=>isset($real_card[$card->cardId][1]['backVideo']) ? $real_card[$card->cardId][1]['backVideo'] : '',	
 					'backVideoThumbnail'=>isset($real_card[$card->cardId][1]['backVideoThumbnail']) ? $real_card[$card->cardId][1]['backVideoThumbnail']: '',
-					'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
+					'userId' => $card->userId
+					//'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
 								->where('userId',$card->userId)->get('profile')->row(),
 					//'mutuals' =>$mutualsContacts		
 				);
