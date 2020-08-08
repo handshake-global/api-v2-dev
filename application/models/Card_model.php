@@ -71,123 +71,109 @@ class Card_model extends CI_Model {
 									LIMIT ".$this->limit." OFFSET ".$this->offset."
 							") 
 						->result();
-			}				
+				$real_card = $mutualsContacts = array();
+				$cards_array = json_decode(json_encode($cards), true);
+				foreach($cards as $card):
+					if($card->side==1)
+						$real_card[$card->cardId][] = array('frontImage' =>$card->cardImage,'frontVideo'=>$card->cardVideo,'frontVideoThumbnail'=>ltrim($card->videoThumbnail,'.'));
+					else
+						$real_card[$card->cardId][] = array('backImage' =>$card->cardImage,'backVideo'=>$card->cardVideo,'backVideoThumbnail'=>ltrim($card->videoThumbnail,'.'));
+
+					// if($showcase!=false && !empty($connections))
+					// 	$mutualsContacts = array_intersect($this->getMutuals($card->userId),$connections);
+					
+					// if(!empty($mutualsContacts))
+					// 	$mutualsContacts = ($showcase==false) ? [] : 
+					// 				$this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
+					// 				->where_in('userId',$mutualsContacts)
+					// 				->get('profile')->result();
+					 
+					//if both side exist with current card
+					if(isset($real_card[$card->cardId][0]) && isset($real_card[$card->cardId][1])){
+						
+						$x = array(
+							'cardId'=>$card->cardId,
+							'frontImage'=>isset($real_card[$card->cardId][0]['frontImage'])?$real_card[$card->cardId][0]['frontImage']:'',	
+							'frontVideo'=>isset($real_card[$card->cardId][0]['frontVideo']) ? $real_card[$card->cardId][0]['frontVideo'] :'',
+							'frontVideoThumbnail'=>isset($real_card[$card->cardId][0]['frontVideoThumbnail']) ? $real_card[$card->cardId][0]['frontVideoThumbnail']:'',	
+							'backImage'=>isset($real_card[$card->cardId][1]['backImage']) ? $real_card[$card->cardId][1]['backImage'] : '',	
+							'backVideo'=> isset($real_card[$card->cardId][1]['backVideo']) ? $real_card[$card->cardId][1]['backVideo']: '',	
+							'backVideoThumbnail'=>isset($real_card[$card->cardId][1]['backVideoThumbnail']) ? $real_card[$card->cardId][1]['backVideoThumbnail']: '',	
+							'userId' => $card->userId
+							//'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
+										//->where('userId',$card->userId)->get('profile')->row(),
+							//'mutuals' => $mutualsContacts
+										 	
+						);
+						unset($real_card[$card->cardId]);
+						$real_card[$card->cardId] = $x;	
+					}
+					
+					//if only front side exist with current card
+					elseif($this->check($cards_array, array("cardId",'side'), array($card->cardId,"1")) == true && $this->check($cards_array, array("cardId",'side'), array($card->cardId,"2"))==false && isset($real_card[$card->cardId][0])){
+						
+						$x = array(
+							'cardId'=>$card->cardId,
+							'frontImage'=>isset($real_card[$card->cardId][0]['frontImage']) ? $real_card[$card->cardId][0]['frontImage']:'',	
+							'frontVideo'=>isset($real_card[$card->cardId][0]['frontVideo']) ? $real_card[$card->cardId][0]['frontVideo'] : '',
+							'frontVideoThumbnail'=>isset($real_card[$card->cardId][0]['frontVideoThumbnail']) ? $real_card[$card->cardId][0]['frontVideoThumbnail'] : '',	
+							'backImage'=>'',	
+							'backVideo'=>'',	
+							'backVideoThumbnail'=>'',	
+							'userId' => $card->userId
+							//'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
+										//->where('userId',$card->userId)->get('profile')->row(),
+							//'mutuals' =>$mutualsContacts			
+						);
+						unset($real_card[$card->cardId]);
+						$real_card[$card->cardId] = $x;	
+					}
+					//if only back side exist with current card
+					elseif($this->check($cards_array, array("cardId",'side'), array($card->cardId,"1")) == false && $this->check($cards_array, array("cardId",'side'), array($card->cardId,"2"))==true && isset($real_card[$card->cardId][1])){
+						$x = array(
+							'cardId'=>$card->cardId,
+							'frontImage'=>'',	
+							'frontVideo'=>'',
+							'frontVideoThumbnail'=>'',	
+							'backImage'=>isset($real_card[$card->cardId][1]['backImage']) ? $real_card[$card->cardId][1]['backImage'] : '',	
+							'backVideo'=>isset($real_card[$card->cardId][1]['backVideo']) ? $real_card[$card->cardId][1]['backVideo'] : '',	
+							'backVideoThumbnail'=>isset($real_card[$card->cardId][1]['backVideoThumbnail']) ? $real_card[$card->cardId][1]['backVideoThumbnail']: '',
+							'userId' => $card->userId
+							//'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
+										//->where('userId',$card->userId)->get('profile')->row(),
+							//'mutuals' =>$mutualsContacts		
+						);
+						unset($real_card[$card->cardId]);
+						$real_card[$card->cardId] = $x;	
+					}
+				endforeach;
+				return array_values($real_card);			
+			}
+
 		else{
 			$final_contacts = $this->suggestions($data['userId']);
  			$connections = !empty($final_contacts['connections']) ? $final_contacts['connections'] : [];
  			$final_contacts = !empty($final_contacts['suggestions']) ? $final_contacts['suggestions'] : [];
 			if(!empty($final_contacts)){
-				$cards = $this->db->query("
-							SELECT
-							card.cardId,
-							side,
-							cardImage,
-							cardVideo,
-							videoThumbnail, 
-							userId
-							FROM
-							card_config ,card
-							WHERE card.userId in (".implode(',',$final_contacts).") and card.cardId = card_config.cardId and card.addedMode != 4 and card.isDefault = 1
-							group by card.cardId, card_config.side
+				$users = $this->db->query("
+							SELECT * from profile
+							where userId in ((".implode(',',$final_contacts)."))
 							LIMIT ".$this->limit." OFFSET ".$this->offset."
 						")
-						->result();
+						->result_array();
 				}
 			else{
-				$cards = $this->db->query("
-							SELECT
-							card.cardId,
-							side,
-							cardImage,
-							cardVideo,
-							videoThumbnail, 
-							userId
-							FROM
-							card_config ,card
-							WHERE card.userId not in (".$data['userId'].") and card.cardId = card_config.cardId and card.addedMode != 4 and card.isDefault = 1
-							group by card.cardId, card_config.side
-							LIMIT ".$this->limit." OFFSET ".$this->offset." 	
+				$users = $this->db->query("
+							SELECT * from profile
+							where userId not in (".$data['userId'].")
+							LIMIT ".$this->limit." OFFSET ".$this->offset."
 						")
-						->result();
+						->result_array();
 				}				
 			}
-		$real_card = $mutualsContacts = array();
-		$cards_array = json_decode(json_encode($cards), true);
-		foreach($cards as $card):
-			if($card->side==1)
-				$real_card[$card->cardId][] = array('frontImage' =>$card->cardImage,'frontVideo'=>$card->cardVideo,'frontVideoThumbnail'=>ltrim($card->videoThumbnail,'.'));
-			else
-				$real_card[$card->cardId][] = array('backImage' =>$card->cardImage,'backVideo'=>$card->cardVideo,'backVideoThumbnail'=>ltrim($card->videoThumbnail,'.'));
 
-			// if($showcase!=false && !empty($connections))
-			// 	$mutualsContacts = array_intersect($this->getMutuals($card->userId),$connections);
-			
-			// if(!empty($mutualsContacts))
-			// 	$mutualsContacts = ($showcase==false) ? [] : 
-			// 				$this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
-			// 				->where_in('userId',$mutualsContacts)
-			// 				->get('profile')->result();
-			 
-			//if both side exist with current card
-			if(isset($real_card[$card->cardId][0]) && isset($real_card[$card->cardId][1])){
-				
-				$x = array(
-					'cardId'=>$card->cardId,
-					'frontImage'=>isset($real_card[$card->cardId][0]['frontImage'])?$real_card[$card->cardId][0]['frontImage']:'',	
-					'frontVideo'=>isset($real_card[$card->cardId][0]['frontVideo']) ? $real_card[$card->cardId][0]['frontVideo'] :'',
-					'frontVideoThumbnail'=>isset($real_card[$card->cardId][0]['frontVideoThumbnail']) ? $real_card[$card->cardId][0]['frontVideoThumbnail']:'',	
-					'backImage'=>isset($real_card[$card->cardId][1]['backImage']) ? $real_card[$card->cardId][1]['backImage'] : '',	
-					'backVideo'=> isset($real_card[$card->cardId][1]['backVideo']) ? $real_card[$card->cardId][1]['backVideo']: '',	
-					'backVideoThumbnail'=>isset($real_card[$card->cardId][1]['backVideoThumbnail']) ? $real_card[$card->cardId][1]['backVideoThumbnail']: '',	
-					'userId' => $card->userId
-					//'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
-								//->where('userId',$card->userId)->get('profile')->row(),
-					//'mutuals' => $mutualsContacts
-								 	
-				);
-				unset($real_card[$card->cardId]);
-				$real_card[$card->cardId] = $x;	
-			}
-			
-			//if only front side exist with current card
-			elseif($this->check($cards_array, array("cardId",'side'), array($card->cardId,"1")) == true && $this->check($cards_array, array("cardId",'side'), array($card->cardId,"2"))==false && isset($real_card[$card->cardId][0])){
-				
-				$x = array(
-					'cardId'=>$card->cardId,
-					'frontImage'=>isset($real_card[$card->cardId][0]['frontImage']) ? $real_card[$card->cardId][0]['frontImage']:'',	
-					'frontVideo'=>isset($real_card[$card->cardId][0]['frontVideo']) ? $real_card[$card->cardId][0]['frontVideo'] : '',
-					'frontVideoThumbnail'=>isset($real_card[$card->cardId][0]['frontVideoThumbnail']) ? $real_card[$card->cardId][0]['frontVideoThumbnail'] : '',	
-					'backImage'=>'',	
-					'backVideo'=>'',	
-					'backVideoThumbnail'=>'',	
-					'userId' => $card->userId
-					//'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
-								//->where('userId',$card->userId)->get('profile')->row(),
-					//'mutuals' =>$mutualsContacts			
-				);
-				unset($real_card[$card->cardId]);
-				$real_card[$card->cardId] = $x;	
-			}
-			//if only back side exist with current card
-			elseif($this->check($cards_array, array("cardId",'side'), array($card->cardId,"1")) == false && $this->check($cards_array, array("cardId",'side'), array($card->cardId,"2"))==true && isset($real_card[$card->cardId][1])){
-				$x = array(
-					'cardId'=>$card->cardId,
-					'frontImage'=>'',	
-					'frontVideo'=>'',
-					'frontVideoThumbnail'=>'',	
-					'backImage'=>isset($real_card[$card->cardId][1]['backImage']) ? $real_card[$card->cardId][1]['backImage'] : '',	
-					'backVideo'=>isset($real_card[$card->cardId][1]['backVideo']) ? $real_card[$card->cardId][1]['backVideo'] : '',	
-					'backVideoThumbnail'=>isset($real_card[$card->cardId][1]['backVideoThumbnail']) ? $real_card[$card->cardId][1]['backVideoThumbnail']: '',
-					'userId' => $card->userId
-					//'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
-								//->where('userId',$card->userId)->get('profile')->row(),
-					//'mutuals' =>$mutualsContacts		
-				);
-				unset($real_card[$card->cardId]);
-				$real_card[$card->cardId] = $x;	
-			}
-		endforeach;
-		return array_values($real_card);	
+			return array_values($users);
+		
 	}
 
 	private function suggestions($userId=NULL){
