@@ -137,15 +137,13 @@ class Card_model extends CI_Model {
 							group by card.cardId
 							LIMIT ".$this->limit." OFFSET ".$this->offset." 	
 						")
-						->result_array();
+						->result();
 				}				
 			}
 							
 		
 		$real_card = $mutualsContacts = array();
 		$cards_array = json_decode(json_encode($cards), true);
-		print_r($cards);
-		exit;
 		foreach($cards as $card):
 			if($card->side==1)
 				$real_card[$card->cardId][] = array('frontImage' =>$card->cardImage,'frontVideo'=>$card->cardVideo,'frontVideoThumbnail'=>ltrim($card->videoThumbnail,'.'));
