@@ -233,6 +233,13 @@ class Card_model extends CI_Model {
  			$connections = !empty($final_contacts['connections']) ? $final_contacts['connections'] : [];
  			$final_contacts = !empty($final_contacts['suggestions']) ? $final_contacts['suggestions'] : [];
 			if(!empty($final_contacts)){
+				//getting mutuals
+				foreach ($final_contacts as $key => $value) {
+					 
+					$mutualsContacts[$value][] = array_intersect($this->getMutuals($value),$connections);
+				}
+
+
 				$users = $this->db->query("
 							SELECT userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
 							where userId in (".implode(',',$final_contacts).") and NOC !=0
@@ -251,8 +258,7 @@ class Card_model extends CI_Model {
 						->result_array();
 				}				
 			}
-			echo vd();
-
+			pr($mutualsContacts);
 			return array_values($users);
 		
 	}
