@@ -11,7 +11,7 @@ class Card_model extends CI_Model {
 	    $this->fields = 'card_fields';
 	    $this->conf = 'card_config';
 	    $this->createdAt = date('Y/m/d h:i:s a', time());
-	    $this->limit = 2;
+	    $this->limit = 10;
 	    $this->offset = 0;
 	}
 
@@ -56,106 +56,61 @@ class Card_model extends CI_Model {
 			$this->offset = $data['pageIndex'] * $this->limit;
 		}
 		if($showcase==false){
-			$cards_for_limit = $this->db->query("
-						SELECT 
-						  cardId
-						FROM
-						    card_config
-						WHERE cardId in 
-						(select cardId from $this->table where userId = ".$data['userId']." and addedMode != 4 ) group by cardId
-						LIMIT ".$this->limit." OFFSET ".$this->offset." 
-						") 
-						->result_array();
-			if(!empty($cards_for_limit)){				
-				$cards =  $this->db->query("
-							SELECT 
-							  cardId,
-							  side,
-							  cardImage,
-							  cardVideo,
-							  videoThumbnail,
-							  (select userId from card where cardId = card_config.cardId) userId
-							FROM
-							    card_config
-							WHERE cardId in (".implode(',',array_column($cards_for_limit, 'cardId')).") 
+			$cards = $this->db->query("
+								 SELECT
+									card.cardId,
+									side,
+									cardImage,
+									cardVideo,
+									videoThumbnail, 
+									userId
+									FROM
+									card_config ,card
+									WHERE card.userId in (".$data['userId'].") and card.cardId = card_config.cardId and card.addedMode != 4
+									group by card.cardId, card_config.side
+									LIMIT ".$this->limit." OFFSET ".$this->offset."
 							") 
-							->result();
-			}else{
-				$cards = array();
+						->result();
 			}				
-		}
 		else{
 			$final_contacts = $this->suggestions($data['userId']);
  			$connections = !empty($final_contacts['connections']) ? $final_contacts['connections'] : [];
  			$final_contacts = !empty($final_contacts['suggestions']) ? $final_contacts['suggestions'] : [];
-
 			if(!empty($final_contacts)){
-				$cards_for_limit = $this->db->query("
+				$cards = $this->db->query("
 							SELECT
-							  cardId
+							card.cardId,
+							side,
+							cardImage,
+							cardVideo,
+							videoThumbnail, 
+							userId
 							FROM
-							    card_config
-							WHERE cardId in 
-							(
-								select cardId from $this->table where 
-								userId in (".implode(',',$final_contacts).") and isDefault = 1
-							)
-							group by cardId
-							LIMIT ".$this->limit." OFFSET ".$this->offset." 
+							card_config ,card
+							WHERE card.userId in (".implode(',',$final_contacts).") and card.cardId = card_config.cardId and card.addedMode != 4 and card.isDefault = 1
+							group by card.cardId, card_config.side
+							LIMIT ".$this->limit." OFFSET ".$this->offset."
 						")
-						->result_array();
-				if(!empty($cards_for_limit)){					
-					$cards =  $this->db->query("
-								SELECT
-								  cardId,
-								  side,
-								  cardImage,
-								  cardVideo,
-								  videoThumbnail,
-								  (select userId from card where cardId = card_config.cardId and addedMode != 4) userId
-								FROM
-								    card_config
-								WHERE cardId in 
-								(".implode(',',array_column($cards_for_limit, 'cardId')).") 
-							")
-							->result();
-				}else{
-					$cards = array();
-				}			
-			}
+						->result();
+				}
 			else{
-				$cards_for_limit = $this->db->query("
+				$cards = $this->db->query("
 							SELECT
-							  cardId
+							card.cardId,
+							side,
+							cardImage,
+							cardVideo,
+							videoThumbnail, 
+							userId
 							FROM
-							    card_config
-							WHERE cardId not in 
-							(select cardId from $this->table where userId = ".$data['userId']." and addedMode != 4 )
-							group by cardId
+							card_config ,card
+							WHERE card.userId not in (".$data['userId'].") and card.cardId = card_config.cardId and card.addedMode != 4 and card.isDefault = 1
+							group by card.cardId, card_config.side
 							LIMIT ".$this->limit." OFFSET ".$this->offset." 	
 						")
-						->result_array();
-				if(!empty($cards_for_limit)){			
-					$cards =  $this->db->query("
-								SELECT
-								  cardId,
-								  side,
-								  cardImage,
-								  cardVideo,
-								  videoThumbnail,
-								  (select userId from card where cardId = card_config.cardId and addedMode != 4) userId
-								FROM
-								    card_config
-								WHERE cardId not in 
-								(".implode(',',array_column($cards_for_limit, 'cardId')).")
-							")
-							->result();	
-				}else{
-					$cards = array();
+						->result();
 				}				
 			}
-							
-		}
 		$real_card = $mutualsContacts = array();
 		$cards_array = json_decode(json_encode($cards), true);
 		foreach($cards as $card):
@@ -164,16 +119,15 @@ class Card_model extends CI_Model {
 			else
 				$real_card[$card->cardId][] = array('backImage' =>$card->cardImage,'backVideo'=>$card->cardVideo,'backVideoThumbnail'=>ltrim($card->videoThumbnail,'.'));
 
-			if($showcase!=false && !empty($connections))
-				$mutualsContacts = array_intersect($this->getMutuals($card->userId),$connections);
+			// if($showcase!=false && !empty($connections))
+			// 	$mutualsContacts = array_intersect($this->getMutuals($card->userId),$connections);
 			
-			if(!empty($mutualsContacts))
-				$mutualsContacts = ($showcase==false) ? [] : 
-							$this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
-							->where_in('userId',$mutualsContacts)
-							->get('profile')->result();
+			// if(!empty($mutualsContacts))
+			// 	$mutualsContacts = ($showcase==false) ? [] : 
+			// 				$this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
+			// 				->where_in('userId',$mutualsContacts)
+			// 				->get('profile')->result();
 			 
-
 			//if both side exist with current card
 			if(isset($real_card[$card->cardId][0]) && isset($real_card[$card->cardId][1])){
 				
@@ -185,9 +139,10 @@ class Card_model extends CI_Model {
 					'backImage'=>isset($real_card[$card->cardId][1]['backImage']) ? $real_card[$card->cardId][1]['backImage'] : '',	
 					'backVideo'=> isset($real_card[$card->cardId][1]['backVideo']) ? $real_card[$card->cardId][1]['backVideo']: '',	
 					'backVideoThumbnail'=>isset($real_card[$card->cardId][1]['backVideoThumbnail']) ? $real_card[$card->cardId][1]['backVideoThumbnail']: '',	
-					'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
-								->where('userId',$card->userId)->get('profile')->row(),
-					'mutuals' => $mutualsContacts
+					'userId' => $card->userId
+					//'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
+								//->where('userId',$card->userId)->get('profile')->row(),
+					//'mutuals' => $mutualsContacts
 								 	
 				);
 				unset($real_card[$card->cardId]);
@@ -205,9 +160,10 @@ class Card_model extends CI_Model {
 					'backImage'=>'',	
 					'backVideo'=>'',	
 					'backVideoThumbnail'=>'',	
-					'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
-								->where('userId',$card->userId)->get('profile')->row(),
-					'mutuals' =>$mutualsContacts			
+					'userId' => $card->userId
+					//'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
+								//->where('userId',$card->userId)->get('profile')->row(),
+					//'mutuals' =>$mutualsContacts			
 				);
 				unset($real_card[$card->cardId]);
 				$real_card[$card->cardId] = $x;	
@@ -222,14 +178,16 @@ class Card_model extends CI_Model {
 					'backImage'=>isset($real_card[$card->cardId][1]['backImage']) ? $real_card[$card->cardId][1]['backImage'] : '',	
 					'backVideo'=>isset($real_card[$card->cardId][1]['backVideo']) ? $real_card[$card->cardId][1]['backVideo'] : '',	
 					'backVideoThumbnail'=>isset($real_card[$card->cardId][1]['backVideoThumbnail']) ? $real_card[$card->cardId][1]['backVideoThumbnail']: '',
-					'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
-								->where('userId',$card->userId)->get('profile')->row(),
-					'mutuals' =>$mutualsContacts		
+					'userId' => $card->userId
+					//'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
+								//->where('userId',$card->userId)->get('profile')->row(),
+					//'mutuals' =>$mutualsContacts		
 				);
 				unset($real_card[$card->cardId]);
 				$real_card[$card->cardId] = $x;	
 			}
-		endforeach;	
+		endforeach;
+		pr($real_card);	
 		return array_values($real_card);	
 	}
 
