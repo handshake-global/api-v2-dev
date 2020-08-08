@@ -59,6 +59,7 @@ $route['updateFcmToken'] = 'notification/updateFcmToken';
 
 //card 
 $route['defaultCard'] = 'card/defaultCard';
+$route['setCardDefault'] = 'card/setDefault';
 
 //card bank
 $route['getHomeConnections'] = 'CardBank/getConnections';

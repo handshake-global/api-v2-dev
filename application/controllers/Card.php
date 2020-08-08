@@ -348,7 +348,7 @@ class Card extends REST_Controller {
      * @access public
      * @return json
      */
-    public function seDefault_post(){
+    public function setDefault_post(){
     // Call the verification method and store the return value in the variable
         $request = AUTHORIZATION::verify_request();
     
