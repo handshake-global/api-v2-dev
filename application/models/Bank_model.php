@@ -14,7 +14,7 @@ class Bank_model extends CI_Model
         $this->fields = 'card_fields';
         $this->conf = 'card_config';
         $this->createdAt = date('Y/m/d h:i:s a', time());
-        $this->limit = 1;
+        $this->limit = 10;
 	    $this->offset = 0;
     }
 
