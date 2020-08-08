@@ -282,6 +282,14 @@ $config = array(
 		)
 	),
 	//card card bank request validation Method: card/index_post
+	'sentCardRequest' => array(
+		array(
+		'field' => 'userId',
+		'label' => 'User ID',
+		'rules' => 'required|numeric'
+		)
+	),
+	//card card bank request validation Method: card/index_post
 	'rejectCardRequest' => array(
 		array(
 		'field' => 'userId',

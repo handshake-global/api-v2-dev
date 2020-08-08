@@ -390,5 +390,11 @@ class Bank_model extends CI_Model
 
         return array_merge($cardBankUserTo, $cardBankUserFrom);
     }
+
+    public function sentRequest($data=NULL)
+        if($data == NULL)
+            return false;
+        return $this->db->where(array('fromUser'=>$data['userId'],'status'=>0))
+                ->get($this->table)->result();
 }
 

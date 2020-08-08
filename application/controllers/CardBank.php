@@ -137,6 +137,39 @@ class CardBank extends REST_Controller {
         }
     }
 
+
+     /**
+     * card bank requests 
+     *
+     * @access public
+     * @return json
+     */
+    public function sentRequest_get(){
+    // Call the verification method and store the return value in the variable
+        $request = AUTHORIZATION::verify_request();
+        if(empty($this->get()))
+            $this->form_validation->set_data(['']);
+        else
+            $this->form_validation->set_data($this->get());
+        //create card using post data
+        if($this->form_validation->run('sentCardRequest') == FALSE){
+          $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
+        }
+        else{
+            if($response = $this->bank_model->sentCardRequest($this->get())){
+                // Prepare the response
+                $statusCode = parent::HTTP_OK;
+                $status = array('statusCode' => $statusCode,'message'=>'card data');
+                $response = array('status'=>$status,'data'=>$response);
+                $this->response($response, $statusCode);  
+            }   
+            else{
+               $statusCode = parent::HTTP_OK;
+               $status = array('statusCode' => $statusCode,'error'=>'No Sent Request Found'); 
+               $this->response(['status' =>$status,], parent::HTTP_OK); 
+            }
+        }
+    }
      /**
      * card bank requests 
      *
