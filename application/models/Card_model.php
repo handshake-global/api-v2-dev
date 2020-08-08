@@ -128,7 +128,6 @@ class Card_model extends CI_Model {
 			// 				->where_in('userId',$mutualsContacts)
 			// 				->get('profile')->result();
 			 
-			pr($real_card);
 			//if both side exist with current card
 			if(isset($real_card[$card->cardId][0]) && isset($real_card[$card->cardId][1])){
 				
@@ -187,7 +186,8 @@ class Card_model extends CI_Model {
 				unset($real_card[$card->cardId]);
 				$real_card[$card->cardId] = $x;	
 			}
-		endforeach;	
+		endforeach;
+		pr($real_card);	
 		return array_values($real_card);	
 	}
 
