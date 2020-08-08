@@ -241,7 +241,7 @@ class Card_model extends CI_Model {
 					$mutualsContacts[$value] =$t;
 					$temp[] = $t;
 				}
-				array_reduce($temp, function($last, $row) {
+				$temp = array_reduce($temp, function($last, $row) {
 	                return $last + $row;
 	            }, array());
 
@@ -264,7 +264,7 @@ class Card_model extends CI_Model {
 				}				
 			}
 			pr($mutualsContacts);
-			pr(array_values($temp));
+			pr(($temp));
 			return array_values($users);
 		
 	}
