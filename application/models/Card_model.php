@@ -409,8 +409,15 @@ class Card_model extends CI_Model {
 		$side = isset($data['side']) ? $data['side'] : NULL;
 		if($side!=NULL)
 			$this->db->where(array('cardId'=>$data['cardId'],'side'=>$side))->delete($this->conf);
-		else
-			$this->db->where('cardId',$data['cardId'])->delete($this->table);
+		else{
+			$isShared = $this->db->or_where("cardId",$data['cardId'])
+						->or_where("targetCardId",$data['cardId'])
+						->get('card_bank')->num_rows();
+			if(!$isShared)			
+				$this->db->where('cardId',$data['cardId'])->delete($this->table);
+			else
+				return false;
+		}
 		return $this->db->affected_rows(); 
 	} 
 
