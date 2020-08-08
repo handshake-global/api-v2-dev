@@ -71,6 +71,8 @@ class Card_model extends CI_Model {
 									LIMIT ".$this->limit." OFFSET ".$this->offset."
 							") 
 						->result();
+				pr($cards);
+				exit;		
 			}				
 		else{
 			$final_contacts = $this->suggestions($data['userId']);
@@ -111,8 +113,6 @@ class Card_model extends CI_Model {
 						->result();
 				}				
 			}
-		pr($cards);
-		exit;
 		$real_card = $mutualsContacts = array();
 		$cards_array = json_decode(json_encode($cards), true);
 		foreach($cards as $card):
