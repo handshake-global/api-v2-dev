@@ -151,12 +151,13 @@ class Card_model extends CI_Model {
 								(".implode(',',array_column($cards_for_limit, 'cardId')).")
 							")
 							->result();	
+							echo vd();
 				}else{
 					$cards = array();
 				}				
 			}
 							
-		}
+		}exit;
 		$real_card = $mutualsContacts = array();
 		$cards_array = json_decode(json_encode($cards), true);
 		pr($cards_array);
