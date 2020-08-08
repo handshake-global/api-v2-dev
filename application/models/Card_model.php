@@ -52,7 +52,7 @@ class Card_model extends CI_Model {
 									side,
 									cardImage,
 									cardVideo,
-									videoThumbnail, 
+									videoThumbnail
 									FROM
 									card_config ,card
 									WHERE card.userId = ".$data['userId']." and card.cardId = card_config.cardId and card.addedMode != 4 and isDefault = 1 
