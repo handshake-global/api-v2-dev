@@ -134,8 +134,6 @@ class Card_model extends CI_Model {
 							LIMIT ".$this->limit." OFFSET ".$this->offset." 	
 						")
 						->result_array();
-				echo vd();
-				pr($cards_for_limit);
 				if(!empty($cards_for_limit)){			
 					$cards =  $this->db->query("
 								SELECT
@@ -147,20 +145,18 @@ class Card_model extends CI_Model {
 								  (select userId from card where cardId = card_config.cardId and addedMode != 4) userId
 								FROM
 								    card_config
-								WHERE cardId not in 
+								WHERE cardId  in 
 								(".implode(',',array_column($cards_for_limit, 'cardId')).")
 							")
 							->result();	
-							echo vd();
 				}else{
 					$cards = array();
 				}				
 			}
 							
-		}exit;
+		}
 		$real_card = $mutualsContacts = array();
 		$cards_array = json_decode(json_encode($cards), true);
-		pr($cards_array);
 		foreach($cards as $card):
 			if($card->side==1)
 				$real_card[$card->cardId][] = array('frontImage' =>$card->cardImage,'frontVideo'=>$card->cardVideo,'frontVideoThumbnail'=>ltrim($card->videoThumbnail,'.'));
