@@ -11,7 +11,7 @@ class Card_model extends CI_Model {
 	    $this->fields = 'card_fields';
 	    $this->conf = 'card_config';
 	    $this->createdAt = date('Y/m/d h:i:s a', time());
-	    $this->limit = 2;
+	    $this->limit = 10;
 	    $this->offset = 0;
 	}
 
@@ -164,14 +164,14 @@ class Card_model extends CI_Model {
 			else
 				$real_card[$card->cardId][] = array('backImage' =>$card->cardImage,'backVideo'=>$card->cardVideo,'backVideoThumbnail'=>ltrim($card->videoThumbnail,'.'));
 
-			if($showcase!=false && !empty($connections))
-				$mutualsContacts = array_intersect($this->getMutuals($card->userId),$connections);
+			// if($showcase!=false && !empty($connections))
+			// 	$mutualsContacts = array_intersect($this->getMutuals($card->userId),$connections);
 			
-			if(!empty($mutualsContacts))
-				$mutualsContacts = ($showcase==false) ? [] : 
-							$this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
-							->where_in('userId',$mutualsContacts)
-							->get('profile')->result();
+			// if(!empty($mutualsContacts))
+			// 	$mutualsContacts = ($showcase==false) ? [] : 
+			// 				$this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
+			// 				->where_in('userId',$mutualsContacts)
+			// 				->get('profile')->result();
 			 
 
 			//if both side exist with current card
@@ -187,7 +187,7 @@ class Card_model extends CI_Model {
 					'backVideoThumbnail'=>isset($real_card[$card->cardId][1]['backVideoThumbnail']) ? $real_card[$card->cardId][1]['backVideoThumbnail']: '',	
 					'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
 								->where('userId',$card->userId)->get('profile')->row(),
-					'mutuals' => $mutualsContacts
+					//'mutuals' => $mutualsContacts
 								 	
 				);
 				unset($real_card[$card->cardId]);
@@ -207,7 +207,7 @@ class Card_model extends CI_Model {
 					'backVideoThumbnail'=>'',	
 					'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
 								->where('userId',$card->userId)->get('profile')->row(),
-					'mutuals' =>$mutualsContacts			
+					//'mutuals' =>$mutualsContacts			
 				);
 				unset($real_card[$card->cardId]);
 				$real_card[$card->cardId] = $x;	
@@ -224,7 +224,7 @@ class Card_model extends CI_Model {
 					'backVideoThumbnail'=>isset($real_card[$card->cardId][1]['backVideoThumbnail']) ? $real_card[$card->cardId][1]['backVideoThumbnail']: '',
 					'user' => $this->db->select('userId,userName,userPhoto,designation,connections,bio,rating')
 								->where('userId',$card->userId)->get('profile')->row(),
-					'mutuals' =>$mutualsContacts		
+					//'mutuals' =>$mutualsContacts		
 				);
 				unset($real_card[$card->cardId]);
 				$real_card[$card->cardId] = $x;	
