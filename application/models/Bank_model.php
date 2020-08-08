@@ -402,8 +402,8 @@ class Bank_model extends CI_Model
                 'card_bank.fromUser' => $data['userId'],
                 'card_bank.status' => 0
             ))
-                ->join('users', 'card_bank.fromUser=users.userId')
-                ->join('user_details', 'card_bank.fromUser=user_details.userId','left')
+                ->join('users', 'card_bank.toUser=users.userId')
+                ->join('user_details', 'card_bank.toUser=user_details.userId','left')
                 ->order_by('users.firstName')
                 ->get($this->table)
                 ->result_array(); 
