@@ -104,6 +104,7 @@ class Card_model extends CI_Model {
 							LIMIT ".$this->limit." OFFSET ".$this->offset."
 						")
 						->result_array();
+						echo vd();
 				if(!empty($cards_for_limit)){					
 					$cards =  $this->db->query("
 								SELECT
@@ -119,6 +120,8 @@ class Card_model extends CI_Model {
 								(".implode(',',array_column($cards_for_limit, 'cardId')).") 
 							")
 							->result();
+					echo vd();
+				exit;			
 				}else{
 					$cards = array();
 				}			
