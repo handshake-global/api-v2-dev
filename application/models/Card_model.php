@@ -66,13 +66,11 @@ class Card_model extends CI_Model {
 									userId
 									FROM
 									card_config ,card
-									WHERE card.userId in (".$data['userId'].") and card.cardId = card_config.cardId and card.addedMode != 4 and card.isDefault = 1
+									WHERE card.userId in (".$data['userId'].") and card.cardId = card_config.cardId and card.addedMode != 4
 									group by card.cardId, card_config.side
 									LIMIT ".$this->limit." OFFSET ".$this->offset."
 							") 
 						->result();
-				pr($cards);
-				exit;		
 			}				
 		else{
 			$final_contacts = $this->suggestions($data['userId']);
