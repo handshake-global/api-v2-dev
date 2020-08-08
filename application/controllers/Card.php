@@ -186,7 +186,7 @@ class Card extends REST_Controller {
             }   
             else{
                $statusCode = parent::HTTP_OK;
-               $status = array('statusCode' => $statusCode,'error'=>'Nothing to delete'); 
+               $status = array('statusCode' => $statusCode,'error'=>'Card not exist or shared with someone'); 
                $this->response(['status' =>$status,], parent::HTTP_OK); 
             }
         }
