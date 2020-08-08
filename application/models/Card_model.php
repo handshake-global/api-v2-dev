@@ -235,15 +235,15 @@ class Card_model extends CI_Model {
 			$temp = [];
 			if(!empty($final_contacts)){
 				//getting mutuals
-				// foreach ($final_contacts as $key => $value) {
-					 
-				// 	$t = array_intersect($this->getMutuals($value),$connections);
-				// 	$mutualsContacts[$value] =$t;
-				// 	$temp[] = $t;
-				// }
-				// $temp = array_reduce($temp, function($last, $row) {
-	   //              return $last + $row;
-	   //          }, array());
+					// foreach ($final_contacts as $key => $value) {
+						 
+					// 	$t = array_intersect($this->getMutuals($value),$connections);
+					// 	$mutualsContacts[$value] =$t;
+					// 	$temp[] = $t;
+					// }
+					// $temp = array_reduce($temp, function($last, $row) {
+		   //              return $last + $row;
+		   //          }, array());
 
 				$final_contacts = array_merge($temp,$final_contacts);
 				$users = $this->db->query("
@@ -511,6 +511,23 @@ class Card_model extends CI_Model {
 			}
 		endforeach;	
 		return array_values($real_card);	
+	}
+
+	public function set_default(){
+		$data = $this->input->post();
+		if(empty($data))
+			return false;
+		$default = array('isDefault'=>1);
+	 	$this->db->where(array('userId'=>$data['userId']))->update($this->table,$default);
+	 	if($this->db->affected_rows()>0){
+			$this->db->where(array('userId'=>$data['userId'],'cardId'=>$data['cardId']))->update($this->table,$default);
+			if($this->db->affected_rows()>0)
+				return true;
+			else
+				return false;
+	 	}
+		else
+			return false;			
 	}
 
 } 

@@ -110,6 +110,19 @@ $config = array(
 		'rules' => 'required|numeric'
 		)
 	),
+	//fetch select validation Method: card/index_get
+	'set_default' => array(
+		array(
+		'field' => 'userId',
+		'label' => 'User ID',
+		'rules' => 'required|numeric'
+		),
+		array(
+		'field' => 'cardId',
+		'label' => 'Card ID',
+		'rules' => 'required|numeric'
+		)
+	),
 	//card select validation Method: card/select_post
 	'card_select' => array(
 		array(

@@ -341,4 +341,34 @@ class Card extends REST_Controller {
             }
         }
     }
+
+     /**
+     * default set card
+     *
+     * @access public
+     * @return json
+     */
+    public function seDefault_post(){
+    // Call the verification method and store the return value in the variable
+        $request = AUTHORIZATION::verify_request();
+    
+    // map card using provided data
+        if($this->form_validation->run('set_default') == FALSE){
+          $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
+        }
+        else{
+            if($response = $this->card_model->set_default()){
+                // Prepare the response
+                $statusCode = parent::HTTP_OK;
+                $status = array('statusCode' => $statusCode,'message'=>'Card set to default');
+                $response = array('status'=>$status,'data'=>$response);
+                $this->response($response, $statusCode);  
+            }   
+            else{
+               $statusCode = parent::HTTP_OK;
+               $status = array('statusCode' => $statusCode,'error'=>'nothing to update'); 
+               $this->response(['status' =>$status,], parent::HTTP_OK); 
+            }
+        }
+    }
 }
