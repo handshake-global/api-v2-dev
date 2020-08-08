@@ -65,6 +65,8 @@ class Card_model extends CI_Model {
 
 				$real_card = array();
 				$cards_array = json_decode(json_encode($cards), true);
+				print_r($cards);
+				exit;
 
 				foreach($cards as $card):
 					if($card->side==1)
