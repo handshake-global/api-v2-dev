@@ -424,7 +424,7 @@ class CardBank extends REST_Controller {
                 $this->response($response, $statusCode);  
             }   
             else{
-               $statusCode = parent::HTTP_OK;
+               $statusCode = parent::HTTP_INTERNAL_SERVER_ERROR;
                $status = array('statusCode' => $statusCode,'error'=>'Nothing to delete'); 
                $this->response(['status' =>$status,], parent::HTTP_OK); 
             }

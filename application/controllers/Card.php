@@ -185,7 +185,7 @@ class Card extends REST_Controller {
                 $this->response($response, $statusCode);  
             }   
             else{
-               $statusCode = parent::HTTP_OK;
+               $statusCode = parent::HTTP_INTERNAL_SERVER_ERROR;
                $status = array('statusCode' => $statusCode,'error'=>'Card not exist or shared with someone'); 
                $this->response(['status' =>$status,], parent::HTTP_OK); 
             }
@@ -338,7 +338,7 @@ class Card extends REST_Controller {
                 $this->response($response, $statusCode);  
             }   
             else{
-               $statusCode = parent::HTTP_OK;
+               $statusCode = parent::HTTP_INTERNAL_SERVER_ERROR;
                $status = array('statusCode' => $statusCode,'error'=>'No Result Found'); 
                $this->response(['status' =>$status,], parent::HTTP_OK); 
             }
@@ -368,7 +368,7 @@ class Card extends REST_Controller {
                 $this->response($response, $statusCode);  
             }   
             else{
-               $statusCode = parent::HTTP_OK;
+               $statusCode = parent::HTTP_INTERNAL_SERVER_ERROR;
                $status = array('statusCode' => $statusCode,'error'=>'nothing to update'); 
                $this->response(['status' =>$status,], parent::HTTP_OK); 
             }
