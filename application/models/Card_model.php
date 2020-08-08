@@ -262,7 +262,7 @@ class Card_model extends CI_Model {
 				}				
 			}
 			pr($mutualsContacts);
-			array_values($temp);
+			pr(array_values($temp));
 			return array_values($users);
 		
 	}
