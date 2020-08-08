@@ -117,6 +117,7 @@ class Card_model extends CI_Model {
 						$real_card[$card->cardId] = $x;	
 					}
 				endforeach;
+				$real_card = array_values($real_card);
 				if(!empty($real_card) && isset($real_card[0]))
 					return array_values($real_card[0]);
 				else
