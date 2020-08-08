@@ -156,7 +156,7 @@ class Card_model extends CI_Model {
  			$final_contacts = !empty($final_contacts['suggestions']) ? $final_contacts['suggestions'] : [];
 			if(!empty($final_contacts)){
 				$users = $this->db->query("
-							SELECT * from profile
+							SELECT userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
 							where userId in ((".implode(',',$final_contacts)."))
 							LIMIT ".$this->limit." OFFSET ".$this->offset."
 						")
@@ -164,7 +164,7 @@ class Card_model extends CI_Model {
 				}
 			else{
 				$users = $this->db->query("
-							SELECT * from profile
+							SELECT  userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
 							where userId not in (".$data['userId'].")
 							LIMIT ".$this->limit." OFFSET ".$this->offset."
 						")
