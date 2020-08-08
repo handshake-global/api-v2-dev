@@ -394,8 +394,58 @@ class Bank_model extends CI_Model
     public function sentCardRequest($data=NULL){
         if($data == NULL)
             return false;
-        return $this->db->where(array('fromUser'=>$data['userId'],'status'=>0))
-                ->get($this->table)->result();
+       $request = $this
+                ->db
+                ->select('card_bank.*,users.userId,
+                        users.firstName,users.lastName,users.email,users.phoneNo,users.countryCode,users.avatar,user_details.designation')
+                ->where(array(
+                'card_bank.fromUser' => $data['userId'],
+                'card_bank.status' => 0
+            ))
+                ->join('users', 'card_bank.fromUser=users.userId')
+                ->join('user_details', 'card_bank.fromUser=user_details.userId','left')
+                ->order_by('users.firstName')
+                ->get($this->table)
+                ->result_array(); 
+
+        if (!empty($request))
+        {
+            $clean = array_map(function (array $elem)
+            {
+                //filter user
+                $elem['user'] = array(
+                    'userId' => $elem['userId'],
+                    'firstName' => $elem['firstName'],
+                    'lastName' => $elem['lastName'],
+                    'email' => $elem['email'],
+                    'countryCode' => $elem['countryCode'],
+                    'phoneNo' => $elem['phoneNo'],
+                    'avatar' => $elem['avatar'],
+                    'designation' => $elem['designation'],
+                );
+                unset($elem['updatedBy']);
+                // unset($elem['updatedAt']);
+                unset($elem['createdBy']);
+                unset($elem['userId']);
+                unset($elem['designation']);
+                unset($elem['firstName']);
+                unset($elem['lastName']);
+                unset($elem['email']);
+                unset($elem['countryCode']);
+                unset($elem['phoneNo']);
+                unset($elem['avatar']);
+                // unset($elem['createdAt']);        // modify $elem
+                return $elem; // and return it to be put into the result
+                
+            }
+            , $request);
+            function compareByName($a, $b)
+            {
+                return strcmp($a['user']["firstName"], $b['user']["firstName"]);
+            }
+            usort($clean, 'compareByName');
+            return $clean;
+        }        
     }
 
      /**
