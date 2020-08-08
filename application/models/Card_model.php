@@ -46,8 +46,6 @@ class Card_model extends CI_Model {
 	public function default_card($data=[]){
 		if(empty($data))
 			return false;
-		pr($this->getMutuals($data['userId']));
-		exit;
 			$cards = $this->db->query("
 								 SELECT
 									card.cardId,
@@ -230,6 +228,7 @@ class Card_model extends CI_Model {
 			}
 
 		else{
+			$mutualsContacts = array();
 			$final_contacts = $this->suggestions($data['userId']);
  			$connections = !empty($final_contacts['connections']) ? $final_contacts['connections'] : [];
  			$final_contacts = !empty($final_contacts['suggestions']) ? $final_contacts['suggestions'] : [];
@@ -252,6 +251,7 @@ class Card_model extends CI_Model {
 						->result_array();
 				}				
 			}
+			echo vd();
 
 			return array_values($users);
 		
