@@ -86,10 +86,8 @@ class Card_model extends CI_Model {
 		}
 		else{
 			$final_contacts = $this->suggestions($data['userId']);
-			print_r($final_contacts);
  			$connections = !empty($final_contacts['connections']) ? $final_contacts['connections'] : [];
  			$final_contacts = !empty($final_contacts['suggestions']) ? $final_contacts['suggestions'] : [];
- 			exit;
 			if(!empty($final_contacts)){
 				$cards_for_limit = $this->db->query("
 							SELECT
@@ -136,6 +134,8 @@ class Card_model extends CI_Model {
 							LIMIT ".$this->limit." OFFSET ".$this->offset." 	
 						")
 						->result_array();
+				echo vd();
+				pr($cards_for_limit);
 				if(!empty($cards_for_limit)){			
 					$cards =  $this->db->query("
 								SELECT
@@ -159,6 +159,7 @@ class Card_model extends CI_Model {
 		}
 		$real_card = $mutualsContacts = array();
 		$cards_array = json_decode(json_encode($cards), true);
+		pr($cards_array);
 		foreach($cards as $card):
 			if($card->side==1)
 				$real_card[$card->cardId][] = array('frontImage' =>$card->cardImage,'frontVideo'=>$card->cardVideo,'frontVideoThumbnail'=>ltrim($card->videoThumbnail,'.'));
