@@ -109,7 +109,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		}
 	} 
 
-	  function do_upload($img=null,$path='./uploads/',$multi=false,$file_name=NULL,$thumb=false,$allowed='gif|jpg|png|jpeg|tif|mp4|MP4|3gp|3GP|flv|FLV|mkv|MKV') { 
+	  function do_upload($img=null,$path='./uploads/',$multi=false,$file_name=NULL,$thumb=false,$allowed='gif|jpg|png|jpeg|tif|mp4|MP4|3gp|3GP|flv|FLV|mkv|MKV|xlsx|xls|doc|docx|ppt|pptx|pdf|svg|txt') { 
 
 	    if($multi==false){
 	         $config['upload_path']   = $path; 
@@ -147,11 +147,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 // File upload configuration
                 $uploadPath = $path;
                 $config['upload_path'] = $uploadPath;
-                $config['allowed_types'] = 'gif|jpg|png|jpeg|tif|mp4|wma|mov|avi|flv'; 
+                $config['allowed_types'] = 'gif|jpg|png|jpeg|tif|mp4|wma|mov|avi|flv|xlsx|xls|doc|docx|ppt|pptx|pdf|svg|txt'; 
                 $config['encrypt_name'] = TRUE; 
                 $config['max_size']      = 9000000000; 
 
                 $videos = array('mp4','wma','mov','avi','flv');
+                $docs = array("xlsx", "xls", "doc", "docx", "ppt", "pptx", "pdf","txt");
                 // Load and initialize upload library
                 $CI = get_instance();
                 $redirect = $CI->router->fetch_class().'/'.$CI->router->fetch_method();
@@ -172,6 +173,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 		            	$thumb_path = str_replace('/'.$CI->upload->data('file_name'),'',$CI->upload->data('full_path'));
 		            	$thumb = exec("ffmpeg  -itsoffset -5  -i ".$CI->upload->data('full_path')." -vcodec mjpeg -vframes 1 -an -f rawvideo -s 1080x1920 ".$thumb_path."/".$withoutExt.".jpg"); 
 		            	$images[$i]['thumb'] = $uploadPath.'/'.$withoutExt.".jpg";
+		            }elseif(in_array($file_ext,$docs)){
+		            	
 		            }
 		         } 
            	 }

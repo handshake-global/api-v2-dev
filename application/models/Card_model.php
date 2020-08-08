@@ -140,7 +140,8 @@ class Card_model extends CI_Model {
 									cardImage,
 									cardVideo,
 									videoThumbnail, 
-									userId
+									userId,
+									isDefault
 									FROM
 									card_config ,card
 									WHERE card.userId in (".$data['userId'].") and card.cardId = card_config.cardId and card.addedMode != 4
@@ -170,6 +171,7 @@ class Card_model extends CI_Model {
 						
 						$x = array(
 							'cardId'=>$card->cardId,
+							'isDefault'=>$card->isDefault,
 							'frontImage'=>isset($real_card[$card->cardId][0]['frontImage'])?$real_card[$card->cardId][0]['frontImage']:'',	
 							'frontVideo'=>isset($real_card[$card->cardId][0]['frontVideo']) ? $real_card[$card->cardId][0]['frontVideo'] :'',
 							'frontVideoThumbnail'=>isset($real_card[$card->cardId][0]['frontVideoThumbnail']) ? $real_card[$card->cardId][0]['frontVideoThumbnail']:'',	
@@ -191,6 +193,7 @@ class Card_model extends CI_Model {
 						
 						$x = array(
 							'cardId'=>$card->cardId,
+							'cardId'=>$card->cardId,
 							'frontImage'=>isset($real_card[$card->cardId][0]['frontImage']) ? $real_card[$card->cardId][0]['frontImage']:'',	
 							'frontVideo'=>isset($real_card[$card->cardId][0]['frontVideo']) ? $real_card[$card->cardId][0]['frontVideo'] : '',
 							'frontVideoThumbnail'=>isset($real_card[$card->cardId][0]['frontVideoThumbnail']) ? $real_card[$card->cardId][0]['frontVideoThumbnail'] : '',	
@@ -208,6 +211,7 @@ class Card_model extends CI_Model {
 					//if only back side exist with current card
 					elseif($this->check($cards_array, array("cardId",'side'), array($card->cardId,"1")) == false && $this->check($cards_array, array("cardId",'side'), array($card->cardId,"2"))==true && isset($real_card[$card->cardId][1])){
 						$x = array(
+							'cardId'=>$card->cardId,
 							'cardId'=>$card->cardId,
 							'frontImage'=>'',	
 							'frontVideo'=>'',
