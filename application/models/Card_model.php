@@ -86,9 +86,10 @@ class Card_model extends CI_Model {
 		}
 		else{
 			$final_contacts = $this->suggestions($data['userId']);
+			print_r($final_contacts);
  			$connections = !empty($final_contacts['connections']) ? $final_contacts['connections'] : [];
  			$final_contacts = !empty($final_contacts['suggestions']) ? $final_contacts['suggestions'] : [];
-
+ 			exit;
 			if(!empty($final_contacts)){
 				$cards_for_limit = $this->db->query("
 							SELECT
