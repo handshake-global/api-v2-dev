@@ -71,8 +71,7 @@ class Bank_model extends CI_Model
         $this
             ->db
             ->where(array(
-            'bankId' => $data['bankId'],
-            'toUser' => $data['userId']
+            'bankId' => $data['bankId']
         ))->update($this->table, array(
             'status' => $status
         ));
