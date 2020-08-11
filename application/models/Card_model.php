@@ -290,8 +290,6 @@ class Card_model extends CI_Model {
 						->result_array();
 				}				
 			}
-			pr($mutualsContacts);
-			pr($connections);
 			return array_values($users);
 		
 	}
