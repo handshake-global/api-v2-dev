@@ -583,7 +583,8 @@ class Card_model extends CI_Model {
 		$fromUser = $data['fromUser'];
 		$toUser = $data['toUser'];
 
-		$fromConnection = $this->suggestions($fromUser,TRUE);	
+		$fromConnection = $this->suggestions($fromUser,TRUE);
+		echo vd();	
 		$toConnection = $this->suggestions($toUser,TRUE);	
 		pr($fromConnection);
 		pr($toConnection);
