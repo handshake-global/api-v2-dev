@@ -271,8 +271,7 @@ class Card_model extends CI_Model {
 												},ARRAY_FILTER_USE_BOTH);
 										$single = array_values($single);
 										if(isset($single[0])){
-											$single= $single;
-											  $clean = array_map(function (array $elem)
+											  $single = array_map(function (array $elem)
 									            {
 									                unset($elem['userName']);
 									                unset($elem['userId']);
