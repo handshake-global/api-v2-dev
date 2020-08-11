@@ -260,7 +260,10 @@ class Card_model extends CI_Model {
 					$v = [];	
 					if(!empty($mutualsContacts) && !empty($users)){
 						foreach ($users as $key => $value) {
-							$value['mutuals'] = $mutualsContacts[$value['userId']];
+							if(isset($mutualsContacts[$value['userId']]))
+								$value['mutuals'] = $mutualsContacts[$value['userId']];
+							else
+								$value['mutuals'] =[];
 							array_push($v,$value);	
 						}
 					}	
