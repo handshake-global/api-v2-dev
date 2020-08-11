@@ -268,6 +268,7 @@ class Card_model extends CI_Model {
 										$single = array_filter($users,function($vl,$kk) use ($search){
 												  return $vl['userId'] == $search;
 												},ARRAY_FILTER_USE_BOTH);
+										pr($single);
 										if(isset($single[0]))
 											$value['mutuals'][] = $single[0];
 									}
@@ -277,7 +278,6 @@ class Card_model extends CI_Model {
 							}
 							array_push($v,$value);	
 						}
-						pr($v);
 						$users = $v;	
 						//removing mutual contact userId from users
 							$users = array_filter($users, function($vv)use($temp){
