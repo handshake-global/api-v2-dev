@@ -585,11 +585,22 @@ class Card_model extends CI_Model {
 		$fromUser = $data['fromUser'];
 		$toUser = $data['toUser'];
 
+		if(isset($data['pageIndex']) && $data['pageIndex']!=0){
+			$this->offset = $data['pageIndex'] * $this->limit;
+		}
+		
 		$fromConnection = $this->suggestions($fromUser,TRUE);
 		$toConnection = $this->suggestions($toUser,TRUE);	
-		pr($fromConnection);
-		pr($toConnection);
+		//finding common connection
+		$mutualsContacts = array_intersect($fromConnection,$toConnection);
 
+		return $this->db->query("
+					SELECT userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
+					where userId in (".implode(',',$mutualsContacts).") and NOC !=0
+					order by NOC desc
+					LIMIT ".$this->limit." OFFSET ".$this->offset."
+				")
+				->result_array();
 	}
 
 } 
