@@ -274,7 +274,6 @@ class Card_model extends CI_Model {
 											  $single = array_map(function (array $elem)
 									            {
 									                unset($elem['userName']);
-									                unset($elem['userId']);
 									                unset($elem['designation']);
 									                unset($elem['isLogin']);
 									                unset($elem['location']);
@@ -283,7 +282,7 @@ class Card_model extends CI_Model {
 									                return $elem; // and return it to be put into the result
 									            }
 									            , $single);
-											$value['mutuals'][] = $single[0];
+											$value['mutuals'][] = $single;
 										}
 										if($kkc == 1)
 											break;
