@@ -596,7 +596,7 @@ class Card_model extends CI_Model {
 
 		$temp = [$fromUser,$toUser];
 		$mutualsContacts =  array_filter($mutualsContacts, function($vv)use($temp){
-			    return !in_array($vv['userId'], $temp);
+			    return !in_array($vv, $temp);
 			}); 
 		
 		if(empty($mutualsContacts))
