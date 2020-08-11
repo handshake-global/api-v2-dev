@@ -237,7 +237,7 @@ class Card_model extends CI_Model {
  			$connections = !empty($final_contacts['connections']) ? $final_contacts['connections'] : [];
  			$final_contacts = !empty($final_contacts['suggestions']) ? $final_contacts['suggestions'] : [];
 			$temp = [];
-			if(empty($final_contacts)){
+			if(!empty($final_contacts)){
 				//getting mutuals
 					foreach ($final_contacts as $key => $value) {
 						 
@@ -250,6 +250,7 @@ class Card_model extends CI_Model {
 		            }, array());
 
 				$final_contacts = array_merge($temp,$final_contacts);
+				
 				$users = $this->db->query("
 							SELECT userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
 							where userId in (".implode(',',$final_contacts).") and NOC !=0
