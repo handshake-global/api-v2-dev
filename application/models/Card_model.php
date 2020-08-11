@@ -245,6 +245,7 @@ class Card_model extends CI_Model {
 						$mutualsContacts[$value] =$t;
 						$temp[] = $t;
 					}
+					pr($temp);
 					$temp = array_reduce($temp, function($last, $row) {
 		                return $last + $row;
 		            }, array());
