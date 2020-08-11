@@ -588,12 +588,13 @@ class Card_model extends CI_Model {
 		if(isset($data['pageIndex']) && $data['pageIndex']!=0){
 			$this->offset = $data['pageIndex'] * $this->limit;
 		}
-		
+
 		$fromConnection = $this->suggestions($fromUser,TRUE);
 		$toConnection = $this->suggestions($toUser,TRUE);	
 		//finding common connection
 		$mutualsContacts = array_intersect($fromConnection,$toConnection);
-
+		if(empty($mutualsContacts))
+			return false;
 		return $this->db->query("
 					SELECT userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
 					where userId in (".implode(',',$mutualsContacts).") and NOC !=0
