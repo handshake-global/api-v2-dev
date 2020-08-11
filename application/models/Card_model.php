@@ -280,7 +280,7 @@ class Card_model extends CI_Model {
 						$users = $v;	
 						//removing mutual contact userId from users
 							$users = array_filter($users, function($vv)use($temp){
-									    return !in_array($vv['property_id'], $temp);
+									    return !in_array($vv['userId'], $temp);
 									}); 
 						}
 				}
