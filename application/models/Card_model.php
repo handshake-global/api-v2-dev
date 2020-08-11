@@ -317,13 +317,15 @@ class Card_model extends CI_Model {
 						userId in 
 						(SELECT CTO.fromUser FROM `card_bank` CTO WHERE CTO.`toUser` = ".$data['userId']." AND CTO.`status` = 1 )")
 		 				->result_array();
-		if($onlyConnection)
-			return $connections; 				
+						
 		if(empty($connections))
 			return $suggestions;
 
 		if(!empty($connections))
 			$connections = array_column($connections, 'userId');
+		
+		if($onlyConnection)
+			return $connections; 
 
 		$suggestion = $this->db->query("SELECT fromUser,toUser
 					FROM `card_bank`
@@ -584,10 +586,10 @@ class Card_model extends CI_Model {
 		$toUser = $data['toUser'];
 
 		$fromConnection = $this->suggestions($fromUser,TRUE);
-		echo vd();	
 		$toConnection = $this->suggestions($toUser,TRUE);	
 		pr($fromConnection);
 		pr($toConnection);
+
 	}
 
 } 
