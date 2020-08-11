@@ -279,11 +279,9 @@ class Card_model extends CI_Model {
 						}
 						$users = $v;	
 						//removing mutual contact userId from users
-						foreach($temp as $kk => $tt)
-							$users = array_filter($users, function($v)use($tt){
-							    return !in_array($v['userId'], $tt);
-							}); 
-						}
+						$users = array_filter($users, function($vv)use($temp){
+								    return !in_array($vv['property_id'], $temp);
+								}); 
 				}
 			else{
 				$users = $this->db->query("
