@@ -394,7 +394,7 @@ class Card extends REST_Controller {
                 // Prepare the response
                 $statusCode = parent::HTTP_OK;
                 $status = array('statusCode' => $statusCode,'message'=>'Mutuals');
-                $response = array('status'=>$status);
+                $response = array('status'=>$status,$data=>$response);
                 $this->response($response, $statusCode);  
             }   
             else{
