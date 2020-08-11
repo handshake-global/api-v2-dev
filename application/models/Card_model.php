@@ -270,8 +270,22 @@ class Card_model extends CI_Model {
 												  return $vl['userId'] == $search;
 												},ARRAY_FILTER_USE_BOTH);
 										$single = array_values($single);
-										if(isset($single[0]))
+										if(isset($single[0])){
+											$single= $single;
+											  $clean = array_map(function (array $elem)
+									            {
+									                unset($elem['userName']);
+									                unset($elem['userId']);
+									                unset($elem['designation']);
+									                unset($elem['isLogin']);
+									                unset($elem['location']);
+									                unset($elem['rating']);
+									                unset($elem['connections']);
+									                return $elem; // and return it to be put into the result
+									            }
+									            , $single);
 											$value['mutuals'][] = $single[0];
+										}
 										if($kkc == 1)
 											break;
 									}
