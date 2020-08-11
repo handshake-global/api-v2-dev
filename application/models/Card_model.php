@@ -282,7 +282,7 @@ class Card_model extends CI_Model {
 									                return $elem; // and return it to be put into the result
 									            }
 									            , $single);
-											$value['mutuals'][] = $single;
+											$value['mutuals'][] = $single[0];
 										}
 										if($kkc == 1)
 											break;
