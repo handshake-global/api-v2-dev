@@ -260,13 +260,14 @@ class Card_model extends CI_Model {
 					$v = [];	
 					if(!empty($mutualsContacts) && !empty($users)){
 						foreach ($users as $key => $value) {
-							if(!empty($mutualsContacts[$value['userId']]))
+							if(isset($mutualsContacts[$value['userId']]))
 								$value['mutuals'] = $mutualsContacts[$value['userId']];
 							else
 								$value['mutuals'] =[];
 							array_push($v,$value);	
 						}
-					}	
+					}
+					$users = $v;	
 				}
 			else{
 				$users = $this->db->query("
@@ -278,8 +279,6 @@ class Card_model extends CI_Model {
 						->result_array();
 				}				
 			}
-			pr($v);
-			pr($mutualsContacts);
 			return array_values($users);
 		
 	}
