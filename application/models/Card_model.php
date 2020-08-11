@@ -269,10 +269,11 @@ class Card_model extends CI_Model {
 												  return $vl['userId'] == $search;
 												},ARRAY_FILTER_USE_BOTH);
 										$single = array_values($single);
-										pr($single);
 										if(isset($single[0]))
 											$value['mutuals'][] = $single[0];
 									}
+								else
+									$value['mutuals'] =[];	
 							}
 							else{
 								$value['mutuals'] =[];
