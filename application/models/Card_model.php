@@ -266,11 +266,11 @@ class Card_model extends CI_Model {
 								if(!empty($mutualsContacts[$value['userId']]))
 									foreach($mutualsContacts[$value['userId']] as $k){
 										$search = $k;
-										$value = array_filter($users,function($vl,$kk) use ($search){
+										$single = array_filter($users,function($vl,$kk) use ($search){
 												  return $vl['userId'] == $search;
 												},ARRAY_FILTER_USE_BOTH);
-										pr($value[0]);
-										exit;
+										if(isest($single[0]))
+											$value['mutuals'][] = $single[0];
 									}
 							}
 							else{
@@ -293,7 +293,7 @@ class Card_model extends CI_Model {
 			}
 			pr($users);
 			pr($mutualsContacts);
-			exit;
+			// exit;
 			return array_values($users);
 		
 	}
