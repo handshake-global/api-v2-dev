@@ -593,6 +593,12 @@ class Card_model extends CI_Model {
 		$toConnection = $this->suggestions($toUser,TRUE);	
 		//finding common connection
 		$mutualsContacts = array_intersect($fromConnection,$toConnection);
+
+		$temp = [$fromUser,$toUser];
+		$mutualsContacts =  array_filter($mutualsContacts, function($vv)use($temp){
+			    return !in_array($vv['userId'], $temp);
+			}); 
+		
 		if(empty($mutualsContacts))
 			return false;
 		return $this->db->query("
