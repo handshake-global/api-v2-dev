@@ -268,7 +268,7 @@ class Card_model extends CI_Model {
 										$single = array_filter($users,function($vl,$kk) use ($search){
 												  return $vl['userId'] == $search;
 												},ARRAY_FILTER_USE_BOTH);
-										pr($single);
+										$single = array_values($single);
 										if(isset($single[0]))
 											$value['mutuals'][] = $single[0];
 									}
