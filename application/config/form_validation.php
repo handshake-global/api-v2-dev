@@ -123,6 +123,19 @@ $config = array(
 		'rules' => 'required|numeric'
 		)
 	),
+	//fetch select validation Method: card/index_get
+	'mututals' => array(
+		array(
+		'field' => 'fromUser',
+		'label' => 'From User ID',
+		'rules' => 'required|numeric'
+		),
+		array(
+		'field' => 'toUser',
+		'label' => 'To User ID',
+		'rules' => 'required|numeric'
+		)
+	),
 	//card select validation Method: card/select_post
 	'card_select' => array(
 		array(

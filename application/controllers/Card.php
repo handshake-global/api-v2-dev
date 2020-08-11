@@ -374,4 +374,34 @@ class Card extends REST_Controller {
             }
         }
     }
+
+     /**
+     * card mutual
+     *
+     * @access public
+     * @return json
+     */
+    public function mutuals_post(){
+    // Call the verification method and store the return value in the variable
+        $request = AUTHORIZATION::verify_request();
+    
+    //create card using post data
+        if($this->form_validation->run('mututals') == FALSE){
+          $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
+        }
+        else{
+            if($response = $this->card_model->mututals()){
+                // Prepare the response
+                $statusCode = parent::HTTP_OK;
+                $status = array('statusCode' => $statusCode,'message'=>'Mutuals');
+                $response = array('status'=>$status);
+                $this->response($response, $statusCode);  
+            }   
+            else{
+               $statusCode = parent::HTTP_OK;
+               $status = array('statusCode' => $statusCode,'error'=>'Not found'); 
+               $this->response(['status' =>$status,], parent::HTTP_NOT_FOUND); 
+            }
+        }
+    }
 }

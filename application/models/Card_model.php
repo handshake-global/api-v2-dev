@@ -302,10 +302,9 @@ class Card_model extends CI_Model {
 				}				
 			}
 			return array_values($users);
-		
 	}
 
-	private function suggestions($userId=NULL){
+	private function suggestions($userId=NULL,$onlyConnection = false){
 		$suggestions = array();
 		
 		if($userId==NULL)
@@ -318,6 +317,8 @@ class Card_model extends CI_Model {
 						userId in 
 						(SELECT CTO.fromUser FROM `card_bank` CTO WHERE CTO.`toUser` = ".$data['userId']." AND CTO.`status` = 1 )")
 		 				->result_array();
+		if($onlyConnection)
+			return $connections; 				
 		if(empty($connections))
 			return $suggestions;
 
@@ -573,6 +574,19 @@ class Card_model extends CI_Model {
 	 	}
 		else
 			return false;			
+	}
+
+	public function mutuals(){
+		$data = $this->input->post();
+		if(empty($data))
+			return false;
+		$fromUser = $data['fromUser'];
+		$toUser = $data['toUser'];
+
+		$fromConnection = $this->suggestions($fromUser,TRUE);	
+		$toConnection = $this->suggestions($toUser,TRUE);	
+		pr($fromConnection);
+		pr($toConnection);
 	}
 
 } 
