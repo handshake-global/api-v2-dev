@@ -237,7 +237,7 @@ class Card_model extends CI_Model {
  			$connections = !empty($final_contacts['connections']) ? $final_contacts['connections'] : [];
  			$final_contacts = !empty($final_contacts['suggestions']) ? $final_contacts['suggestions'] : [];
 			$temp = [];
-			if(!empty($final_contacts)){
+			if(empty($final_contacts)){
 				//getting mutuals
 					foreach ($final_contacts as $key => $value) {
 						 
@@ -271,7 +271,7 @@ class Card_model extends CI_Model {
 				}
 			else{
 				$users = $this->db->query("
-							SELECT  userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
+							SELECT  userId,userName,isLogin,connections,userPhoto,location,designation,rating,JSON_ARRAY() as mutuals from profile
 							where userId not in (".$data['userId'].") and NOC !=0
 							order by NOC desc
 							LIMIT ".$this->limit." OFFSET ".$this->offset."
