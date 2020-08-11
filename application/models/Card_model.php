@@ -262,6 +262,7 @@ class Card_model extends CI_Model {
 					if(!empty($mutualsContacts) && !empty($users)){
 						foreach ($users as $key => $value) {
 							if(isset($mutualsContacts[$value['userId']])){
+								$value['totalMutuals'] = count($mutualsContacts[$value['userId']]);
 								if(!empty($mutualsContacts[$value['userId']]))
 									foreach($mutualsContacts[$value['userId']] as $kkc => $k){
 										$search = $k;
@@ -279,6 +280,7 @@ class Card_model extends CI_Model {
 							}
 							else{
 								$value['mutuals'] =[];
+								$value['totalMutuals'] = 0;
 							}
 							array_push($v,$value);	
 						}
