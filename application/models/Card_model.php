@@ -240,7 +240,7 @@ class Card_model extends CI_Model {
 			if(!empty($final_contacts)){
 				//getting mutuals
 					foreach ($final_contacts as $key => $value) {
-						pr($this->getMutuals($value)); 
+						 
 						$t = array_intersect($this->getMutuals($value),$connections);
 						$mutualsContacts[$value] =$t;
 						$temp[] = $t;
