@@ -245,7 +245,6 @@ class Card_model extends CI_Model {
 						$mutualsContacts[$value] =$t;
 						$temp[] = $t;
 					}
-					pr($mutualsContacts);
 					$temp = array_reduce($temp, function($last, $row) {
 		                return $last + $row;
 		            }, array());
@@ -258,6 +257,13 @@ class Card_model extends CI_Model {
 							LIMIT ".$this->limit." OFFSET ".$this->offset."
 						")
 						->result_array();
+					$v = [];	
+					if(!empty($mutualsContacts) && !empty($users)){
+						foreach ($users as $key => $value) {
+							$value['mutuals'] = $mutualsContacts[$value['userId']];
+							array_push($v,$value);	
+						}
+					}	
 				}
 			else{
 				$users = $this->db->query("
