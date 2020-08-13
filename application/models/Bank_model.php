@@ -229,7 +229,7 @@ class Bank_model extends CI_Model
             ->input
             ->post('mobileNo'));
         if (empty($mobileNos)) return false;
-        $fromUser = array();
+        $fromUser = $notExist = array();
         foreach ($mobileNos as $mobile)
         {
             $mobile = str_replace('+', '', $mobile);
@@ -255,13 +255,16 @@ class Bank_model extends CI_Model
                 }
                 // send card reqeust
                 else
-                {
+                {   
+                    $notExist[] = $mobile;
                     $request['fromUser'] = $data['userId'];
                     $request['toUser'] = $toCard->userId;
                     $request['cardId'] = $data['cardId'];
                     $request['targetCardId'] = $toCard->cardId;
                     $request['cardType'] = $toCard->addedMode;
-                    $request['note'] = "Requested cause of mutual contact";
+                    $request['note'] = isset($data['note']) ?  $data['note'] : "Requested cause of mutual contact";
+                    $request['attachment'] = isset($data['attachment'])?$data['attachment'] : '';
+
                     $this
                         ->db
                         ->insert($this->table, $request);
@@ -273,7 +276,7 @@ class Bank_model extends CI_Model
         }
         //delete later on cards
         $this->shareLaterDelete($data);
-        return true;
+        return $notExist;
     }
 
     private function sendMsg()
