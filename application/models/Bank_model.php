@@ -251,12 +251,12 @@ class Bank_model extends CI_Model
                 // user exist not exist in sytem with given mobile no send sms
                 if (empty($toCard))
                 {
+                    $notExist[] = $mobile;
                     $this->sendMsg();
                 }
                 // send card reqeust
                 else
                 {   
-                    $notExist[] = $mobile;
                     $request['fromUser'] = $data['userId'];
                     $request['toUser'] = $toCard->userId;
                     $request['cardId'] = $data['cardId'];
