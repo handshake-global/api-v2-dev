@@ -276,7 +276,10 @@ class Bank_model extends CI_Model
         }
         //delete later on cards
         $this->shareLaterDelete($data);
-        return $notExist;
+        if(!empty($notExist))
+            return $notExist;
+        else
+            return true;
     }
 
     private function sendMsg()
