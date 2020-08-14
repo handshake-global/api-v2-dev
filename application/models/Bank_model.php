@@ -100,7 +100,7 @@ class Bank_model extends CI_Model
                 $msgBank = $this->db->select('note,fromUser,toUser,attachment,attachmentType')
                            ->where('bankId', $data['bankId'])
                            ->get($this->table)
-                           ->row();
+                           ->row_array();
                 if(!empty($msgBank))
                     $this->db->insert('messages',array(
                        'sender'=>$msgBank['fromCard'],     
