@@ -85,7 +85,7 @@ class Auth extends REST_Controller {
                     if($response->status!=1){
                        $statusCode = parent::HTTP_UNAUTHORIZED;
                        $status = array('statusCode' => $statusCode,'error'=>'user is not active'); 
-                       $this->response(['status' =>$status,], parent::HTTP_UNAUTHORIZED); 
+                       $this->response(['status' =>$status,], parent::HTTP_OK); 
                        exit;
                     }
 
