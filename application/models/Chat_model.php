@@ -80,7 +80,7 @@ class Chat_model extends CI_Model {
 					 	array(
 					 		'card_bank.toUser'=>$data['userId'],
 					 	)
-					 ),
+					 )
 					 ->where_in("status",array(1,3))
 			         ->join('profile', 'card_bank.fromUser=profile.userId')
 			         ->group_by('card_bank.fromUser')
@@ -91,7 +91,7 @@ class Chat_model extends CI_Model {
 					 	array(
 					 		'card_bank.fromUser'=>$data['userId'],
 					 	)
-					 ),
+					 )
 					 ->where_in("status",array(1,3))
 			         ->join('profile', 'card_bank.toUser=profile.userId')
 			         ->group_by('card_bank.toUser')
