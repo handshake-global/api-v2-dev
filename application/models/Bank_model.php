@@ -103,8 +103,8 @@ class Bank_model extends CI_Model
                            ->row_array();
                 if(!empty($msgBank))
                     $this->db->insert('messages',array(
-                       'sender'=>$msgBank['fromCard'],     
-                       'receiver'=>$msgBank['toCard'],     
+                       'sender'=>$msgBank['fromUser'],     
+                       'receiver'=>$msgBank['toUser'],     
                        'message'=>$msgBank['note'],     
                        'type'=>$msgBank['attachmentType'],     
                        'file'=>$msgBank['attachment']     
