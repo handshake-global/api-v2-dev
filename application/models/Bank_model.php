@@ -246,6 +246,7 @@ class Bank_model extends CI_Model
                 $completeMobile = $countryCode;
                 $mobile = $mobile[0];
             }
+            echo $completeMobile;
             //see if user exist with mobile no in already card bank
             $user = $this
                 ->db
