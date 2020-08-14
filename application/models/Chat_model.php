@@ -123,6 +123,11 @@ class Chat_model extends CI_Model {
 			$finalConnectionUsers = array_unique(array_column($finalConnection, 'userId'));
 			$temp = array();
 			foreach ($finalConnection as $final) {
+				if($final['status']==1)
+					$temp['hasConnection'] =1;
+				else	 
+					$temp['hasConnection'] =0;
+
 				if(array_key_exists($final['userId'],$temp)){
 					$tempDate = new DateTime($temp[$final['userId']]['lastMessageTime']);
 					$finalDate = new DateTime($final['lastMessageTime']);
@@ -131,10 +136,6 @@ class Chat_model extends CI_Model {
 				}else{
 					$temp[$final['userId']] = $final;
 				}
-				if($final['status']==1)
-					$temp['hasConnection'] =1;
-				else	 
-					$temp['hasConnection'] =0; 
 			}
 
 			$connectionWithNoMsg = array();
