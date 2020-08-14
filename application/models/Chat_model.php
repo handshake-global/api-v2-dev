@@ -10,7 +10,7 @@ class Chat_model extends CI_Model {
 	    $this->fcm = 'fcm_tokens';
 	    $this->users = 'users';
 	    $this->createdAt = date('Y/m/d h:i:s a', time());
-	    $this->limit = 10;
+	    $this->limit = 2;
 	    $this->offset = 0;
 	}
 
