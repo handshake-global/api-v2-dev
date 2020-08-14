@@ -95,6 +95,22 @@ class Bank_model extends CI_Model
             ->db
             ->affected_rows() > 0)
         {
+            //iff  reqeuest accepted transfer atachement ot mes
+            if($status==1){
+                $msgBank = $this->db->select('note,fromUser,toUser,attachment,attachmentType')
+                           ->where('bankId', $data['bankId'])
+                           ->get($this->table)
+                           ->row();
+                if(!empty($msgBank))
+                    $this->db->insert('messages',array(
+                       'sender'=>$msgBank['fromCard'],     
+                       'receiver'=>$msgBank['toCard'],     
+                       'message'=>$msgBank['note'],     
+                       'type'=>$msgBank['attachmentType'],     
+                       'file'=>$msgBank['attachment']     
+                    ));           
+            }
+
             $request = $this
                 ->db
                 ->where('toUser', $data['userId'])->get($this->table)
