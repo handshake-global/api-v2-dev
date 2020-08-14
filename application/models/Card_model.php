@@ -305,12 +305,20 @@ class Card_model extends CI_Model {
 				}
 			else{
 				$users = $this->db->query("
-							SELECT  userId,userName,isLogin,connections,userPhoto,location,designation,rating,JSON_ARRAY() as mutuals from profile
+							SELECT  userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
 							where userId not in (".$data['userId'].") and NOC !=0
 							order by NOC desc
 							LIMIT ".$this->limit." OFFSET ".$this->offset."
 						")
 						->result_array();
+					$temp = array();	
+					if(!empty($users))	
+						foreach($users as $user){	
+							$user['mutuals'] = [];
+							array_push($temp,$user);
+						}	
+					if(!empty($temp))
+						$users = $temp;	
 				}				
 			}
 			return array_values($users);
@@ -350,7 +358,7 @@ class Card_model extends CI_Model {
 
 		$suggestion = array_unique(array_merge(array_column($suggestion, 'fromUser'),array_column($suggestion, 'toUser'))); 
 		$suggestion = array_diff($suggestion,$connections);
-		
+
 		return array('suggestions'=>$suggestion,'connections'=>$connections);
 	}
 	private function getMutuals($userId=NULL){
