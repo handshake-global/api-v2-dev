@@ -52,7 +52,7 @@ class Bank_model extends CI_Model
         $data['cardId'] = $fromCard->cardId;
         $data['targetCardId'] = $toCard->cardId;
 
-        $ifRequested = $this->select("cardId")
+        $ifRequested = $this->db->select("cardId")
                         ->where('cardId',$data['cardId'])
                         ->where('targetCardId',$data['targetCardId'])
                         ->where('targetCardId',$data['targetCardId'])
