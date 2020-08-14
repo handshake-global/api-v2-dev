@@ -441,7 +441,7 @@ class CardBank extends REST_Controller {
             return false;
         $notify = array(
             'userId'=> $toId,
-            'userName'=> get_userName($toId),
+            'userName'=> get_userName($toId)->userName,
             'type'=>'RequestAccepted'
         );
         
