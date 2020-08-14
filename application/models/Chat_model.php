@@ -75,14 +75,24 @@ class Chat_model extends CI_Model {
 			return false;
 		 	
 		 	$status = 1;
-			$cardBankUserFrom = $this->db->select("profile.userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.designation")
-					 ->where(array('card_bank.toUser'=>$data['userId'],'card_bank.status'=>$status))
+			$cardBankUserFrom = $this->db->select("profile.userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.designation,card_bank.status")
+					 ->where(
+					 	array(
+					 		'card_bank.toUser'=>$data['userId'],
+					 	)
+					 ),
+					 ->where_in("status",array(1,3))
 			         ->join('profile', 'card_bank.fromUser=profile.userId')
 			         ->group_by('card_bank.fromUser')
 			         ->get($this->bank)->result_array();
 
-			$cardBankUserTo = $this->db->select("profile.userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.designation")
-					 ->where(array('card_bank.fromUser'=>$data['userId'],'card_bank.status'=>$status))
+			$cardBankUserTo = $this->db->select("profile.userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.designation,card_bank.status")
+					 ->where(
+					 	array(
+					 		'card_bank.fromUser'=>$data['userId'],
+					 	)
+					 ),
+					 ->where_in("status",array(1,3))
 			         ->join('profile', 'card_bank.toUser=profile.userId')
 			         ->group_by('card_bank.toUser')
 			         ->get($this->bank)->result_array();         
@@ -121,6 +131,8 @@ class Chat_model extends CI_Model {
 				}else{
 					$temp[$final['userId']] = $final;
 				}
+				pr($final);
+				exit;
 			}
 
 			$connectionWithNoMsg = array();
