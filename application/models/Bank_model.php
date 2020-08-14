@@ -126,10 +126,6 @@ class Bank_model extends CI_Model
                 
             }
             , $request);
-            echo vd();
-            pr($request);
-            pr($clean);
-            exit;
             return $clean;
         }
         else
