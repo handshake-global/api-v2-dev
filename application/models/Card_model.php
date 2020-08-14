@@ -345,14 +345,14 @@ class Card_model extends CI_Model {
 					OR `fromUser` in (".implode(',', $connections).") )  and toUser!= ".$data['userId']." 
 					and fromUser !=  ".$data['userId']." ")
 					->result_array(); 
-					echo vd();
-					exit;
 		if(empty($suggestion))
 			return $suggestions;
 
 		$suggestion = array_unique(array_merge(array_column($suggestion, 'fromUser'),array_column($suggestion, 'toUser'))); 
 		
-		return array('suggestions'=>array_diff($suggestion,$connections),'connections'=>$connections);
+		$x = array('suggestions'=>array_diff($suggestion,$connections),'connections'=>$connections);
+		pr($x);
+		exit;
 	}
 	private function getMutuals($userId=NULL){
 		if($userId==NULL)
