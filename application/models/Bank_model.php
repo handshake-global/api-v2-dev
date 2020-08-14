@@ -237,11 +237,9 @@ class Bank_model extends CI_Model
         {
             $mobile = str_replace('+', '', $mobile);
             $mobile = explode('-', $mobile);
-            pr($mobile);
-            echo $countryCode = '+' . $mobile[0];
-            $mobile = isset($mobile[1]) ? $mobile[1] : NULL;
-            echo $completeMobile = $countryCode . $mobile;
-            exit;
+            $countryCode = '+' . $mobile[0];
+            $mobile = isset($mobile[1]) ? $mobile[1] : $mobile[0];
+            $completeMobile = $countryCode . $mobile;
             //see if user exist with mobile no in already card bank
             $user = $this
                 ->db
