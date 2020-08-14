@@ -59,6 +59,7 @@ class Bank_model extends CI_Model
                         ->where('fromUser',$data['fromUser'])
                         ->where('toUser',$data['toUser'])
                         ->where('cardType',$data['cardType'])
+                        ->where('status!=',3)
                         ->get($this->table)
                         ->num_rows();
         if($ifRequested)
