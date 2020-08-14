@@ -349,10 +349,9 @@ class Card_model extends CI_Model {
 			return $suggestions;
 
 		$suggestion = array_unique(array_merge(array_column($suggestion, 'fromUser'),array_column($suggestion, 'toUser'))); 
+		$suggestion = array_diff($suggestion,$connections);
 		
-		$x = array('suggestions'=>array_diff($suggestion,$connections),'connections'=>$connections);
-		pr($x);
-		exit;
+		return array('suggestions'=>$suggestion,'connections'=>$connections);
 	}
 	private function getMutuals($userId=NULL){
 		if($userId==NULL)
