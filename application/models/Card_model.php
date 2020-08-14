@@ -345,6 +345,8 @@ class Card_model extends CI_Model {
 					OR `fromUser` in (".implode(',', $connections).") )  and toUser!= ".$data['userId']." 
 					and fromUser !=  ".$data['userId']." ")
 					->result_array(); 
+					echo vd();
+					exit;
 		if(empty($suggestion))
 			return $suggestions;
 
