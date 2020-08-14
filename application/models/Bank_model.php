@@ -54,6 +54,8 @@ class Bank_model extends CI_Model
         $this
             ->db
             ->insert($this->table, $data);
+            echo vd();
+            exit;
         if ($requestId = $this
             ->db
             ->insert_id())
