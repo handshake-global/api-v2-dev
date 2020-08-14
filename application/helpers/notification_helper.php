@@ -61,6 +61,9 @@ if ( ! function_exists('get_userName')){
         if($userId==NULL)
             return false;
         $CI =& get_instance();
-        return $CI->db->select('concat(users.firstName,' ',users.lastName) as userName')->where('userId',$userId)->get('users')->row();
+        return $CI->db->select("concat(users.firstName,' ',users.lastName) as userName")
+        ->where('userId',$userId)
+        ->get('users')
+        ->row();
     }
 }	   
