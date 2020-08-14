@@ -38,8 +38,8 @@ class CardBank extends REST_Controller {
             }   
             else{
                $statusCode = parent::HTTP_INTERNAL_SERVER_ERROR;
-               $status = array('statusCode' => $statusCode,'error'=>'something went wrong'); 
-               $this->response(['status' =>$status,], parent::HTTP_INTERNAL_SERVER_ERROR); 
+               $status = array('statusCode' => $statusCode,'error'=>'Already requested to this user'); 
+               $this->response(['status' =>$status,], parent::HTTP_OK); 
             }
         }
     }

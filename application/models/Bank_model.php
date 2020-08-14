@@ -51,11 +51,22 @@ class Bank_model extends CI_Model
         if (empty($fromCard) or empty($toCard)) return false;
         $data['cardId'] = $fromCard->cardId;
         $data['targetCardId'] = $toCard->cardId;
+
+        $ifRequested = $this->select("cardId")
+                        ->where('cardId',$data['cardId'])
+                        ->where('targetCardId',$data['targetCardId'])
+                        ->where('targetCardId',$data['targetCardId'])
+                        ->where('fromUser',$data['fromUser'])
+                        ->where('toUser',$data['toUser'])
+                        ->where('cardType',$data['cardType'])
+                        ->get($this->table)
+                        ->num_rows();
+        if($ifRequested)
+           return false;                 
+
         $this
             ->db
             ->insert($this->table, $data);
-            echo vd();
-            exit;
         if ($requestId = $this
             ->db
             ->insert_id())
