@@ -131,10 +131,10 @@ class Chat_model extends CI_Model {
 				}else{
 					$temp[$final['userId']] = $final;
 				}
-				if($temp[$final['status']]==1)
-					$temp[$final['hasConnection']] =1;
+				if($temp['status']==1)
+					$temp['hasConnection'] =1;
 				else	 
-					$temp[$final['hasConnection']] =0; 
+					$temp['hasConnection'] =0; 
 			}
 
 			$connectionWithNoMsg = array();
