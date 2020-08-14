@@ -65,6 +65,7 @@ class CardBank extends REST_Controller {
                 $status = array('statusCode' => $statusCode,'message'=>'Request Accepted');
                 $response = array('status'=>$status);
                 $count = count($response)-1;
+                pr($count);exit;
                 $this->sendAcceptNotification($response[$count]['fromUser'],$response[$count]['toUser']);
                 $this->response($response, $statusCode);  
             }   
