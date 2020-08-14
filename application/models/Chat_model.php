@@ -110,12 +110,16 @@ class Chat_model extends CI_Model {
 			$untouchedConnections =  array_diff($receivers,array_column($sentMgs, 'userId'));
 
 			$receivedMsgs = array();
+			if(isset($data['pageIndex']) && $data['pageIndex']!=0){
+                $this->offset = $data['pageIndex']* $this->limit;
+            }
+
 			if(!empty($receivers))			
 				$receivedMsgs = $this->db->query("SELECT tbl.messageId, tbl.message as lastMessage,tbl.file as fileUrl, tbl.createdAt as lastMessageTime , tbl.status , 'received' as 'msgType',profile.userId ,profile.userName, profile.					userPhoto,profile.isLogin,profile.designation   FROM
 							(SELECT * FROM messages WHERE `receiver` = ".$data['userId']." 
 							AND `sender` IN(".implode(',',$receivers).") GROUP BY messageId
 							ORDER BY messageId DESC) as tbl,profile where profile.userId = tbl.sender
-							GROUP BY tbl.sender order by messageId desc")->result_array(); 	
+							GROUP BY tbl.sender order by messageId desc LIMIT ".$this->limit." OFFSET ".$this->offset." ")->result_array(); 	
 			
 			$untouchedConnections =  array_diff($untouchedConnections,array_column($receivedMsgs, 'userId'));
 			
