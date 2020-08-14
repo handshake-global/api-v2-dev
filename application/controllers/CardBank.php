@@ -64,6 +64,7 @@ class CardBank extends REST_Controller {
                 $statusCode = parent::HTTP_OK;
                 $status = array('statusCode' => $statusCode,'message'=>'Request Accepted');
                 $response = array('status'=>$status);
+                $this->sendAcceptNotification($response['fromUser'],$response['toUser']);
                 $this->response($response, $statusCode);  
             }   
             else{
@@ -431,5 +432,21 @@ class CardBank extends REST_Controller {
         }
     }
 
-    
+    private function sendAcceptNotification($fromId=NULL,$toId=NULL){
+    //send chat notification on success 
+    $token = get_token($fromId);
+    if($token==false || !isset($token->token) || $fromId==NULL || $toId==NULL)
+            return false;
+        $notify = array(
+            'userId'=> $toId,
+            'userName'=> get_userName($toId),
+            'type'=>'RequestAccepted'
+        );
+        
+        send_notification(
+            $token ->token,
+            array('title'=>'LoginStatus','msg'=>'LoginStatus','img'=>''),
+            $notify
+        );
+    }
 }
