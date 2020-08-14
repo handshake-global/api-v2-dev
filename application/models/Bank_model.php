@@ -25,6 +25,7 @@ class Bank_model extends CI_Model
             ->post();
         $data['createdAt'] = $this->createdAt;
         $data['createdBy'] = $data['fromUser'];
+
         $fromCard = $this
             ->db
             ->select('cardId')
@@ -35,6 +36,7 @@ class Bank_model extends CI_Model
             ->order_by('cardId', 'desc')
             ->get('card')
             ->row();
+
         $toCard = $this
             ->db
             ->select('cardId')
@@ -45,6 +47,7 @@ class Bank_model extends CI_Model
             ->order_by('cardId', 'desc')
             ->get('card')
             ->row();
+            
         if (empty($fromCard) or empty($toCard)) return false;
         $data['cardId'] = $fromCard->cardId;
         $data['targetCardId'] = $toCard->cardId;
@@ -234,9 +237,11 @@ class Bank_model extends CI_Model
         {
             $mobile = str_replace('+', '', $mobile);
             $mobile = explode('-', $mobile);
-            $countryCode = '+' . $mobile[0];
+            pr($mobile);
+            echo $countryCode = '+' . $mobile[0];
             $mobile = isset($mobile[1]) ? $mobile[1] : NULL;
-            $completeMobile = $countryCode . $mobile;
+            echo $completeMobile = $countryCode . $mobile;
+            exit;
             //see if user exist with mobile no in already card bank
             $user = $this
                 ->db
