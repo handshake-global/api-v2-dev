@@ -139,7 +139,7 @@ class Work_model extends CI_Model {
  		$data = $this->input->post();
  		$data['createdAt'] = $this->createdAt;
 
- 		$this->db->insert($this->rewards,$data)
+ 		$this->db->insert($this->rewards,$data);
  		if($rewardId = $this->db->insert_id())
  			return $this->db->where('rewardId',$rewardId)->get($this->rewards)->row();
  		else
