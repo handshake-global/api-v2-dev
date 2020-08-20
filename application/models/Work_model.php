@@ -156,8 +156,8 @@ class Work_model extends CI_Model {
  		$data = $this->input->post();
  		$data['createdAt'] = $this->createdAt;
 
- 		if($this->db->insert($this->achievement,$data))
- 			return true;
+ 		if($achiId =  $this->db->insert($this->achievement,$data))
+ 			return $this->db->where('achId',$achiId)->get($this->achievement)->row();
  		else
  			return false;
  	}
