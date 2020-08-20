@@ -203,7 +203,15 @@ class User_model extends CI_Model {
  		$data = $this->input->post();
  		if($data == NULL)
  			return false;
- 		$this->db->insert('track_swipes',$data);
+ 		$swipes = implode(',', $data['swiped']);
+ 		foreach($swipes as $swipe)
+ 			$this->db->insert('track_swipes',
+ 				array(
+ 					'userId'=>$data['userId'],
+ 					'swiped'=>$swipe,
+ 					'type'=>$data['type']
+ 				)
+ 			);
  		if($swipeId = $this->db->insert_id())
  			return true;
  		else
