@@ -198,7 +198,7 @@ class Work_model extends CI_Model {
  			->update($this->rewards,$data);
 
  		if($this->db->affected_rows()>0)
- 			return $this->db->where('rewardId',$data['rewardId'])->get($this->rewards)->row();;
+ 			return $this->db->where('rewardId',$data['rewardId'])->get($this->rewards)->row();
 		else
 			return false;	
  	}
