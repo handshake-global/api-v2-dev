@@ -216,7 +216,7 @@ class Work_model extends CI_Model {
  			->update($this->achievement,$data);
 
  		if($this->db->affected_rows()>0)
- 			return true;
+ 			return $this->db->where('achId',$data['achId'])->get($this->achievement)->row();
 		else
 			return false;	
  	}
