@@ -440,7 +440,7 @@ class User extends REST_Controller {
      * @access public
      * @return json
      */
-    public function userSwipe_post(){
+    public function setUserSwipe_post(){
     // Call the verification method and store the return value in the variable
         $request = AUTHORIZATION::verify_request();
               //create card using post data
@@ -468,7 +468,7 @@ class User extends REST_Controller {
      * @access public
      * @return json
      */
-    public function userSwipe_get(){
+    public function getUserSwipe_get(){
      // Call the verification method and store the return value in the variable
         $request = AUTHORIZATION::verify_request();
         if(empty($this->get()))

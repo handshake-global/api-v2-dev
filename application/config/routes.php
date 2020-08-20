@@ -97,6 +97,9 @@ $route['deleteUserSkill'] = 'user/userSkill';
 $route['deleteUserReview'] = 'user/userReview';
 $route['getUserCategory'] = 'user/userCategory';
 
+$route['trackUserSwipe'] = 'user/getUserSwipe';
+$route['getUserSwipe'] = 'user/setUserSwipe';
+
 //education Routes
 $route['getEducationLevels']  = 'education/educationLevels';
 $route['getEducationCourses']  = 'education/educationCourses';
