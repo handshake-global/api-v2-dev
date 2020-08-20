@@ -476,11 +476,11 @@ class User extends REST_Controller {
         else
             $this->form_validation->set_data($this->get());
         //create card using post data
-        if($this->form_validation->run('userSwipe') == FALSE){
+        if($this->form_validation->run('getUserSwipe') == FALSE){
           $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
         }
         else{
-            if($response = $this->card_model->fetch_cards($this->get())){
+            if($response = $this->user_model->getUserSwipe($this->get())){
                 // Prepare the response
                 $statusCode = parent::HTTP_OK;
                 $status = array('statusCode' => $statusCode,'message'=>'user swipe data');

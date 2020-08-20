@@ -904,4 +904,11 @@ $config = array(
 		'rules' => 'required'
 		), 
 	),
+	'getUserSwipe' => array(
+		array(
+		'field' => 'userId',
+		'label' => 'User ID',
+		'rules' => 'required|numeric'
+		)
+	),
 );

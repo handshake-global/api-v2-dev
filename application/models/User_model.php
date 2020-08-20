@@ -173,7 +173,7 @@ class User_model extends CI_Model {
  		return $this->db->where($data)->delete($this->skill_mapping);
  	}
 
- 		public function getUserCategory($data = NULL){
+ 	public function getUserCategory($data = NULL){
  		return $this->db->where('status',1)->get($this->category)->result();
  	}
 
@@ -208,4 +208,12 @@ class User_model extends CI_Model {
  		else
  			return false;
  	}
+
+ 	public function getUserSwipe($data = NULL){
+ 		if(!empty($data) && isset($data['type']))
+ 			$this->db->where('type', $data['type']);
+ 		$this->db->where('userId',$data['userId']);
+ 		return $this->db->get('track_swipes')->result_array();
+ 	}
+
 }
