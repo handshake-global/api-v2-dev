@@ -123,7 +123,7 @@ class User_model extends CI_Model {
  		$data = $this->input->post();
  		$this->db->insert('testimonials',$data);
  		if($testId = $this->db->insert_id())
-			return $this->db->where('testId',$testId)->get('testimonials')->row();
+			return $this->db->where('testId',$testId)->get($this->testimonials)->row();
 		else
 			return false;
  	}
