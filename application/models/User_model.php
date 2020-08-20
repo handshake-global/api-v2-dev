@@ -199,7 +199,8 @@ class User_model extends CI_Model {
 			return false;
  	}
 
- 	public function setUserSwipe($data=NULL){
+ 	public function setUserSwipe(){
+ 		$data = $this->input->post();
  		if($data == NULL)
  			return false;
  		$this->db->insert('track_swipes',$data);
