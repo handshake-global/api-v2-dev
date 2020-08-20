@@ -82,7 +82,7 @@ class Education_model extends CI_Model {
 
  		$this->db->insert($this->table,$data);
  		if($educationId = $this->db->insert_id())
- 			return true;
+ 			return $this->db->where('educationId',$educationId)->get($this->table)->row();
  		else
  			return false;
  	}
