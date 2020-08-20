@@ -139,8 +139,9 @@ class Work_model extends CI_Model {
  		$data = $this->input->post();
  		$data['createdAt'] = $this->createdAt;
 
- 		if($this->db->insert($this->rewards,$data))
- 			return true;
+ 		$this->db->insert($this->rewards,$data)
+ 		if($rewardId = $this->db->insert_id())
+ 			return $this->db->where('rewardId',$rewardId)->get($this->rewards)->row();
  		else
  			return false;
  	}
@@ -197,7 +198,7 @@ class Work_model extends CI_Model {
  			->update($this->rewards,$data);
 
  		if($this->db->affected_rows()>0)
- 			return true;
+ 			return $this->db->where('rewardId',$data['rewardId'])->get($this->rewards)->row();;
 		else
 			return false;	
  	}
