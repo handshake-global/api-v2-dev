@@ -887,4 +887,21 @@ $config = array(
 		'rules' => 'numeric|trim'
 		), 
 	),
+	'setUserSwipe' => array(
+		array(
+		'field' => 'userId',
+		'label' => 'User ID',
+		'rules' => 'required|numeric'
+		),
+		array(
+		'field' => 'swiped',
+		'label' => 'swiped user',
+		'rules' => 'required'
+		), 
+		array(
+		'field' => 'type',
+		'label' => 'swipe type left or right',
+		'rules' => 'required'
+		), 
+	),
 );

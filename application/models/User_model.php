@@ -199,4 +199,13 @@ class User_model extends CI_Model {
 			return false;
  	}
 
+ 	public function setUserSwipe($data=NULL){
+ 		if($data == NULL)
+ 			return false;
+ 		$this->db->insert('track_swipes',$data);
+ 		if($swipeId = $this->db->insert_id())
+ 			return true;
+ 		else
+ 			return false;
+ 	}
 }
