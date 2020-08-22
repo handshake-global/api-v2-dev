@@ -37,7 +37,7 @@ class Settings extends REST_Controller {
             else{
                $statusCode = parent::HTTP_INTERNAL_SERVER_ERROR;
                $status = array('statusCode' => $statusCode,'error'=>'Something went wrong'); 
-               $this->response(['status' =>$status,], parent::HTTP_INTERNAL_SERVER_ERROR); 
+               $this->response(['status' =>$status,], parent::HTTP_OK); 
             }
         }
     }
