@@ -8,6 +8,7 @@ class Settings_model extends CI_Model {
 	    $this->table = 'settings';
 	    $this->social_account = 'social_account';
 	    $this->locations = 'locations';
+	    $this->track_swipes = 'track_swipes';
 	    $this->createdAt = date('Y/m/d h:i:s a', time());
 	}
  	
@@ -56,11 +57,27 @@ class Settings_model extends CI_Model {
 	 	}	
  		$settings['social'] = $social;
 
+ 		//getting locations
 	 	$location = $this->db->where('userId',$data['userId'])
  				  ->get($this->locations)->result();
-
  		$settings['locations'] = $location;
 
+ 		//getting swipes
+ 		$swipes = $this->db->where('userId',$userId)
+ 				  ->get($this->track_swipes)->result_array();
+
+ 		$leftSwipe = array_filter($swipes, function ($dataSet){
+                if(isset($dataSet['type']))
+                  return (trim($dataSet['type']) == 1);
+            });		
+
+        $rightSwipe = array_filter($swipes, function ($dataSet){
+                if(isset($dataSet['type']))
+                  return (trim($dataSet['type']) == 2);
+            }); 
+
+        $settings['leftSwipe'] = count($leftSwipe);         
+        $settings['rightSwipe'] = count($rightSwipe);         
  		return $settings;			
  	}
 
