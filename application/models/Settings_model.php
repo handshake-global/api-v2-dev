@@ -85,4 +85,21 @@ class Settings_model extends CI_Model {
  			return false;
  		}		  		
  	}
+
+ 	public function setLocation(){
+ 		$data = $this->input->post();
+ 		if(empty($data))
+ 			return false;
+ 		$location = $this->db->where($data)
+ 		->get($this->locations)->row();
+
+ 		if(!empty($location))
+ 			return false;
+ 		$this->db->insert($this->locations,$data);
+ 		if($locationId = $this->db->insert_id())
+ 			return $this->db->where('locationId',$locationId)
+ 			->get($this->locations)->row();
+ 		else
+ 			return false;	
+ 	}
 }

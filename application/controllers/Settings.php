@@ -102,6 +102,63 @@ class Settings extends REST_Controller {
             }
         }
     }
+
+    /**
+     * verify social account
+     *
+     * @access public
+     * @return json
+     */
+    public function location_post(){
+    // Call the verification method and store the return value in the variable
+        $request = AUTHORIZATION::verify_request();
+              //create card using post data
+        if($this->form_validation->run('setLocation') == FALSE){
+          $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
+        }
+        else{
+            if($response = $this->settings_model->setLocation()){
+                $statusCode = parent::HTTP_OK;
+                $status = array('statusCode' => $statusCode,'message'=>'Location Added');
+                $response = array('status'=>$status,'data'=>$response);
+                $this->response($response, $statusCode);  
+            }   
+            else{
+               $statusCode = parent::HTTP_INTERNAL_SERVER_ERROR;
+               $status = array('statusCode' => $statusCode,'error'=>'Location exist or something went wrong'); 
+               $this->response(['status' =>$status,], parent::HTTP_OK); 
+            }
+        }
+    }
     
+     /**
+     * delete location
+     *
+     * @access public
+     * @return json
+     */
+    public function index_delete(){
+    // Call the verification method and store the return value in the variable
+        $request = AUTHORIZATION::verify_request();
+        $this->form_validation->set_data($this->delete());
+    //create card using post data
+        if($this->form_validation->run('card_delete') == FALSE){
+          $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
+        }
+        else{
+            if($response = $this->card_model->delete_card($this->delete())){
+                // Prepare the response
+                $statusCode = parent::HTTP_OK;
+                $status = array('statusCode' => $statusCode,'message'=>'card deleted');
+                $response = array('status'=>$status,'data'=>$response);
+                $this->response($response, $statusCode);  
+            }   
+            else{
+               $statusCode = parent::HTTP_INTERNAL_SERVER_ERROR;
+               $status = array('statusCode' => $statusCode,'error'=>'Card not exist or shared with someone'); 
+               $this->response(['status' =>$status,], parent::HTTP_OK); 
+            }
+        }
+    }
 
 }

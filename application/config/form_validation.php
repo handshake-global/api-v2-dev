@@ -935,4 +935,26 @@ $config = array(
 		'rules' => 'required'
 		)
 	),
+	'setLocation' => array(
+		array(
+		'field' => 'userId',
+		'label' => 'User ID',
+		'rules' => 'required|numeric'
+		),
+		array(
+		'field' => 'area',
+		'label' => 'Area',
+		'rules' => 'required'
+		),
+		array(
+		'field' => 'latitude',
+		'label' => 'Latitude',
+		'rules' => 'required'
+		),
+		array(
+		'field' => 'longitude',
+		'label' => 'Longitude',
+		'rules' => 'required'
+		) 
+	),
 );
