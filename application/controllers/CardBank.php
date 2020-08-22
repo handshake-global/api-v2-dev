@@ -484,8 +484,8 @@ class CardBank extends REST_Controller {
         $userDesignation = $userDetails->designation;
 
         $noteMe = array(
-          'userId'=>$fromUser,
-          'notification'=>$userName.' is accepted your request.',
+          'userId'=>$toUser,
+          'notification'=>$userName.' sent you request.',
           'type'=>'RequestReceived',
           'createdOn'=>date('Y/m/d h:i:s a', time()),
           'userDetails'=>json_encode(
