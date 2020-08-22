@@ -957,4 +957,16 @@ $config = array(
 		'rules' => 'required'
 		) 
 	),
+	'deleteLocation' => array(
+		array(
+		'field' => 'userId',
+		'label' => 'User ID',
+		'rules' => 'required|numeric'
+		),
+		array(
+		'field' => 'locationId',
+		'label' => 'Location Id',
+		'rules' => 'required|numeric'
+		),  
+	),
 );

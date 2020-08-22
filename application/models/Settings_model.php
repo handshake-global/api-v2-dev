@@ -102,4 +102,15 @@ class Settings_model extends CI_Model {
  		else
  			return false;	
  	}
+
+ 	public function deleteLocation($data=NULL){
+ 		if($data==NULL)
+ 			return false;
+ 		$this->db->where($data)
+				->delete($this->locations);
+		if($this->db->affected_rows()>0)
+			return true;
+		else
+			return false;	
+ 	}
 }

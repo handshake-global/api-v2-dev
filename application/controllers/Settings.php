@@ -142,20 +142,20 @@ class Settings extends REST_Controller {
         $request = AUTHORIZATION::verify_request();
         $this->form_validation->set_data($this->delete());
     //create card using post data
-        if($this->form_validation->run('card_delete') == FALSE){
+        if($this->form_validation->run('deleteLocation') == FALSE){
           $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
         }
         else{
-            if($response = $this->card_model->delete_card($this->delete())){
+            if($response = $this->settings_model->deleteLocation($this->delete())){
                 // Prepare the response
                 $statusCode = parent::HTTP_OK;
-                $status = array('statusCode' => $statusCode,'message'=>'card deleted');
+                $status = array('statusCode' => $statusCode,'message'=>'Location deleted');
                 $response = array('status'=>$status,'data'=>$response);
                 $this->response($response, $statusCode);  
             }   
             else{
                $statusCode = parent::HTTP_INTERNAL_SERVER_ERROR;
-               $status = array('statusCode' => $statusCode,'error'=>'Card not exist or shared with someone'); 
+               $status = array('statusCode' => $statusCode,'error'=>'Location not exist'); 
                $this->response(['status' =>$status,], parent::HTTP_OK); 
             }
         }
