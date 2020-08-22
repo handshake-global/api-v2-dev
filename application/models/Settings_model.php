@@ -16,7 +16,7 @@ class Settings_model extends CI_Model {
  		if($data == NULL)
  			return false;
  		$settings = $this->db->where('userId',$data['userId'])
- 					->get($this->table)->row();
+ 					->get($this->table)->row_array();
  		if(empty($settings)){
  			$settings['settingId'] = NULL;
  			$settings['global'] = 1;
