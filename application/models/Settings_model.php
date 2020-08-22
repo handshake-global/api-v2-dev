@@ -22,9 +22,9 @@ class Settings_model extends CI_Model {
  			$settings['userId'] = $data['userId'];
  		}
  		$social = $this->db->where('userId',$data['userId'])
- 				  ->get($this->social_account)->result();
+ 				  ->get($this->social_account)->result_array();
 
- 		$socialAccount = array_column($connections, 'source');
+ 		$socialAccount = array_column($social, 'source');
  		if(empty($socialAccount)){
  			$socialAccount['Facebook'] = 'FALSE';
  			$socialAccount['Google'] = 'FALSE';
