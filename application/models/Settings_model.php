@@ -63,7 +63,7 @@ class Settings_model extends CI_Model {
  		$settings['locations'] = $location;
 
  		//getting swipes
- 		$swipes = $this->db->where('userId',$userId)
+ 		$swipes = $this->db->where('userId',$data['userId'])
  				  ->get($this->track_swipes)->result_array();
 
  		$leftSwipe = array_filter($swipes, function ($dataSet){
