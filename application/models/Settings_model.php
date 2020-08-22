@@ -73,15 +73,13 @@ class Settings_model extends CI_Model {
  				  ->get($this->social_account)->row_array(); 
  		if(empty($social)){
  			return $this->db->insert($this->social_account,$data);
- 		}else($social['status']==0){
+ 		}elseif($social['status']==0){
  			$this->db->where('socialId',$social['socialId'])
  			->update($this->social_account,array('status'=>1));
- 			if($this->db->affected_rows()){
+ 			if($this->db->affected_rows())
  				return true;
- 			}
- 			else{
+ 			else
  				return false;
- 			}
  		}else{
  			return false;
  		}		  		
