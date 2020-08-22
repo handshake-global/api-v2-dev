@@ -64,6 +64,18 @@ class Settings_model extends CI_Model {
  		return $settings;			
  	}
 
+ 	public function setSettings(){
+ 		$data = $this->input->post();
+ 		if(empty($data))
+ 			return false;
+ 		$this->db->insert($this->table,$data);
+ 		if($settingId = $this->db->insert_id())
+ 			return $this->db->where('settingId',$settingId)
+ 				->get($this->table)->row();
+ 		else
+ 			return false;				
+ 	}
+
  	public function verifySocial(){
  		$data = $this->input->post();
  		if(empty($data))

@@ -24,7 +24,7 @@ class Settings extends REST_Controller {
     // Call the verification method and store the return value in the variable
         $request = AUTHORIZATION::verify_request();
               //create card using post data
-        if($this->form_validation->run('setWork') == FALSE){
+        if($this->form_validation->run('setSettings') == FALSE){
           $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
         }
         else{

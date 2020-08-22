@@ -918,6 +918,13 @@ $config = array(
 		'rules' => 'required|numeric'
 		)
 	),
+	'setSettings' => array(
+		array(
+		'field' => 'userId',
+		'label' => 'User ID',
+		'rules' => 'required|numeric'
+		)
+	),
 	'verifySocial' => array(
 		array(
 		'field' => 'userId',
