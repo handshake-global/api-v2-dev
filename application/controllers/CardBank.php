@@ -458,18 +458,7 @@ class CardBank extends REST_Controller {
             $notify
         );
        
-        $token = get_token($toId);
-        $notify = array(
-            'userId'=> $fromId,
-            'userName'=> get_userName($fromId),
-            'type'=>'RequestReceived'
-        );
-        
-        send_notification(
-            $token ->token,
-            array('title'=>'RequestReceived','msg'=>'RequestReceived','img'=>''),
-            $notify
-        );
+
 
         $noteMe = array(
           'userId'=>$fromId,
@@ -511,5 +500,18 @@ class CardBank extends REST_Controller {
                             
         );
         setNotification($noteMe);
+        
+        $token = get_token($toUser);
+        $notify = array(
+            'userId'=> $fromUser,
+            'userName'=> $userName,
+            'type'=>'RequestReceived'
+        );
+        
+        send_notification(
+            $token ->token,
+            array('title'=>'RequestReceived','msg'=>'RequestReceived','img'=>''),
+            $notify
+        );
     }
 }
