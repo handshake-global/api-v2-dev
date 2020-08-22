@@ -69,11 +69,35 @@ class Settings_model extends CI_Model {
  		if(empty($data))
  			return false;
  		$settings = array();
- 		$settings['global'] = isset($data['global']) ?$data['global'] : 0;
-		$settings['maxDistance'] =isset($data['maxDistance'])? $data['maxDistance'] : 100;;
+ 		
+
+		$settingExist = $this->db->where('userId',$data['userId'])
+						->get($this->table)->row_array();
+
+		if(!empty($settingExist)){
+			$settings['global'] = isset($data['global']) ?$data['global'] 
+								  : $settingExist['global'];
+			$settings['maxDistance'] =isset($data['maxDistance'])? $data['maxDistance'] 
+								   : $settingExist['maxDistance'];
+			$settings['userId'] = $data['userId'];
+			$settings['notifications'] = isset($data['notifications'])?$data['notifications']
+										 : $settingExist['notifications'];
+			
+			$this->db->where('settingId',$settingExist['settingId'])
+					->update($this->table,$settings);
+			if($this->db->affected_rows()>0)
+				return $this->db->where('settingId',$settingExist['settingId'])
+ 				->get($this->table)->row();
+			else
+				return false;
+													 
+		}
+
+		$settings['global'] = isset($data['global']) ?$data['global'] : 0;
+		$settings['maxDistance'] =isset($data['maxDistance'])? $data['maxDistance'] : 100;
 		$settings['userId'] = $data['userId'];
 		$settings['notifications'] = isset($data['notifications'])?$data['notifications'] : 1;
-
+			
  		$this->db->insert($this->table,$settings);
  		if($settingId = $this->db->insert_id())
  			return $this->db->where('settingId',$settingId)
