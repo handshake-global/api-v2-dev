@@ -65,6 +65,23 @@ class Settings_model extends CI_Model {
 
  	public function verifySocial(){
  		$data = $this->input->post();
-
+ 		if(empty($data))
+ 			return false;
+ 		$social = $this->db->where('userId',$data['userId'])
+ 						->where('source',$data['source'])
+ 						->where('accountId',$data['accountId'])
+ 				  ->get($this->social_account)->row_array(); 
+ 		if(empty($social)){
+ 			return $this->db->insert($this->social_account,$data);
+ 		}else($social['status']==0){
+ 			$this->db->where('socialId',$social['socialId'])
+ 			->update($this->social_account,array('status'=>1));
+ 			if($this->db->affected_rows())
+ 				return true;
+ 			else
+ 				return false;
+ 		}else{
+ 			return false;
+ 		}		  		
  	}
 }
