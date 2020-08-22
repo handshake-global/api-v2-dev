@@ -37,17 +37,17 @@ class Settings_model extends CI_Model {
 	 		else
 	 			$social['Facebook'] = TRUE;
 
-	 		if(!isset($social['Google']))
+	 		if(!in_array('Google', $socialAccount))
 	 			$social['Google'] = FALSE;
 	 		else
 	 			$social['Google'] = TRUE;
 
-	 		if(!isset($social['Linkedln']))
+	 		if(!in_array('Linkedln', $socialAccount))
 	 			$social['Linkedln'] = FALSE;
 	 		else
 	 			$social['Linkedln'] = TRUE;
 
-	 		if(!isset($social['Twitter']))
+	 		if(!in_array('Twitter', $socialAccount))
 	 			$social['Twitter'] = FALSE;
 	 		else
 	 			$social['Twitter'] = TRUE;	
