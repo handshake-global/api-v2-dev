@@ -478,13 +478,13 @@ class CardBank extends REST_Controller {
     private function sendRequestNotification($data=NULL){
         if($data == NULL)
             return false;
-        $userDetails = get_userDetails($data['fromId']);
+        $userDetails = get_userDetails($data['fromUser']);
         $userName = $userDetails->userName;
         $userPhoto = $userDetails->userPhoto;
         $userDesignation = $userDetails->designation;
 
         $noteMe = array(
-          'userId'=>$data['fromId'],
+          'userId'=>$data['fromUser'],
           'notification'=>$userName.' is accepted your request.',
           'type'=>'RequestReceived',
           'createdOn'=>date('Y/m/d h:i:s a', time()),
