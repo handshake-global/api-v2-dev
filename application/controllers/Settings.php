@@ -97,7 +97,7 @@ class Settings extends REST_Controller {
             }   
             else{
                $statusCode = parent::HTTP_INTERNAL_SERVER_ERROR;
-               $status = array('statusCode' => $statusCode,'error'=>'Something went wrong'); 
+               $status = array('statusCode' => $statusCode,'error'=>'User already exist'); 
                $this->response(['status' =>$status,], parent::HTTP_OK); 
             }
         }
