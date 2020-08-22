@@ -911,4 +911,11 @@ $config = array(
 		'rules' => 'required|numeric'
 		)
 	),
+	'getSettings' => array(
+		array(
+		'field' => 'userId',
+		'label' => 'User ID',
+		'rules' => 'required|numeric'
+		)
+	),
 );
