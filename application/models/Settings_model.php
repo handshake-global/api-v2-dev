@@ -76,10 +76,12 @@ class Settings_model extends CI_Model {
  		}else($social['status']==0){
  			$this->db->where('socialId',$social['socialId'])
  			->update($this->social_account,array('status'=>1));
- 			if($this->db->affected_rows())
+ 			if($this->db->affected_rows()){
  				return true;
- 			else
+ 			}
+ 			else{
  				return false;
+ 			}
  		}else{
  			return false;
  		}		  		
