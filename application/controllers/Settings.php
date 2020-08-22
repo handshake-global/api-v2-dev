@@ -102,6 +102,6 @@ class Settings extends REST_Controller {
             }
         }
     }
-
+    
 
 }

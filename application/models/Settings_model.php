@@ -21,6 +21,7 @@ class Settings_model extends CI_Model {
  			$settings['global'] = NULL;
  			$settings['maxDistance'] = NULL;
  			$settings['userId'] = $data['userId'];
+ 			$settings['notification'] = $data['notification'];
  		}
  		$social = $this->db->where('userId',$data['userId'])
  				  ->get($this->social_account)->result_array();
