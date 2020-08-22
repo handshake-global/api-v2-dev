@@ -30,6 +30,8 @@ class CardBank extends REST_Controller {
         }
         else{
             if($response = $this->bank_model->init_cardRequest()){
+                //request send notification
+                $this->sendRequestNotification($_POST['fromUser'],$_POST['toUser']);    
                 // Prepare the response
                 $statusCode = parent::HTTP_OK;
                 $status = array('statusCode' => $statusCode,'message'=>'Request Success');
@@ -460,6 +462,31 @@ class CardBank extends REST_Controller {
           'userId'=>$fromId,
           'notification'=>$userName.' is accepted your request.',
           'type'=>'RequestAccepted',
+          'createdOn'=>date('Y/m/d h:i:s a', time()),
+          'userDetails'=>json_encode(
+                            array(
+                            'userName'=>$userName,
+                            'userImage'=>$userImage,
+                            'designation'=>$userDesignation,
+                            )
+                        ),
+                            
+        );
+        setNotification($noteMe);
+    }
+
+    private function sendRequestNotification($data=NULL){
+        if($data == NULL)
+            return false;
+        $userDetails = get_userDetails($data['fromId']);
+        $userName = $userDetails->userName;
+        $userPhoto = $userDetails->userPhoto;
+        $userDesignation = $userDetails->designation;
+
+        $noteMe = array(
+          'userId'=>$data['fromId'],
+          'notification'=>$userName.' is accepted your request.',
+          'type'=>'RequestReceived',
           'createdOn'=>date('Y/m/d h:i:s a', time()),
           'userDetails'=>json_encode(
                             array(
