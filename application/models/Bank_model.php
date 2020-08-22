@@ -36,7 +36,7 @@ class Bank_model extends CI_Model
             ->order_by('cardId', 'desc')
             ->get('card')
             ->row();
-
+        echo vd();    
         $toCard = $this
             ->db
             ->select('cardId')
@@ -47,7 +47,7 @@ class Bank_model extends CI_Model
             ->order_by('cardId', 'desc')
             ->get('card')
             ->row();
-            
+        echo vd();    
         if (empty($fromCard) or empty($toCard)) return false;
         $data['cardId'] = $fromCard->cardId;
         $data['targetCardId'] = $toCard->cardId;
