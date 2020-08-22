@@ -59,7 +59,7 @@ class Settings_model extends CI_Model {
 	 	$location = $this->db->where('userId',$data['userId'])
  				  ->get($this->locations)->result();
 
- 		$settings['location'] = $location;
+ 		$settings['locations'] = $location;
 
  		return $settings;			
  	}
