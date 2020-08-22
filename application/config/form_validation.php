@@ -983,4 +983,5 @@ $config = array(
 		'rules' => 'required|numeric'
 		), 
 	),
+	
 );

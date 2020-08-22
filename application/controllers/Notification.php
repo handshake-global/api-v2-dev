@@ -102,5 +102,5 @@ class Notification extends REST_Controller {
             }
         }
     }
-
+    
 }    

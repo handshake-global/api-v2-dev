@@ -34,6 +34,10 @@ class Notification_model extends CI_Model {
 		if(isset($data['pageIndex']) && $data['pageIndex']!=0)
             $this->offset = $data['pageIndex']* $this->limit;
         
+        if($this->offset == 0)
+        	$this->db->where('userId',$data['userId'])
+        	->update($this->notify,array('isRead'=>1));
+        	
         return $this->db->where('userId',$data['userId'])
         		->order_by('notifyId')
                 ->limit($this->limit,$this->offset)
