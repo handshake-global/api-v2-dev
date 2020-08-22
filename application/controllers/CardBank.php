@@ -475,10 +475,10 @@ class CardBank extends REST_Controller {
         setNotification($noteMe);
     }
 
-    private function sendRequestNotification($data=NULL){
-        if($data == NULL)
+    private function sendRequestNotification($fromUser=NULL,$toUser=NULL){
+        if($fromUser == NULL || $toUser == NULL)
             return false;
-        $userDetails = get_userDetails($data['fromUser']);
+        $userDetails = get_userDetails($fromUser);
         $userName = $userDetails->userName;
         $userPhoto = $userDetails->userPhoto;
         $userDesignation = $userDetails->designation;
