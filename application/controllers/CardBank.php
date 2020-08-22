@@ -439,9 +439,14 @@ class CardBank extends REST_Controller {
     $token = get_token($fromId);
     if($token==false || !isset($token->token) || $fromId==NULL || $toId==NULL)
             return false;
+        $userDetails = get_userDetails($toId);
+        $userName = $userDetails->userName;
+        $userPhoto = $userDetails->userPhoto;
+        $userDesignation = $userDetails->designation;
+
         $notify = array(
             'userId'=> $toId,
-            'userName'=> get_userName($toId)->userName,
+            'userName'=> $userName,
             'type'=>'RequestAccepted'
         );
         
@@ -450,5 +455,21 @@ class CardBank extends REST_Controller {
             array('title'=>'RequestAccepted','msg'=>'RequestAccepted','img'=>''),
             $notify
         );
+
+        $noteMe = array(
+          'userId'=>$fromId,
+          'notification'=>$userName.' is accepted your request.',
+          'type'=>'RequestAccepted',
+          'createdOn'=>date('Y/m/d h:i:s a', time()),
+          'userDetails'=>json_encode(
+                            array(
+                            'userName'=>$userName,
+                            'userImage'=>$userImage,
+                            'designation'=>$userDesignation,
+                            )
+                        ),
+                            
+        );
+        setNotification($noteMe);
     }
 }

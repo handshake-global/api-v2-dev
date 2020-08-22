@@ -66,4 +66,27 @@ if ( ! function_exists('get_userName')){
         ->get('users')
         ->row();
     }
+}
+
+//get token and user details
+if ( ! function_exists('get_userDetails')){ 
+    function get_userDetails($userId=NULL){   
+        if($userId==NULL)
+            return false;
+        $CI =& get_instance();
+        return $CI->db->select("userName,userPhoto,designation")
+        ->where('userId',$userId)
+        ->get('profile')
+        ->row();
+    }
+}
+
+//get token and user details
+if ( ! function_exists('setNotification')){ 
+    function setNotification($data=NULL){   
+        if($data==NULL)
+            return false;
+        $CI =& get_instance();
+        return $CI->db->insert('notifications',$data);
+    }
 }	   
