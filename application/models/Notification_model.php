@@ -6,8 +6,11 @@ class Notification_model extends CI_Model {
 	public function __construct(){
 	    parent::__construct(); 
 	    $this->table = 'fcm_tokens';
+	    $this->notify = 'notifications';
 	    $this->users = 'users';
 	    $this->createdAt = date('Y/m/d h:i:s a', time());
+        $this->limit = 10;
+	    $this->offset = 0;
 	}
 
 	public function updateFcmToken(){
@@ -23,5 +26,18 @@ class Notification_model extends CI_Model {
 				return false;
 			else 
 				return true;
-	} 
+	}
+
+	public function getNotification($data=NULL){
+		if($data==NULL)
+			return false;
+		if(isset($data['pageIndex']) && $data['pageIndex']!=0)
+            $this->offset = $data['pageIndex']* $this->limit;
+        
+        return $this->db->where('userId',$data['userId'])
+        		->order_by('notifyId')
+                ->limit($this->limit,$this->offset)
+                ->get($this->notify)
+                ->result_array();  
+	}
 } 

@@ -71,5 +71,36 @@ class Notification extends REST_Controller {
         $result = $this->fcm->sendMultiple($token, $json);
     }
 
+     /**
+     * get Notification
+     *
+     * @access public
+     * @return json
+     */
+    public function index_get(){
+    // Call the verification method and store the return value in the variable
+        $request = AUTHORIZATION::verify_request();
+        if(empty($this->get()))
+            $this->form_validation->set_data(['']);
+        else
+            $this->form_validation->set_data($this->get());
+        //create card using post data
+        if($this->form_validation->run('getNotification') == FALSE){
+          $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
+        }
+        else{
+            if($response = $this->notification_model->getNotification($this->get())){
+                $statusCode = parent::HTTP_OK;
+                $status = array('statusCode' => $statusCode,'message'=>'Notification List');
+                $response = array('status'=>$status,'data'=>$response);
+                $this->response($response, $statusCode);  
+            }   
+            else{
+               $statusCode = parent::HTTP_OK;
+               $status = array('statusCode' => $statusCode,'error'=>'No Notification found'); 
+               $this->response(['status' =>$status,], parent::HTTP_OK); 
+            }
+        }
+    }
 
 }    

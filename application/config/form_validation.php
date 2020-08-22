@@ -976,4 +976,11 @@ $config = array(
 		'rules' => 'required|numeric'
 		),  
 	),
+	'getNotification' => array(
+		array(
+		'field' => 'userId',
+		'label' => 'User ID',
+		'rules' => 'required|numeric'
+		), 
+	),
 );
