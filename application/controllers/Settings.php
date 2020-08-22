@@ -73,4 +73,35 @@ class Settings extends REST_Controller {
             }
         }
     }
+
+
+    /**
+     * verify social account
+     *
+     * @access public
+     * @return json
+     */
+    public function verifySocial_post(){
+    // Call the verification method and store the return value in the variable
+        $request = AUTHORIZATION::verify_request();
+              //create card using post data
+        if($this->form_validation->run('verifySocial') == FALSE){
+          $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
+        }
+        else{
+            if($response = $this->settings_model->verifySocial()){
+                $statusCode = parent::HTTP_OK;
+                $status = array('statusCode' => $statusCode,'message'=>'Verified');
+                $response = array('status'=>$status,'data'=>$response);
+                $this->response($response, $statusCode);  
+            }   
+            else{
+               $statusCode = parent::HTTP_INTERNAL_SERVER_ERROR;
+               $status = array('statusCode' => $statusCode,'error'=>'Something went wrong'); 
+               $this->response(['status' =>$status,], parent::HTTP_OK); 
+            }
+        }
+    }
+
+
 }

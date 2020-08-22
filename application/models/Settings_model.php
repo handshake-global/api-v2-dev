@@ -7,6 +7,7 @@ class Settings_model extends CI_Model {
 	    parent::__construct(); 
 	    $this->table = 'settings';
 	    $this->social_account = 'social_account';
+	    $this->locations = 'locations';
 	    $this->createdAt = date('Y/m/d h:i:s a', time());
 	}
  	
@@ -52,9 +53,18 @@ class Settings_model extends CI_Model {
 	 		else
 	 			$social['Twitter'] = TRUE;	
 	 	}	
-
  		$settings['social'] = $social;
 
+	 	$location = $this->db->where('userId',$data['userId'])
+ 				  ->get($this->locations)->result_array();
+
+ 		$settings['location'] = $location;
+ 				  
  		return $settings;			
+ 	}
+
+ 	public function verifySocial(){
+ 		$data = $this->input->post();
+
  	}
 }
