@@ -466,7 +466,7 @@ class CardBank extends REST_Controller {
           'userDetails'=>json_encode(
                             array(
                             'userName'=>$userName,
-                            'userImage'=>$userImage,
+                            'userPhoto'=>$userPhoto,
                             'designation'=>$userDesignation,
                             )
                         ),
@@ -491,7 +491,7 @@ class CardBank extends REST_Controller {
           'userDetails'=>json_encode(
                             array(
                             'userName'=>$userName,
-                            'userImage'=>$userImage,
+                            'userPhoto'=>$userPhoto,
                             'designation'=>$userDesignation,
                             )
                         ),
