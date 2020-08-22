@@ -68,7 +68,13 @@ class Settings_model extends CI_Model {
  		$data = $this->input->post();
  		if(empty($data))
  			return false;
- 		$this->db->insert($this->table,$data);
+ 		$settings = array();
+ 		$settings['global'] = $data['global']!=''?$data['global'] : 0;
+		$settings['maxDistance'] =$data['maxDistance']!='' ? $data['maxDistance'] : 100;;
+		$settings['userId'] = $data['userId'];
+		$settings['notifications'] = $data['notifications']!=''?$data['notifications'] : 1;
+
+ 		$this->db->insert($this->table,$settings);
  		if($settingId = $this->db->insert_id())
  			return $this->db->where('settingId',$settingId)
  				->get($this->table)->row();
