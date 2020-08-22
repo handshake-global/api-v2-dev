@@ -19,8 +19,8 @@ class Settings_model extends CI_Model {
  					->get($this->table)->row();
  		if(empty($settings)){
  			$settings['settingId'] = NULL;
- 			$settings['global'] = NULL;
- 			$settings['maxDistance'] = NULL;
+ 			$settings['global'] = 1;
+ 			$settings['maxDistance'] = 100;
  			$settings['userId'] = $data['userId'];
  			$settings['notifications'] = 1;
  		}
