@@ -62,7 +62,7 @@ class Bank_model extends CI_Model
                         ->where('status!=',3)
                         ->get($this->table)
                         ->num_rows();
-        if($ifRequested)
+        if(!empty($ifRequested))
            return false;                 
 
         $this
