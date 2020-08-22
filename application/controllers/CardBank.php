@@ -458,6 +458,18 @@ class CardBank extends REST_Controller {
             $notify
         );
 
+         $notify = array(
+            'userId'=> $fromId,
+            'userName'=> get_userName($fromId),
+            'type'=>'RequestAccepted'
+        );
+        
+        send_notification(
+            $token ->token,
+            array('title'=>'RequestReceived','msg'=>'RequestReceived','img'=>''),
+            $notify
+        );
+
         $noteMe = array(
           'userId'=>$fromId,
           'notification'=>$userName.' is accepted your request.',
