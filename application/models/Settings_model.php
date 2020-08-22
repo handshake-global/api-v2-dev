@@ -26,30 +26,30 @@ class Settings_model extends CI_Model {
 
  		$socialAccount = array_column($social, 'source');
  		if(empty($socialAccount)){
- 			$socialAccount['Facebook'] = 'FALSE';
- 			$socialAccount['Google'] = 'FALSE';
- 			$socialAccount['Linkedln'] = 'FALSE';
- 			$socialAccount['Twitter'] = 'FALSE';
+ 			$socialAccount['Facebook'] = FALSE;
+ 			$socialAccount['Google'] = FALSE;
+ 			$socialAccount['Linkedln'] = FALSE;
+ 			$socialAccount['Twitter'] = FALSE;
  		}else{
 	 		if(!isset($socialAccount['Facebook']))
-	 			$socialAccount['Facebook'] = 'FALSE';
+	 			$socialAccount['Facebook'] = FALSE;
 	 		else
-	 			$socialAccount['Facebook'] = 'TRUE';
+	 			$socialAccount['Facebook'] = TRUE;
 
 	 		if(!isset($socialAccount['Google']))
-	 			$socialAccount['Google'] = 'FALSE';
+	 			$socialAccount['Google'] = FALSE;
 	 		else
-	 			$socialAccount['Google'] = 'TRUE';
+	 			$socialAccount['Google'] = TRUE;
 
 	 		if(!isset($socialAccount['Linkedln']))
-	 			$socialAccount['Linkedln'] = 'FALSE';
+	 			$socialAccount['Linkedln'] = FALSE;
 	 		else
-	 			$socialAccount['Linkedln'] = 'TRUE';
+	 			$socialAccount['Linkedln'] = TRUE;
 
 	 		if(!isset($socialAccount['Twitter']))
-	 			$socialAccount['Twitter'] = 'FALSE';
+	 			$socialAccount['Twitter'] = FALSE;
 	 		else
-	 			$socialAccount['Twitter'] = 'TRUE';	
+	 			$socialAccount['Twitter'] = TRUE;	
 	 	}	
 
  		$settings['social'] = $socialAccount;
