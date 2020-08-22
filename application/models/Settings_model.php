@@ -25,6 +25,7 @@ class Settings_model extends CI_Model {
  				  ->get($this->social_account)->result_array();
 
  		$socialAccount = array_column($social, 'source');
+ 		$social = array();
  		if(empty($socialAccount)){
  			$social['Facebook'] = FALSE;
  			$social['Google'] = FALSE;
