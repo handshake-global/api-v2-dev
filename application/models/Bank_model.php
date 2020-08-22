@@ -72,7 +72,8 @@ class Bank_model extends CI_Model
             ->db
             ->insert_id())
         {
-            return true;
+            return $this->db->where('bankId',$requestId)
+            ->get($this->table)->row_array();
         }
         else
         {

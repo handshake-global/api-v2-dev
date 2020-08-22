@@ -31,7 +31,7 @@ class CardBank extends REST_Controller {
         else{
             if($response = $this->bank_model->init_cardRequest()){
                 //request send notification
-                $this->sendRequestNotification($_POST['fromUser'],$_POST['toUser']);    
+                $this->sendRequestNotification($response['fromUser'],$response['toUser']);    
                 // Prepare the response
                 $statusCode = parent::HTTP_OK;
                 $status = array('statusCode' => $statusCode,'message'=>'Request Success');
