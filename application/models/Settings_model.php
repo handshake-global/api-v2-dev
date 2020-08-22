@@ -56,10 +56,10 @@ class Settings_model extends CI_Model {
  		$settings['social'] = $social;
 
 	 	$location = $this->db->where('userId',$data['userId'])
- 				  ->get($this->locations)->result_array();
+ 				  ->get($this->locations)->result();
 
  		$settings['location'] = $location;
- 				  
+
  		return $settings;			
  	}
 
