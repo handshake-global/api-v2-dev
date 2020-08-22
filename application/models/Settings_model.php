@@ -69,10 +69,10 @@ class Settings_model extends CI_Model {
  		if(empty($data))
  			return false;
  		$settings = array();
- 		$settings['global'] = $data['global']!=''?$data['global'] : 0;
-		$settings['maxDistance'] =$data['maxDistance']!='' ? $data['maxDistance'] : 100;;
+ 		$settings['global'] = isset($data['global']) ?$data['global'] : 0;
+		$settings['maxDistance'] =isset($data['maxDistance'])? $data['maxDistance'] : 100;;
 		$settings['userId'] = $data['userId'];
-		$settings['notifications'] = $data['notifications']!=''?$data['notifications'] : 1;
+		$settings['notifications'] = isset($data['notifications'])?$data['notifications'] : 1;
 
  		$this->db->insert($this->table,$settings);
  		if($settingId = $this->db->insert_id())
