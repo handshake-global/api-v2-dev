@@ -137,7 +137,7 @@ class Settings extends REST_Controller {
      * @access public
      * @return json
      */
-    public function index_delete(){
+    public function location_delete(){
     // Call the verification method and store the return value in the variable
         $request = AUTHORIZATION::verify_request();
         $this->form_validation->set_data($this->delete());
