@@ -457,11 +457,12 @@ class CardBank extends REST_Controller {
             array('title'=>'RequestAccepted','msg'=>'RequestAccepted','img'=>''),
             $notify
         );
+       
         $token = get_token($toId);
         $notify = array(
             'userId'=> $fromId,
             'userName'=> get_userName($fromId),
-            'type'=>'RequestAccepted'
+            'type'=>'RequestReceived'
         );
         
         send_notification(
