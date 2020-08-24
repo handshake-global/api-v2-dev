@@ -112,7 +112,7 @@ class Chat_model extends CI_Model {
 			$receivedMsgs = array();
 			
 			if(!empty($receivers))			
-				$receivedMsgs = $this->db->query("SELECT tbl.messageId,tbl.message AS lastMessage,tbl.file AS fileUrl,tbl.createdAt AS lastMessageTime,tbl.status,'received' AS 'msgType',`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,`users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation` FROM (SELECT * FROM messages WHERE `receiver`=".$data['userId']." AND `sender` IN (".implode(',',$receivers)." GROUP BY messageId ORDER BY messageId DESC) AS tbl,users,user_details WHERE users .userId=tbl.sender GROUP BY tbl.sender ORDER BY messageId DESC")->result_array(); 	
+				$receivedMsgs = $this->db->query("SELECT tbl.messageId,tbl.message AS lastMessage,tbl.file AS fileUrl,tbl.createdAt AS lastMessageTime,tbl.status,'received' AS 'msgType',`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,`users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation` FROM (SELECT * FROM messages WHERE `receiver`=".$data['userId']." AND `sender` IN (".implode(',',$receivers).") GROUP BY messageId ORDER BY messageId DESC) AS tbl,users,user_details WHERE users .userId=tbl.sender GROUP BY tbl.sender ORDER BY messageId DESC")->result_array(); 	
 
 			$untouchedConnections =  array_diff($untouchedConnections,array_column($receivedMsgs, 'userId'));
 			
