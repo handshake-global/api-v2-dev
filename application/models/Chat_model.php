@@ -108,7 +108,7 @@ class Chat_model extends CI_Model {
 						(SELECT * FROM messages WHERE `sender` = ".$data['userId']." GROUP BY messageId
 						ORDER BY messageId DESC) as tbl,profile where profile.userId = tbl.receiver
 						GROUP BY tbl.receiver order by messageId desc")->result_array();
- 
+ 			echo vd();
 			$untouchedConnections = array();
 			$untouchedConnections =  array_diff($receivers,array_column($sentMgs, 'userId'));
 
