@@ -85,7 +85,7 @@ class Chat_model extends CI_Model {
 			         ->join('profile', 'card_bank.fromUser=profile.userId')
 			         ->group_by('card_bank.fromUser')
 			         ->get($this->bank)->result_array();
-
+			echo vd();         
 			$cardBankUserTo = $this->db->select("profile.userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.designation,card_bank.status")
 					 ->where(
 					 	array(
@@ -96,7 +96,7 @@ class Chat_model extends CI_Model {
 			         ->join('profile', 'card_bank.toUser=profile.userId')
 			         ->group_by('card_bank.toUser')
 			         ->get($this->bank)->result_array();         
-			
+			echo vd();
 			$allConnections = array_merge($cardBankUserTo,$cardBankUserFrom);
 			
 			$receivers = array_merge(array_column($cardBankUserFrom, 'userId'),array_column($cardBankUserTo, 'userId'));
