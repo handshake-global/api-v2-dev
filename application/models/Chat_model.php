@@ -75,28 +75,32 @@ class Chat_model extends CI_Model {
 			return false;
 		 	
 		 	$status = 1;
-			$cardBankUserFrom = $this->db->select("profile.userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.designation,card_bank.status")
+			$cardBankUserFrom = $this->db->select("`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,
+  							  `users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation`, `card_bank`.`status`")
 					 ->where(
 					 	array(
 					 		'card_bank.toUser'=>$data['userId'],
 					 	)
 					 )
-					 ->where_in("status",array(1,3))
-			         ->join('profile', 'card_bank.fromUser=profile.userId')
+					 ->where_in("card_bank.status",array(1,3))
+			         ->join('users', 'card_bank.fromUser=users.userId')
+			         ->join('user_details', 'card_bank.fromUser=user_details.userId')
 			         ->group_by('card_bank.fromUser')
 			         ->get($this->bank)->result_array();
-			echo vd();         
-			$cardBankUserTo = $this->db->select("profile.userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.designation,card_bank.status")
+
+			$cardBankUserTo = $this->db->select("`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,
+  							  `users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation`, `card_bank`.`status`")
 					 ->where(
 					 	array(
 					 		'card_bank.fromUser'=>$data['userId'],
 					 	)
 					 )
-					 ->where_in("status",array(1,3))
-			         ->join('profile', 'card_bank.toUser=profile.userId')
+					 ->where_in("card_bank.status",array(1,3))
+			         ->join('users', 'card_bank.toUser=users.userId')
+			         ->join('user_details', 'card_bank.toUser=user_details.userId')
 			         ->group_by('card_bank.toUser')
 			         ->get($this->bank)->result_array();         
-			echo vd();
+
 			$allConnections = array_merge($cardBankUserTo,$cardBankUserFrom);
 			
 			$receivers = array_merge(array_column($cardBankUserFrom, 'userId'),array_column($cardBankUserTo, 'userId'));
@@ -119,7 +123,8 @@ class Chat_model extends CI_Model {
 							AND `sender` IN(".implode(',',$receivers).") GROUP BY messageId
 							ORDER BY messageId DESC) as tbl,profile where profile.userId = tbl.sender
 							GROUP BY tbl.sender order by messageId desc")->result_array(); 	
-			
+			echo vd();
+			exit;
 			$untouchedConnections =  array_diff($untouchedConnections,array_column($receivedMsgs, 'userId'));
 			
 			$finalConnection = array_merge($sentMgs,$receivedMsgs);
