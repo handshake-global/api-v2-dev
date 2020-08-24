@@ -619,12 +619,8 @@ class Card_model extends CI_Model {
 		
 		if(empty($mutualsContacts))
 			return false;
-		 $this->db->query("
-					SELECT userId,userName,isLogin,userPhoto,designation from profile
-					where userId in (".implode(',',$mutualsContacts).") and NOC !=0
-					order by NOC desc
-					LIMIT ".$this->limit." OFFSET ".$this->offset."
-				")
+
+		 $this->db->query("SELECT `users`.`userId`,CONCAT(users.firstName,' ',users.lastName) AS userName,`users`.`avatar` AS `userPhoto`,`users`.loggedIn AS `isLogin`,`user_details`.`designation` FROM users INNER JOIN user_details ON users.userId=user_details.userId WHERE users.userId IN (".implode(',',$mutualsContacts).") LIMIT ".$this->limit." OFFSET ".$this->offset."")
 				->result_array();
 				echo vd();
 				exit;
