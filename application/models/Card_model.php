@@ -619,13 +619,15 @@ class Card_model extends CI_Model {
 		
 		if(empty($mutualsContacts))
 			return false;
-		return $this->db->query("
+		 $this->db->query("
 					SELECT userId,userName,isLogin,userPhoto,designation from profile
 					where userId in (".implode(',',$mutualsContacts).") and NOC !=0
 					order by NOC desc
 					LIMIT ".$this->limit." OFFSET ".$this->offset."
 				")
 				->result_array();
+				echo vd();
+				exit;
 	}
 
 } 
