@@ -104,9 +104,6 @@ class Chat_model extends CI_Model {
 			$allConnections = array_merge($cardBankUserTo,$cardBankUserFrom);
 			
 			$receivers = array_merge(array_column($cardBankUserFrom, 'userId'),array_column($cardBankUserTo, 'userId'));
-			print_r($allConnections);
-			print_r($receivers);
-			exit;
 			$sentMgs = $this->db->query("SELECT tbl.messageId, tbl.message as lastMessage,tbl.file as fileUrl, tbl.createdAt as 				lastMessageTime , tbl.status, 'sent' as 'msgType',  profile.userId ,profile.userName, profile.					userPhoto,profile.isLogin,profile.designation FROM
 						(SELECT * FROM messages WHERE `sender` = ".$data['userId']." GROUP BY messageId
 						ORDER BY messageId DESC) as tbl,profile where profile.userId = tbl.receiver
