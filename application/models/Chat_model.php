@@ -105,7 +105,7 @@ class Chat_model extends CI_Model {
 			
 			$receivers = array_merge(array_column($cardBankUserFrom, 'userId'),array_column($cardBankUserTo, 'userId'));
 			$sentMgs = $this->db->query("SELECT tbl.messageId,tbl.message AS lastMessage,tbl.file AS fileUrl,tbl.createdAt AS lastMessageTime,tbl.status,'sent' AS 'msgType',`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,`users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation` FROM (SELECT * FROM messages WHERE `sender`=".$data['userId']." GROUP BY messageId ORDER BY messageId DESC) AS tbl,users,user_details WHERE users .userId=tbl.receiver GROUP BY tbl.receiver ORDER BY messageId DESC")->result_array();
- 			echo vd();
+
 			$untouchedConnections = array();
 			$untouchedConnections =  array_diff($receivers,array_column($sentMgs, 'userId'));
 
