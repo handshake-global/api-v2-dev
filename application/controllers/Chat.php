@@ -101,6 +101,7 @@ class Chat extends REST_Controller {
         	array('title'=>$data->userName,'msg'=>$data->msgContent,'img'=>$data->userPhoto),
         	$notify
         );
+
     }
 
      /**

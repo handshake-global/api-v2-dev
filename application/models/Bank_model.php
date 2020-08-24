@@ -25,6 +25,7 @@ class Bank_model extends CI_Model
             ->post();
         $data['createdAt'] = $this->createdAt;
         $data['createdBy'] = $data['fromUser'];
+
         $fromCard = $this
             ->db
             ->select('cardId')
@@ -35,6 +36,7 @@ class Bank_model extends CI_Model
             ->order_by('cardId', 'desc')
             ->get('card')
             ->row();
+
         $toCard = $this
             ->db
             ->select('cardId')
@@ -45,9 +47,24 @@ class Bank_model extends CI_Model
             ->order_by('cardId', 'desc')
             ->get('card')
             ->row();
+            
         if (empty($fromCard) or empty($toCard)) return false;
         $data['cardId'] = $fromCard->cardId;
         $data['targetCardId'] = $toCard->cardId;
+
+        $ifRequested = $this->db->select("cardId")
+                        ->where('cardId',$data['cardId'])
+                        ->where('targetCardId',$data['targetCardId'])
+                        ->where('targetCardId',$data['targetCardId'])
+                        ->where('fromUser',$data['fromUser'])
+                        ->where('toUser',$data['toUser'])
+                        ->where('cardType',$data['cardType'])
+                        ->where('status!=',3)
+                        ->get($this->table)
+                        ->num_rows();
+        if($ifRequested)
+           return false;                 
+
         $this
             ->db
             ->insert($this->table, $data);
@@ -55,7 +72,8 @@ class Bank_model extends CI_Model
             ->db
             ->insert_id())
         {
-            return true;
+            return $this->db->where('bankId',$requestId)
+            ->get($this->table)->row_array();
         }
         else
         {
@@ -79,6 +97,22 @@ class Bank_model extends CI_Model
             ->db
             ->affected_rows() > 0)
         {
+            //iff  reqeuest accepted transfer atachement ot mes
+            if($status==1){
+                $msgBank = $this->db->select('note,fromUser,toUser,attachment,attachmentType')
+                           ->where('bankId', $data['bankId'])
+                           ->get($this->table)
+                           ->row_array();
+                if(!empty($msgBank))
+                    $this->db->insert('messages',array(
+                       'sender'=>$msgBank['fromUser'],     
+                       'receiver'=>$msgBank['toUser'],     
+                       'message'=>$msgBank['note'],     
+                       'type'=>$msgBank['attachmentType'],     
+                       'file'=>$msgBank['attachment']     
+                    ));           
+            }
+
             $request = $this
                 ->db
                 ->where('toUser', $data['userId'])->get($this->table)
@@ -106,7 +140,11 @@ class Bank_model extends CI_Model
         if (empty($data)) return false;
 
         if ($status == 0)
-        {
+        {   
+            if(isset($data['pageIndex']) && $data['pageIndex']!=0){
+                $this->offset = $data['pageIndex']* $this->limit;
+            }
+
             $request = $this
                 ->db
                 ->select('card_bank.*,users.userId,
@@ -118,6 +156,7 @@ class Bank_model extends CI_Model
                 ->join('users', 'card_bank.fromUser=users.userId')
                 ->join('user_details', 'card_bank.fromUser=user_details.userId','left')
                 ->order_by('users.firstName')
+                ->limit($this->limit,$this->offset)
                 ->get($this->table)
                 ->result_array(); 
         }
@@ -229,14 +268,20 @@ class Bank_model extends CI_Model
             ->input
             ->post('mobileNo'));
         if (empty($mobileNos)) return false;
-        $fromUser = array();
+        $fromUser = $notExist = array();
         foreach ($mobileNos as $mobile)
         {
             $mobile = str_replace('+', '', $mobile);
             $mobile = explode('-', $mobile);
             $countryCode = '+' . $mobile[0];
-            $mobile = isset($mobile[1]) ? $mobile[1] : NULL;
-            $completeMobile = $countryCode . $mobile;
+            if(isset($mobile[1])){
+                $completeMobile = $countryCode . $mobile[1];
+                $mobile = $mobile[1];
+            }
+            else{
+                $completeMobile = $countryCode;
+                $mobile = $mobile[0];
+            }
             //see if user exist with mobile no in already card bank
             $user = $this
                 ->db
@@ -251,17 +296,20 @@ class Bank_model extends CI_Model
                 // user exist not exist in sytem with given mobile no send sms
                 if (empty($toCard))
                 {
+                    $notExist[] = $mobile;
                     $this->sendMsg();
                 }
                 // send card reqeust
                 else
-                {
+                {   
                     $request['fromUser'] = $data['userId'];
                     $request['toUser'] = $toCard->userId;
                     $request['cardId'] = $data['cardId'];
                     $request['targetCardId'] = $toCard->cardId;
                     $request['cardType'] = $toCard->addedMode;
-                    $request['note'] = "Requested cause of mutual contact";
+                    $request['note'] = isset($data['note']) ?  $data['note'] : "Requested cause of mutual contact";
+                    $request['attachment'] = isset($data['attachment'])?$data['attachment'] : '';
+
                     $this
                         ->db
                         ->insert($this->table, $request);
@@ -273,7 +321,10 @@ class Bank_model extends CI_Model
         }
         //delete later on cards
         $this->shareLaterDelete($data);
-        return true;
+        if(!empty($notExist))
+            return $notExist;
+        else
+            return true;
     }
 
     private function sendMsg()

@@ -75,14 +75,24 @@ class Chat_model extends CI_Model {
 			return false;
 		 	
 		 	$status = 1;
-			$cardBankUserFrom = $this->db->select("profile.userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.designation")
-					 ->where(array('card_bank.toUser'=>$data['userId'],'card_bank.status'=>$status))
+			$cardBankUserFrom = $this->db->select("profile.userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.designation,card_bank.status")
+					 ->where(
+					 	array(
+					 		'card_bank.toUser'=>$data['userId'],
+					 	)
+					 )
+					 ->where_in("status",array(1,3))
 			         ->join('profile', 'card_bank.fromUser=profile.userId')
 			         ->group_by('card_bank.fromUser')
 			         ->get($this->bank)->result_array();
 
-			$cardBankUserTo = $this->db->select("profile.userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.designation")
-					 ->where(array('card_bank.fromUser'=>$data['userId'],'card_bank.status'=>$status))
+			$cardBankUserTo = $this->db->select("profile.userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.designation,card_bank.status")
+					 ->where(
+					 	array(
+					 		'card_bank.fromUser'=>$data['userId'],
+					 	)
+					 )
+					 ->where_in("status",array(1,3))
 			         ->join('profile', 'card_bank.toUser=profile.userId')
 			         ->group_by('card_bank.toUser')
 			         ->get($this->bank)->result_array();         
@@ -100,6 +110,7 @@ class Chat_model extends CI_Model {
 			$untouchedConnections =  array_diff($receivers,array_column($sentMgs, 'userId'));
 
 			$receivedMsgs = array();
+			
 			if(!empty($receivers))			
 				$receivedMsgs = $this->db->query("SELECT tbl.messageId, tbl.message as lastMessage,tbl.file as fileUrl, tbl.createdAt as lastMessageTime , tbl.status , 'received' as 'msgType',profile.userId ,profile.userName, profile.					userPhoto,profile.isLogin,profile.designation   FROM
 							(SELECT * FROM messages WHERE `receiver` = ".$data['userId']." 
@@ -113,6 +124,11 @@ class Chat_model extends CI_Model {
 			$finalConnectionUsers = array_unique(array_column($finalConnection, 'userId'));
 			$temp = array();
 			foreach ($finalConnection as $final) {
+				if($final['status']==1)
+					$final['hasConnection'] =1;
+				else	 
+					$final['hasConnection'] =0;
+
 				if(array_key_exists($final['userId'],$temp)){
 					$tempDate = new DateTime($temp[$final['userId']]['lastMessageTime']);
 					$finalDate = new DateTime($final['lastMessageTime']);
@@ -136,6 +152,10 @@ class Chat_model extends CI_Model {
 			 		$connectionWithNoMsg[$i]['userPhoto'] = $con['userPhoto'];
 			 		$connectionWithNoMsg[$i]['isLogin'] = $con['isLogin'];
 			 		$connectionWithNoMsg[$i]['designation'] = $con['designation'];
+			 		if($con['status']==1)
+						$connectionWithNoMsg[$i]['hasConnection'] =1;
+					else	 
+						$connectionWithNoMsg[$i]['hasConnection'] =0; 
 			 	}
 			 $i++;	
 			}

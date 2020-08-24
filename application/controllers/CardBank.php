@@ -30,6 +30,8 @@ class CardBank extends REST_Controller {
         }
         else{
             if($response = $this->bank_model->init_cardRequest()){
+                //request send notification
+                $this->sendRequestNotification($response['fromUser'],$response['toUser']);    
                 // Prepare the response
                 $statusCode = parent::HTTP_OK;
                 $status = array('statusCode' => $statusCode,'message'=>'Request Success');
@@ -38,8 +40,8 @@ class CardBank extends REST_Controller {
             }   
             else{
                $statusCode = parent::HTTP_INTERNAL_SERVER_ERROR;
-               $status = array('statusCode' => $statusCode,'error'=>'something went wrong'); 
-               $this->response(['status' =>$status,], parent::HTTP_INTERNAL_SERVER_ERROR); 
+               $status = array('statusCode' => $statusCode,'error'=>'Already requested to this user'); 
+               $this->response(['status' =>$status,], parent::HTTP_OK); 
             }
         }
     }
@@ -60,10 +62,13 @@ class CardBank extends REST_Controller {
         }
         else{
             if($response = $this->bank_model->modify_cardRequest(1)){
+                $count = count($response)-1;
+                $this->sendAcceptNotification($response[$count]['fromUser'],$response[$count]['toUser']);
                 // Prepare the response
                 $statusCode = parent::HTTP_OK;
                 $status = array('statusCode' => $statusCode,'message'=>'Request Accepted');
                 $response = array('status'=>$status);
+
                 $this->response($response, $statusCode);  
             }   
             else{
@@ -222,7 +227,7 @@ class CardBank extends REST_Controller {
                 // Prepare the response
                 $statusCode = parent::HTTP_OK;
                 $status = array('statusCode' => $statusCode,'message'=>'Request Success');
-                $response = array('status'=>$status);
+                $response = array('status'=>$status,'data'=>$response);
                 $this->response($response, $statusCode);  
             }   
             else{
@@ -431,5 +436,82 @@ class CardBank extends REST_Controller {
         }
     }
 
-    
+    private function sendAcceptNotification($fromId=NULL,$toId=NULL){
+    //send chat notification on success 
+    $token = get_token($fromId);
+    if($token==false || !isset($token->token) || $fromId==NULL || $toId==NULL)
+            return false;
+        $userDetails = get_userDetails($toId);
+        $userName = $userDetails->userName;
+        $userPhoto = $userDetails->userPhoto;
+        $userDesignation = $userDetails->designation;
+
+        $notify = array(
+            'userId'=> $toId,
+            'userName'=> $userName,
+            'type'=>'RequestAccepted'
+        );
+        
+        send_notification(
+            $token ->token,
+            array('title'=>'RequestAccepted','msg'=>'RequestAccepted','img'=>''),
+            $notify
+        );
+       
+
+
+        $noteMe = array(
+          'userId'=>$fromId,
+          'notification'=>$userName.' is accepted your request.',
+          'type'=>'requestAccepted',
+          'createdOn'=>date('Y/m/d h:i:s a', time()),
+          'userDetails'=>json_encode(
+                            array(
+                            'userName'=>$userName,
+                            'userPhoto'=>$userPhoto,
+                            'designation'=>$userDesignation,
+                            )
+                        ),
+                            
+        );
+        setNotification($noteMe);
+    }
+
+    private function sendRequestNotification($fromUser=NULL,$toUser=NULL){
+        if($fromUser == NULL || $toUser == NULL)
+            return false;
+        $userDetails = get_userDetails($fromUser);
+        $userName = $userDetails->userName;
+        $userPhoto = $userDetails->userPhoto;
+        $userDesignation = $userDetails->designation;
+
+        $noteMe = array(
+          'userId'=>$toUser,
+          'notification'=>$userName.' sent you request.',
+          'type'=>'requestReceived',
+          'createdOn'=>date('Y/m/d h:i:s a', time()),
+          'userDetails'=>json_encode(
+                            array(
+                            'userName'=>$userName,
+                            'userPhoto'=>$userPhoto,
+                            'designation'=>$userDesignation,
+                            )
+                        ),
+                            
+        );
+        setNotification($noteMe);
+        
+        $token = get_token($toUser);
+        $notify = array(
+            'userId'=> $fromUser,
+            'userName'=> $userName,
+            'type'=>'RequestReceived'
+        );
+        
+        send_notification(
+            $token ->token,
+            array('title'=>'RequestReceived','msg'=>'RequestReceived','img'=>''),
+            $notify
+        );
+    }
 }

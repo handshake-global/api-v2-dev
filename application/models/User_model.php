@@ -122,8 +122,8 @@ class User_model extends CI_Model {
     public function setUserTestimonials(){
  		$data = $this->input->post();
  		$this->db->insert('testimonials',$data);
- 		if($testId = $this->db->insert_id())
-			return true;
+ 		if($testiId = $this->db->insert_id())
+			return $this->db->where('testiId',$testiId)->get($this->testimonials)->row();
 		else
 			return false;
  	}
@@ -173,7 +173,7 @@ class User_model extends CI_Model {
  		return $this->db->where($data)->delete($this->skill_mapping);
  	}
 
- 		public function getUserCategory($data = NULL){
+ 	public function getUserCategory($data = NULL){
  		return $this->db->where('status',1)->get($this->category)->result();
  	}
 
@@ -194,9 +194,35 @@ class User_model extends CI_Model {
  			return false;
  		$this->db->where('testiId',$data['testiId'])->update($this->testimonials,$data);
 		if($this->db->affected_rows()>0)
-			return true;
+			return $this->db->where('testiId',$data['testiId'])->get($this->testimonials)->row();
 		else
 			return false;
+ 	}
+
+ 	public function setUserSwipe(){
+ 		$data = $this->input->post();
+ 		if($data == NULL)
+ 			return false;
+ 		$swipes = explode(',', $data['swiped']);
+ 		foreach($swipes as $swipe)
+ 			$this->db->insert('track_swipes',
+ 				array(
+ 					'userId'=>$data['userId'],
+ 					'swiped'=>$swipe,
+ 					'type'=>$data['type']
+ 				)
+ 			);
+ 		if($swipeId = $this->db->insert_id())
+ 			return true;
+ 		else
+ 			return false;
+ 	}
+
+ 	public function getUserSwipe($data = NULL){
+ 		if(!empty($data) && isset($data['type']))
+ 			$this->db->where('type', $data['type']);
+ 		$this->db->where('userId',$data['userId']);
+ 		return $this->db->get('track_swipes')->result_array();
  	}
 
 }

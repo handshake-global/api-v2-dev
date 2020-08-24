@@ -433,4 +433,65 @@ class User extends REST_Controller {
            $this->response(['status' =>$status,], parent::HTTP_OK); 
         }
     }
+
+     /**
+     * insert testimonials to  database
+     *
+     * @access public
+     * @return json
+     */
+    public function setUserSwipe_post(){
+    // Call the verification method and store the return value in the variable
+        $request = AUTHORIZATION::verify_request();
+              //create card using post data
+        if($this->form_validation->run('setUserSwipe') == FALSE){
+          $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
+        }
+        else{
+            if($response = $this->user_model->setUserSwipe()){
+                $statusCode = parent::HTTP_OK;
+                $status = array('statusCode' => $statusCode,'message'=>'User swipe tracked');
+                $response = array('status'=>$status,'data'=>$response);
+                $this->response($response, $statusCode);  
+            }   
+            else{
+               $statusCode = parent::HTTP_INTERNAL_SERVER_ERROR;
+               $status = array('statusCode' => $statusCode,'error'=>'Something went wrong'); 
+               $this->response(['status' =>$status,], parent::HTTP_INTERNAL_SERVER_ERROR); 
+            }
+        }
+    }
+
+     /**
+     * get Courses
+     *
+     * @access public
+     * @return json
+     */
+    public function getUserSwipe_get(){
+     // Call the verification method and store the return value in the variable
+        $request = AUTHORIZATION::verify_request();
+        if(empty($this->get()))
+            $this->form_validation->set_data(['']);
+        else
+            $this->form_validation->set_data($this->get());
+        //create card using post data
+        if($this->form_validation->run('getUserSwipe') == FALSE){
+          $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
+        }
+        else{
+            if($response = $this->user_model->getUserSwipe($this->get())){
+                // Prepare the response
+                $statusCode = parent::HTTP_OK;
+                $status = array('statusCode' => $statusCode,'message'=>'user swipe data');
+                $response = array('status'=>$status,'data'=>$response);
+                $this->response($response, $statusCode);  
+            }   
+            else{
+               $statusCode = parent::HTTP_OK;
+               $status = array('statusCode' => $statusCode,'error'=>'No Result Found'); 
+               $this->response(['status' =>$status,], parent::HTTP_OK); 
+            }
+        }
+    }
 }

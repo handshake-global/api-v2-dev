@@ -887,4 +887,101 @@ $config = array(
 		'rules' => 'numeric|trim'
 		), 
 	),
+	'setUserSwipe' => array(
+		array(
+		'field' => 'userId',
+		'label' => 'User ID',
+		'rules' => 'required|numeric'
+		),
+		array(
+		'field' => 'swiped',
+		'label' => 'swiped user',
+		'rules' => 'required'
+		), 
+		array(
+		'field' => 'type',
+		'label' => 'swipe type left or right',
+		'rules' => 'required'
+		), 
+	),
+	'getUserSwipe' => array(
+		array(
+		'field' => 'userId',
+		'label' => 'User ID',
+		'rules' => 'required|numeric'
+		)
+	),
+	'getSettings' => array(
+		array(
+		'field' => 'userId',
+		'label' => 'User ID',
+		'rules' => 'required|numeric'
+		)
+	),
+	'setSettings' => array(
+		array(
+		'field' => 'userId',
+		'label' => 'User ID',
+		'rules' => 'required|numeric'
+		)
+	),
+	'verifySocial' => array(
+		array(
+		'field' => 'userId',
+		'label' => 'User ID',
+		'rules' => 'required|numeric'
+		),
+		array(
+		'field' => 'source',
+		'label' => 'Source',
+		'rules' => 'required'
+		),
+		array(
+		'field' => 'accountId',
+		'label' => 'Account Id',
+		'rules' => 'required'
+		)
+	),
+	'setLocation' => array(
+		array(
+		'field' => 'userId',
+		'label' => 'User ID',
+		'rules' => 'required|numeric'
+		),
+		array(
+		'field' => 'area',
+		'label' => 'Area',
+		'rules' => 'required'
+		),
+		array(
+		'field' => 'latitude',
+		'label' => 'Latitude',
+		'rules' => 'required'
+		),
+		array(
+		'field' => 'longitude',
+		'label' => 'Longitude',
+		'rules' => 'required'
+		) 
+	),
+	'deleteLocation' => array(
+		array(
+		'field' => 'userId',
+		'label' => 'User ID',
+		'rules' => 'required|numeric'
+		),
+		array(
+		'field' => 'locationId',
+		'label' => 'Location Id',
+		'rules' => 'required|numeric'
+		),  
+	),
+	'getNotification' => array(
+		array(
+		'field' => 'userId',
+		'label' => 'User ID',
+		'rules' => 'required|numeric'
+		), 
+	),
+	
 );

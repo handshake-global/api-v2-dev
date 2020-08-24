@@ -53,4 +53,40 @@ if ( ! function_exists('get_token')){
 		$CI =& get_instance();
 		return $CI->db->select('token')->where('userId',$userId)->get('fcm_tokens')->row();
 	}
+}
+
+//get token and user details
+if ( ! function_exists('get_userName')){ 
+    function get_userName($userId=NULL){   
+        if($userId==NULL)
+            return false;
+        $CI =& get_instance();
+        return $CI->db->select("concat(users.firstName,' ',users.lastName) as userName")
+        ->where('userId',$userId)
+        ->get('users')
+        ->row();
+    }
+}
+
+//get token and user details
+if ( ! function_exists('get_userDetails')){ 
+    function get_userDetails($userId=NULL){   
+        if($userId==NULL)
+            return false;
+        $CI =& get_instance();
+        return $CI->db->select("userName,userPhoto,designation")
+        ->where('userId',$userId)
+        ->get('profile')
+        ->row();
+    }
+}
+
+//get token and user details
+if ( ! function_exists('setNotification')){ 
+    function setNotification($data=NULL){   
+        if($data==NULL)
+            return false;
+        $CI =& get_instance();
+        return $CI->db->insert('notifications',$data);
+    }
 }	   
