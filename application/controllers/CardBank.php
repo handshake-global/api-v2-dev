@@ -233,7 +233,6 @@ class CardBank extends REST_Controller {
             }
             elseif(is_array($response) && ($response)){
                 $statusCode = parent::HTTP_OK;
-                $response= $this->clean_response($response);
                 $status = array('statusCode' => $statusCode,'message'=>'Request Success');
                 $response = array('status'=>$status,'data'=>$response);
                 $this->response($response, $statusCode);  
