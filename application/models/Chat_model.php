@@ -121,7 +121,7 @@ class Chat_model extends CI_Model {
 			$finalConnectionUsers = array_unique(array_column($finalConnection, 'userId'));
 			$temp = array();
 			foreach ($finalConnection as $final) {
-				if($final['status']==1)
+				if($final['status']==1 || $final['status']==3)
 					$final['hasConnection'] =1;
 				else	 
 					$final['hasConnection'] =0;
@@ -149,7 +149,7 @@ class Chat_model extends CI_Model {
 			 		$connectionWithNoMsg[$i]['userPhoto'] = $con['userPhoto'];
 			 		$connectionWithNoMsg[$i]['isLogin'] = $con['isLogin'];
 			 		$connectionWithNoMsg[$i]['designation'] = $con['designation'];
-			 		if($con['status']==1)
+			 		if($con['status']==1 || $con['status']==3)
 						$connectionWithNoMsg[$i]['hasConnection'] =1;
 					else	 
 						$connectionWithNoMsg[$i]['hasConnection'] =0; 
