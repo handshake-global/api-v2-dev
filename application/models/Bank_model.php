@@ -517,10 +517,17 @@ class Bank_model extends CI_Model
             ->db
             ->where(array(
             'bankId' => $data['bankId'],
-        ))->delete($this->table)) return $this
-            ->db
-            ->affected_rows();
-        else return false;
+        ))->delete($this->table)) 
+            if($this->db->affected_rows()){
+                $bank = $this->db->where('bankId',$data['bankId'])->get($this->table)->row();
+                $this->db->query("
+                  update messages set status = 5 where (sender = ".$bank['fromUser']." and receiver = ".$bank['toUser'].") OR (sender = ".$bank['toUser']." and receiver = ".$bank['fromUser'].")  
+                ");
+
+            }
+        else {
+            return false;
+        }
     }            
 }
 
