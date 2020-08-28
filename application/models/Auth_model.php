@@ -17,6 +17,15 @@ class Auth_model extends CI_Model {
 		$data['ipAddress'] = get_client_ip();
         $data['createdAt'] = date('Y/m/d h:i:s a', time());
         $social = array();
+
+        $phoneNo = $data['phoneNo'];
+        $countryCode = str_replace('+','',$data['countryCode']);
+        $where = array('phoneNo'=>$phoneNo,'countryCode'=>'+'.$countryCode);
+        $userExist = $this->db->where($where)->get($this->table)->num_rows();
+
+        if($userExist)			
+			return 410;
+
         if(isset($data['social'])){
 	 		$social = json_decode($data['social']);
 	 		unset($data['social']);

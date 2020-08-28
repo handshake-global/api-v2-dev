@@ -22,10 +22,7 @@ $config = array(
 		array(
 		'field' => 'phoneNo',
 		'label' => 'Phone Number',
-		'rules' => 'required|numeric|min_length[6]|max_length[15]|is_unique[users.phoneNo]',
-		"errors" => [
-            			'is_unique' => '%s is already taken.',
-        			]
+		'rules' => 'required|numeric|min_length[6]|max_length[15]',
 		),
 		array(
 		'field' => 'countryCode',
