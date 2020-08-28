@@ -99,7 +99,7 @@ class Bank_model extends CI_Model
         {
             //iff  reqeuest accepted transfer atachement ot mes
             if($status==1){
-                $msgBank = $this->db->select('note,fromUser,toUser,attachment,attachmentType')
+                $msgBank = $this->db->select('note,fromUser,toUser,attachment,attachmentType,createdAt')
                            ->where('bankId', $data['bankId'])
                            ->get($this->table)
                            ->row_array();
@@ -109,7 +109,9 @@ class Bank_model extends CI_Model
                        'receiver'=>$msgBank['toUser'],     
                        'message'=>$msgBank['note'],     
                        'type'=>$msgBank['attachmentType'],     
-                       'file'=>$msgBank['attachment']     
+                       'file'=>$msgBank['attachment'],   
+                       'createdAt'=>$msgBank['createdAt'],   
+                       'updatedAt'=>$msgBank['createdAt'],   
                     ));           
             }
 
