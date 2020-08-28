@@ -138,6 +138,9 @@ class Chat_model extends CI_Model {
 			$i = 0;
 			pr($allConnections);
 			pr($untouchedConnections);
+			pr($sentMgs);
+			pr($receivedMsgs);
+
 			exit;
 			foreach ($allConnections as $con) {
 			 	if(in_array($con['userId'],$untouchedConnections)){
