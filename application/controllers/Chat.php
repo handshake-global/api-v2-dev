@@ -354,7 +354,7 @@ class Chat extends REST_Controller {
             if($response = $this->chat_model->getMessageList($this->get())){
                 // Prepare the response
                 $statusCode = parent::HTTP_OK;
-                $status = array('statusCode' => $statusCode,'message'=>'Connections');
+                $status = array('statusCode' => $statusCode,'message'=>'Message List');
                 $response = array('status'=>$status,'data'=>$response);
                 $this->response($response, $statusCode);  
             }   
