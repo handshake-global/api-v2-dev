@@ -511,7 +511,8 @@ class Bank_model extends CI_Model
      * @return array ,card
      */
     public function deleteConnection($data = array())
-    {
+    {   
+        pr($data);
         if (empty($data)) return false;
         if ($this
             ->db
