@@ -223,9 +223,17 @@ class CardBank extends REST_Controller {
           $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
         }
         else{
-            if($response = $this->bank_model->shareCard()){
+             $response = $this->bank_model->shareCard();
+            if(!is_array($response) && $response == true){
                 // Prepare the response
                 $statusCode = parent::HTTP_OK;
+                $status = array('statusCode' => $statusCode,'message'=>'Request Success');
+                $response = array('status'=>$status,'data'=>[]);
+                $this->response($response, $statusCode);  
+            }
+            elseif(is_array($response) && ($response)){
+                $statusCode = parent::HTTP_OK;
+                $response= $this->clean_response($response);
                 $status = array('statusCode' => $statusCode,'message'=>'Request Success');
                 $response = array('status'=>$status,'data'=>$response);
                 $this->response($response, $statusCode);  
