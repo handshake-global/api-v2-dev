@@ -73,6 +73,7 @@ $route['markMessageRead'] = 'chat/markMessageRead';
 $route['changeMessageStatus'] = 'chat/changeMessageStatus';
 $route['changeMessageStatusBulk'] = 'chat/changeMessageStatusBulk';
 $route['getConnections'] = 'chat/getConnections';
+$route['getMessageList'] = 'chat/getMessageList';
 $route['loginStatus'] = 'chat/loginStatus';
 $route['typingStatus'] = 'chat/typingStatus';
 $route['deleteMessage'] = 'chat/deleteMessage';
