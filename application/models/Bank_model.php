@@ -184,7 +184,7 @@ class Bank_model extends CI_Model
             $myCard = $this
                 ->db
                 ->query($myCard)->result_array();
- 
+        echo vd();
         $otherCard = array(); 
          
         if(count($myCard)<$this->limit){    
@@ -208,7 +208,8 @@ class Bank_model extends CI_Model
                 ->db
                 ->query($otherCard)->result_array();
 		}	
-
+        echo vd();
+        exit;
             $request = array_merge($myCard, $otherCard);
         }
         if (!empty($request))
