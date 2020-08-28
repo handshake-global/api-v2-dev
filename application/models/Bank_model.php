@@ -512,7 +512,6 @@ class Bank_model extends CI_Model
      */
     public function deleteConnection($data = array())
     {   
-        pr($data);
         if (empty($data)) return false;
         if ($this
             ->db
@@ -521,7 +520,8 @@ class Bank_model extends CI_Model
         ))->delete($this->table)){ 
                 if(!$this->db->affected_rows())
                     return false;
-                $bank = $this->db->where('bankId',$data['bankId'])->get($this->table)->row();
+                $bank = $this->db->where('bankId',$data['bankId'])
+                        ->get($this->table)->row_array();
                 $this->db->query("
                   update messages set status = 5 where (sender = ".$bank['fromUser']." and receiver = ".$bank['toUser'].") OR (sender = ".$bank['toUser']." and receiver = ".$bank['fromUser'].")  
                 ");
