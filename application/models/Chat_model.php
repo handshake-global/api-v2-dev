@@ -86,6 +86,7 @@ class Chat_model extends CI_Model {
 			         ->join('users', 'card_bank.fromUser=users.userId')
 			         ->join('user_details', 'card_bank.fromUser=user_details.userId')
 			         ->group_by('card_bank.fromUser')
+			         ->order_by('card_bank.cardId','desc')
 			         ->get($this->bank)->result_array();
 
 			$cardBankUserTo = $this->db->select("`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,
@@ -99,6 +100,7 @@ class Chat_model extends CI_Model {
 			         ->join('users', 'card_bank.toUser=users.userId')
 			         ->join('user_details', 'card_bank.toUser=user_details.userId')
 			         ->group_by('card_bank.toUser')
+			         ->order_by('card_bank.cardId','desc')
 			         ->get($this->bank)->result_array();         
 
 			$allConnections = array_merge($cardBankUserTo,$cardBankUserFrom);
