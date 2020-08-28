@@ -188,7 +188,9 @@ class Chat_model extends CI_Model {
 			         ->group_by('card_bank.toUser')
 			         ->get($this->bank)->result_array();         
 
-			$allConnections = array_merge($cardBankUserTo,$cardBankUserFrom);
+			return $allConnections = array_merge($cardBankUserTo,$cardBankUserFrom);
+
+
 			
 			$receivers = array_merge(array_column($cardBankUserFrom, 'userId'),array_column($cardBankUserTo, 'userId'));
 			$sentMgs = $this->db->query("SELECT tbl.messageId,tbl.message AS lastMessage,tbl.file AS fileUrl,tbl.createdAt AS lastMessageTime,tbl.status,'sent' AS 'msgType',`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,`users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation`, ((select count(distinct `card_bank`.`toUser`) from `card_bank` where ((`card_bank`.`fromUser` = `users`.`userId`) and (`card_bank`.`status` = 1))) + (select count(distinct `card_bank`.`fromUser`) from `card_bank` where ((`card_bank`.`toUser` = `users`.`userId`) and (`card_bank`.`status` = 1)))) AS `connections` FROM (SELECT * FROM messages WHERE `sender`=".$data['userId']." GROUP BY messageId ORDER BY messageId DESC) AS tbl,users,user_details WHERE users .userId=tbl.receiver and user_details.userId = tbl.receiver GROUP BY tbl.receiver ORDER BY messageId DESC")->result_array();
