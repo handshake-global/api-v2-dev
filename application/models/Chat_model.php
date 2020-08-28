@@ -136,6 +136,9 @@ class Chat_model extends CI_Model {
 
 			$connectionWithNoMsg = array();
 			$i = 0;
+			pr($allConnections);
+			pr($untouchedConnections);
+			exit;
 			foreach ($allConnections as $con) {
 			 	if(in_array($con['userId'],$untouchedConnections)){
 			 		$connectionWithNoMsg[$i]['messageId'] = '';
@@ -147,7 +150,6 @@ class Chat_model extends CI_Model {
 			 		$connectionWithNoMsg[$i]['userPhoto'] = $con['userPhoto'];
 			 		$connectionWithNoMsg[$i]['isLogin'] = $con['isLogin'];
 			 		$connectionWithNoMsg[$i]['designation'] = $con['designation'];
-			 		$connectionWithNoMsg[$i]['connections'] = $con['connections'];
 			 		if($con['status']==1)
 						$connectionWithNoMsg[$i]['hasConnection'] =1;
 					else	 
