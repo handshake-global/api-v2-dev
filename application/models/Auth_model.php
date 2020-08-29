@@ -28,7 +28,6 @@ class Auth_model extends CI_Model {
 
         if(isset($data['social']) && !empty($data['social'])){
 	 		$social = json_decode($data['social']);
-		 	unset($data['social']);
 	 		if($social!=NULL): 
 		 		//check if user already exist
 		 		if($this->db->where(
@@ -37,6 +36,8 @@ class Auth_model extends CI_Model {
 		 			return 409;
 		 	endif;		
 	 	}		
+	 	unset($data['social']);
+	 	
 	 	$this->db->insert($this->table,$data);
 	 	if($userId = $this->db->insert_id()){
 	 		if(!empty($social))
