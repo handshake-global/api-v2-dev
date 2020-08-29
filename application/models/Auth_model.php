@@ -28,6 +28,7 @@ class Auth_model extends CI_Model {
 
         if(isset($data['social'])){
 	 		$social = json_decode($data['social']);
+	 		pr($social);
 	 		unset($data['social']);
 	 		//check if user already exist
 	 		if($this->db->where(
