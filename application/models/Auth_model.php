@@ -36,7 +36,6 @@ class Auth_model extends CI_Model {
 		 		)
 		 			return 409;
 		 	endif;		
-
 	 	}		
 	 	$this->db->insert($this->table,$data);
 	 	if($userId = $this->db->insert_id()){
