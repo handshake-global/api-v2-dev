@@ -48,7 +48,7 @@ class Auth extends REST_Controller {
                 // Prepare the response
                 $statusCode = parent::HTTP_OK;
                 $response->token = $token;
-               // $response= $this->clean_response($response);
+                $response= $this->clean_response($response);
                 $status = array('statusCode' => $statusCode,'message'=>'user registered');
                 $response = array('status'=>$status,'data'=>$response);
                 $this->response($response, $statusCode);  
