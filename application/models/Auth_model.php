@@ -26,15 +26,16 @@ class Auth_model extends CI_Model {
         if($userExist)			
 			return 410;
 
-        if(isset($data['social'])){
+        if(isset($data['social']) && !empty($data['social'])){
 	 		$social = json_decode($data['social']);
-	 		pr($social);
-	 		unset($data['social']);
-	 		//check if user already exist
-	 		if($this->db->where(
-	 			array('source'=>$social->source,'accountId'=>$social->accountId))->get('social_account')->row()
-	 		)
-	 			return 409;
+	 		if($social!=NULL) 
+		 		unset($data['social']);
+		 		//check if user already exist
+		 		if($this->db->where(
+		 			array('source'=>$social->source,'accountId'=>$social->accountId))->get('social_account')->row()
+		 		)
+		 			return 409;
+		 	endif;		
 
 	 	}		
 	 	$this->db->insert($this->table,$data);
