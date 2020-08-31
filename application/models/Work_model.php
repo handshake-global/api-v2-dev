@@ -130,14 +130,14 @@ class Work_model extends CI_Model {
 		 			$scheduleId = $this->db->insert($this->work_schedule,$schData);	 
 		 			endforeach;  
 		 			if($scheduleId)
-		 				return true;
+		 				return $this->getCurrentWork($data['workId']);
 		 			else
 		 				return false;
 		 		endif;				
 	 		}else{
-	 			return true;
+	 			return $this->getCurrentWork($data['workId']);
 	 	}
-	 	return true;	
+	 	return $this->getCurrentWork($data['workId']);	
  	}
 
  	public function deleteWork($data=NULL){
