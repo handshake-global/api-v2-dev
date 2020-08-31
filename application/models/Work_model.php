@@ -43,7 +43,7 @@ class Work_model extends CI_Model {
 	 			$scheduleId = $this->db->insert($this->work_schedule,$schData);	 
 	 			endforeach;  
 	 			if($scheduleId)
-	 				return $this->getCurrentWork($workId);;
+	 				return $this->getCurrentWork($workId);
 	 			else
 	 				return false;		
 	 		}else{
