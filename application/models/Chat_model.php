@@ -191,7 +191,7 @@ class Chat_model extends CI_Model {
 			         ->get($this->bank)->result_array();         
 
 		$allConnections = array_merge($cardBankUserTo,$cardBankUserFrom);
-		return array_map("unserialize", array_unique(array_map("serialize", $allConnections)));
+		return  array_values(array_map("unserialize", array_unique(array_map("serialize", $allConnections))));
 
 	}
 
