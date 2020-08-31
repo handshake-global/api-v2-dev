@@ -75,7 +75,7 @@ class Work_model extends CI_Model {
  		 	$completeSchedule[] = $wk;
  		 	$i++;
  		 }
- 		return  $completeSchedule;
+ 		return  $completeSchedule[0];
  	}
 
 
