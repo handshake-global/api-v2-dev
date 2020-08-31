@@ -43,17 +43,41 @@ class Work_model extends CI_Model {
 	 			$scheduleId = $this->db->insert($this->work_schedule,$schData);	 
 	 			endforeach;  
 	 			if($scheduleId)
-	 				return true;
+	 				return $this->getCurrentWork($workId);;
 	 			else
 	 				return false;		
 	 		}else{
-	 			return true;
+	 			return $this->getCurrentWork($workId);
 	 		}
 
  		}else{
  			return false;
  		}
  	} 
+
+ 	private function getCurrentWork($workId=NULL){
+ 		if($workId==NULL)
+ 			return false;
+	 	$work = $this->db->select('work_history.*,empType.emp as employeeType',false)
+	    ->from('work_history')
+	    ->join('empType', 'work_history.empType = empType.typeId', 'left')
+	    ->where('work_history.workId',$workId)
+	    ->get()->row_array();
+ 		if(empty($work))
+ 			return false;
+ 		$completeSchedule = array();
+
+ 		$i = 0;
+ 		foreach ($work as $wk) {
+ 		 	$schedule = $this->db->select('day,time as timeData')
+ 		 	->where('workId',$wk['workId'])->get($this->work_schedule)->result_array();
+ 		 	$wk['schedule'] = $this->tempSchedule($schedule);
+ 		 	$completeSchedule[] = $wk;
+ 		 	$i++;
+ 		 }
+ 		return  $completeSchedule;
+ 	}
+
 
  	public function getWork($data=NULL){
  		if(empty($data))
