@@ -62,7 +62,7 @@ class Work_model extends CI_Model {
 	    ->from('work_history')
 	    ->join('empType', 'work_history.empType = empType.typeId', 'left')
 	    ->where('work_history.workId',$workId)
-	    ->get()->row_array();
+	    ->get()->result_array();
  		if(empty($work))
  			return false;
  		$completeSchedule = array();
