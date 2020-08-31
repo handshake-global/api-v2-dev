@@ -82,7 +82,11 @@ class Education_model extends CI_Model {
 
  		$this->db->insert($this->table,$data);
  		if($educationId = $this->db->insert_id())
- 			return $this->db->where('educationId',$educationId)->get($this->table)->row();
+ 			return $this->db->query("SELECT education.educationId,education.userId,edu_level.level,courses.course,institutions.institution,education.startYear,education.endYear FROM `education`
+		LEFT JOIN edu_level ON education.levelId = edu_level.levelId
+		LEFT JOIN courses ON education.courseId = courses.courseId
+		LEFT JOIN institutions ON education.institutionId = institutions.institutionId
+		WHERE education.educationId = ".$educationId."  ")->row();
  		else
  			return false;
  	}
