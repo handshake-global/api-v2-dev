@@ -159,7 +159,11 @@ class Education_model extends CI_Model {
  			->update($this->table,$data);
 
  		if($this->db->affected_rows()>0)
- 			return $this->db->where('educationId',$data['educationId'])->get($this->table)->row();
+ 			return $this->db->query("SELECT education.educationId,education.userId,edu_level.level,courses.course,institutions.institution,education.startYear,education.endYear FROM `education`
+		LEFT JOIN edu_level ON education.levelId = edu_level.levelId
+		LEFT JOIN courses ON education.courseId = courses.courseId
+		LEFT JOIN institutions ON education.institutionId = institutions.institutionId
+		WHERE education.educationId = ".$data['educationId']."  ")->row();
 		else
 			return false;	
  	}
