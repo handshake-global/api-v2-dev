@@ -537,6 +537,7 @@ class User extends REST_Controller {
                         ),
                             
         );
+        pr($noteMe);
         setNotification($noteMe);
         
         $token = get_token($data['referUserId']);
@@ -548,7 +549,7 @@ class User extends REST_Controller {
 
         send_notification(
             $token ->token,
-            array('title'=>'RequestReceived','msg'=>$data,'img'=>''),
+            array('title'=>'friendIntroduction','msg'=>$data,'img'=>''),
             $notify
         );
     }
