@@ -82,6 +82,7 @@ $route['deleteMessage'] = 'chat/deleteMessage';
 $route['getUserProfile'] = 'user/userProfile';
 $route['updateUserProfile'] = 'user/userProfile';
 $route['updateUserDetails'] = 'user/userDetails';
+$route['userIntroduction'] = 'user/userIntroduction';
 
 $route['getUserProfileRating'] = 'user/userProfileRating';
 $route['setUserProfileReview'] = 'user/userProfileReview';
