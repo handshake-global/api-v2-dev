@@ -51,7 +51,6 @@ class Notification_model extends CI_Model {
 		$notifyId = json_decode($data['notifyId'],TRUE);
 		$this->db->where_in('notifyId',$notifyId)->update($this->notify,array('status'=>0));
 
-		echo vd();
 		if($this->db->affected_rows()>0)
 			return true;
 		else
