@@ -102,5 +102,38 @@ class Notification extends REST_Controller {
             }
         }
     }
+
+     /**
+     * delete existing user userReview
+     *
+     * @access public
+     * @return json
+     */
+    public function index_delete(){
+    // Call the verification method and store the return value in the variable
+        $request = AUTHORIZATION::verify_request();
+       if(empty($this->delete()))
+            $this->form_validation->set_data(['']);
+        else
+            $this->form_validation->set_data($this->delete());
+
+        if($this->form_validation->run('deleteUserNotification') == FALSE){
+          $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
+        }
+        else{
+            if($response = $this->notification_model->deleteUserNotification($this->delete())){
+                // Prepare the response
+                $statusCode = parent::HTTP_OK;
+                $status = array('statusCode' => $statusCode,'message'=>'notification deleted');
+                $response = array('status'=>$status,'data'=>$response);
+                $this->response($response, $statusCode);  
+            }   
+            else{
+               $statusCode = parent::HTTP_INTERNAL_SERVER_ERROR;
+               $status = array('statusCode' => $statusCode,'error'=>'something went wrong'); 
+               $this->response(['status' =>$status,], parent::HTTP_INTERNAL_SERVER_ERROR); 
+            }
+        }
+    }
     
 }    

@@ -44,4 +44,16 @@ class Notification_model extends CI_Model {
                 ->get($this->notify)
                 ->result_array();  
 	}
+
+	public function deleteUserNotification($data){
+		if(empty($data))
+			return false;
+		$notifyId = implode(',', json_decode($data['notifyId'],TRUE));
+		$this->db->where_in('notifyId',$notifyId)->update($this->notify,array('status',0));
+
+		if($this->db->affected_rows()>0)
+			return true;
+		else
+			return false;
+	}
 } 
