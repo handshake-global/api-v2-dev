@@ -39,6 +39,7 @@ class Notification_model extends CI_Model {
         	->update($this->notify,array('isRead'=>1));
         	
         return $this->db->where('userId',$data['userId'])
+        		->where('status',1)
         		->order_by('notifyId','desc')
                 ->limit($this->limit,$this->offset)
                 ->get($this->notify)
