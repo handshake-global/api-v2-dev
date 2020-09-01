@@ -980,6 +980,13 @@ $config = array(
 		'rules' => 'required|numeric'
 		), 
 	),
+	'deleteUserNotification' => array(
+		array(
+		'field' => 'notifyId',
+		'label' => 'notifyId',
+		'rules' => 'required'
+		), 
+	),
 	'userIntroduction' => array(
 		array(
 		'field' => 'referToUserIds',
