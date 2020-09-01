@@ -537,7 +537,6 @@ class User extends REST_Controller {
                         ),
                             
         );
-        pr($noteMe);
         setNotification($noteMe);
         
         $token = get_token($data['referUserId']);
