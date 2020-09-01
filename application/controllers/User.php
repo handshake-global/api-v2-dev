@@ -525,7 +525,7 @@ class User extends REST_Controller {
 
         $noteMe = array(
           'userId'=>$data['referUserId'],
-          'notification'=>$userName.' sent you request.',
+          'notification'=>$userName.' introduce '.$data['referToUserName'].' .',
           'type'=>'friendIntroduction',
           'createdOn'=>date('Y/m/d h:i:s a', time()),
           'userDetails'=>json_encode(
