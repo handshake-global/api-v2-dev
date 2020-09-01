@@ -535,6 +535,7 @@ class User extends REST_Controller {
                             'designation'=>$userDesignation,
                             )
                         ),
+          'data'=>$data,
                             
         );
         setNotification($noteMe);
