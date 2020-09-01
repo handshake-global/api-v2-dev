@@ -45,7 +45,6 @@ class User_model extends CI_Model {
  			$percentage = $percentage + 30;
 
  		$profile['profileCompleted'] = $percentage;
-
  		$clean = array_map(
 				    function (array $elem) {
 				 		unset($elem['updatedAt']);
