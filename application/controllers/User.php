@@ -549,7 +549,7 @@ class User extends REST_Controller {
 
         send_notification(
             $token ->token,
-            array('title'=>'friendIntroduction','msg'=>$data,'img'=>''),
+            array('title'=>'Friend Introduction','msg'=>$data,'img'=>''),
             $notify
         );
     }
