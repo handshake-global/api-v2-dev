@@ -70,7 +70,7 @@ class Chat_model extends CI_Model {
 	}
 
 
-	public function getConnections($data=[]){
+	public function getMessageList($data=[]){
 		if(empty($data))
 			return false;
 		 	
@@ -86,6 +86,7 @@ class Chat_model extends CI_Model {
 			         ->join('users', 'card_bank.fromUser=users.userId')
 			         ->join('user_details', 'card_bank.fromUser=user_details.userId')
 			         ->group_by('card_bank.fromUser')
+			         ->order_by('card_bank.cardId','desc')
 			         ->get($this->bank)->result_array();
 
 			$cardBankUserTo = $this->db->select("`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,
@@ -99,12 +100,13 @@ class Chat_model extends CI_Model {
 			         ->join('users', 'card_bank.toUser=users.userId')
 			         ->join('user_details', 'card_bank.toUser=user_details.userId')
 			         ->group_by('card_bank.toUser')
+			         ->order_by('card_bank.cardId','desc')
 			         ->get($this->bank)->result_array();         
 
 			$allConnections = array_merge($cardBankUserTo,$cardBankUserFrom);
 			
 			$receivers = array_merge(array_column($cardBankUserFrom, 'userId'),array_column($cardBankUserTo, 'userId'));
-			$sentMgs = $this->db->query("SELECT tbl.messageId,tbl.message AS lastMessage,tbl.file AS fileUrl,tbl.createdAt AS lastMessageTime,tbl.status,'sent' AS 'msgType',`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,`users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation` FROM (SELECT * FROM messages WHERE `sender`=".$data['userId']." GROUP BY messageId ORDER BY messageId DESC) AS tbl,users,user_details WHERE users .userId=tbl.receiver GROUP BY tbl.receiver ORDER BY messageId DESC")->result_array();
+			$sentMgs = $this->db->query("SELECT tbl.messageId,tbl.message AS lastMessage,tbl.file AS fileUrl,tbl.createdAt AS lastMessageTime,tbl.status,'sent' AS 'msgType',`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,`users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation` FROM (SELECT * FROM messages WHERE `sender`=".$data['userId']." GROUP BY messageId ORDER BY messageId DESC) AS tbl,users,user_details WHERE users .userId=tbl.receiver and user_details.userId = tbl.receiver GROUP BY tbl.receiver ORDER BY messageId DESC")->result_array();
 
 			$untouchedConnections = array();
 			$untouchedConnections =  array_diff($receivers,array_column($sentMgs, 'userId'));
@@ -112,15 +114,14 @@ class Chat_model extends CI_Model {
 			$receivedMsgs = array();
 			
 			if(!empty($receivers))			
-				$receivedMsgs = $this->db->query("SELECT tbl.messageId,tbl.message AS lastMessage,tbl.file AS fileUrl,tbl.createdAt AS lastMessageTime,tbl.status,'received' AS 'msgType',`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,`users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation` FROM (SELECT * FROM messages WHERE `receiver`=".$data['userId']." AND `sender` IN (".implode(',',$receivers).") GROUP BY messageId ORDER BY messageId DESC) AS tbl,users,user_details WHERE users .userId=tbl.sender GROUP BY tbl.sender ORDER BY messageId DESC")->result_array(); 	
-
+				$receivedMsgs = $this->db->query("SELECT tbl.messageId,tbl.message AS lastMessage,tbl.file AS fileUrl,tbl.createdAt AS lastMessageTime,tbl.status,'received' AS 'msgType',`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,`users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation` FROM (SELECT * FROM messages WHERE `receiver`=".$data['userId']." AND `sender` IN (".implode(',',$receivers).") GROUP BY messageId ORDER BY messageId DESC) AS tbl,users,user_details WHERE users .userId=tbl.sender and user_details.userId = tbl.sender GROUP BY tbl.sender ORDER BY messageId DESC")->result_array(); 	
 			$untouchedConnections =  array_diff($untouchedConnections,array_column($receivedMsgs, 'userId'));
 			
 			$finalConnection = array_merge($sentMgs,$receivedMsgs);
 			$finalConnectionUsers = array_unique(array_column($finalConnection, 'userId'));
 			$temp = array();
 			foreach ($finalConnection as $final) {
-				if($final['status']==1)
+				if($final['status']==1 || $final['status']==3)
 					$final['hasConnection'] =1;
 				else	 
 					$final['hasConnection'] =0;
@@ -148,7 +149,7 @@ class Chat_model extends CI_Model {
 			 		$connectionWithNoMsg[$i]['userPhoto'] = $con['userPhoto'];
 			 		$connectionWithNoMsg[$i]['isLogin'] = $con['isLogin'];
 			 		$connectionWithNoMsg[$i]['designation'] = $con['designation'];
-			 		if($con['status']==1)
+			 		if($con['status']==1 || $con['status']==3)
 						$connectionWithNoMsg[$i]['hasConnection'] =1;
 					else	 
 						$connectionWithNoMsg[$i]['hasConnection'] =0; 
@@ -156,6 +157,42 @@ class Chat_model extends CI_Model {
 			 $i++;	
 			}
 			return array_merge($temp,$connectionWithNoMsg);
+	}
+
+	public function getConnections($data=[]){
+		if(empty($data))
+			return false;
+		 	
+		 	$status = 1;
+			$cardBankUserFrom = $this->db->select("`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,
+  							  `users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation`, `card_bank`.`status`, ((select count(distinct `card_bank`.`toUser`) from `card_bank` where ((`card_bank`.`fromUser` = `users`.`userId`) and (`card_bank`.`status` = 1))) + (select count(distinct `card_bank`.`fromUser`) from `card_bank` where ((`card_bank`.`toUser` = `users`.`userId`) and (`card_bank`.`status` = 1)))) AS `connections` ")
+					 ->where(
+					 	array(
+					 		'card_bank.toUser'=>$data['userId'],
+					 	)
+					 )
+					 ->where("card_bank.status",1)
+			         ->join('users', 'card_bank.fromUser=users.userId')
+			         ->join('user_details', 'card_bank.fromUser=user_details.userId')
+			         ->group_by('card_bank.fromUser')
+			         ->get($this->bank)->result_array();
+
+			$cardBankUserTo = $this->db->select("`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,
+  							  `users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation`, `card_bank`.`status`, ((select count(distinct `card_bank`.`toUser`) from `card_bank` where ((`card_bank`.`fromUser` = `users`.`userId`) and (`card_bank`.`status` = 1))) + (select count(distinct `card_bank`.`fromUser`) from `card_bank` where ((`card_bank`.`toUser` = `users`.`userId`) and (`card_bank`.`status` = 1)))) AS `connections` ")
+					 ->where(
+					 	array(
+					 		'card_bank.fromUser'=>$data['userId'],
+					 	)
+					 )
+					 ->where("card_bank.status",1)
+			         ->join('users', 'card_bank.toUser=users.userId')
+			         ->join('user_details', 'card_bank.toUser=user_details.userId')
+			         ->group_by('card_bank.toUser')
+			         ->get($this->bank)->result_array();         
+
+		$allConnections = array_merge($cardBankUserTo,$cardBankUserFrom);
+		return  array_values(array_map("unserialize", array_unique(array_map("serialize", $allConnections))));
+
 	}
 
 	public function loginStatus(){

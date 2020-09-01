@@ -17,16 +17,27 @@ class Auth_model extends CI_Model {
 		$data['ipAddress'] = get_client_ip();
         $data['createdAt'] = date('Y/m/d h:i:s a', time());
         $social = array();
-        if(isset($data['social'])){
-	 		$social = json_decode($data['social']);
-	 		unset($data['social']);
-	 		//check if user already exist
-	 		if($this->db->where(
-	 			array('source'=>$social->source,'accountId'=>$social->accountId))->get('social_account')->row()
-	 		)
-	 			return 409;
 
+        $phoneNo = $data['phoneNo'];
+        $countryCode = str_replace('+','',$data['countryCode']);
+        $where = array('phoneNo'=>$phoneNo,'countryCode'=>'+'.$countryCode);
+        $userExist = $this->db->where($where)->get($this->table)->num_rows();
+
+        if($userExist)			
+			return 410;
+
+        if(isset($data['social']) && !empty($data['social'])){
+	 		$social = json_decode($data['social']);
+	 		if($social!=NULL): 
+		 		//check if user already exist
+		 		if($this->db->where(
+		 			array('source'=>$social->source,'accountId'=>$social->accountId))->get('social_account')->row()
+		 		)
+		 			return 409;
+		 	endif;		
 	 	}		
+	 	unset($data['social']);
+	 	
 	 	$this->db->insert($this->table,$data);
 	 	if($userId = $this->db->insert_id()){
 	 		if(!empty($social))

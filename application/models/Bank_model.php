@@ -99,7 +99,7 @@ class Bank_model extends CI_Model
         {
             //iff  reqeuest accepted transfer atachement ot mes
             if($status==1){
-                $msgBank = $this->db->select('note,fromUser,toUser,attachment,attachmentType')
+                $msgBank = $this->db->select('note,fromUser,toUser,attachment,attachmentType,createdAt')
                            ->where('bankId', $data['bankId'])
                            ->get($this->table)
                            ->row_array();
@@ -109,7 +109,9 @@ class Bank_model extends CI_Model
                        'receiver'=>$msgBank['toUser'],     
                        'message'=>$msgBank['note'],     
                        'type'=>$msgBank['attachmentType'],     
-                       'file'=>$msgBank['attachment']     
+                       'file'=>$msgBank['attachment'],   
+                       'createdAt'=>$msgBank['createdAt'],   
+                       'updatedAt'=>$msgBank['createdAt'],   
                     ));           
             }
 
@@ -178,13 +180,14 @@ class Bank_model extends CI_Model
                 $myCard .= " AND (`users`.`firstName` LIKE '".$search_keyword."%' ESCAPE '!'
 				OR `users`.`lastName` LIKE '".$search_keyword."%' ESCAPE '!' ) ";
             }
-            $myCard .= "GROUP BY `card_bank`.`cardId`
+            //$myCard .= "GROUP BY `card_bank`.`cardId`
+            $myCard .= "
 				ORDER BY `users`.`firstName` 
 				LIMIT ".$this->limit." OFFSET ".$this->offset." ";
             $myCard = $this
                 ->db
                 ->query($myCard)->result_array();
- 
+    
         $otherCard = array(); 
          
         if(count($myCard)<$this->limit){    
@@ -200,7 +203,8 @@ class Bank_model extends CI_Model
                 $otherCard .= " AND (`users`.`firstName` LIKE '".$search_keyword."%' ESCAPE '!'
 				OR `users`.`lastName` LIKE '".$search_keyword."%' ESCAPE '!') ";
             }
-            $otherCard .= "GROUP BY `card_bank`.`cardId`
+            //$otherCard .= "GROUP BY `card_bank`.`cardId`
+            $otherCard .= " 
 						ORDER BY `users`.`firstName`
 						LIMIT ".$this->limit." OFFSET ".$this->offset." ";
 
@@ -507,16 +511,25 @@ class Bank_model extends CI_Model
      * @return array ,card
      */
     public function deleteConnection($data = array())
-    {
+    {   
         if (empty($data)) return false;
+        $bank = $this->db->where('bankId',$data['bankId'])
+                        ->get($this->table)->row_array();
         if ($this
             ->db
             ->where(array(
             'bankId' => $data['bankId'],
-        ))->delete($this->table)) return $this
-            ->db
-            ->affected_rows();
-        else return false;
+        ))->delete($this->table)){ 
+                if(!$this->db->affected_rows())
+                    return false;
+                $this->db->query("
+                  update messages set status = 5 where (sender = ".$bank['fromUser']." and receiver = ".$bank['toUser'].") OR (sender = ".$bank['toUser']." and receiver = ".$bank['fromUser'].")  
+                ");
+                return true;
+        }    
+        else {
+            return false;
+        }
     }            
 }
 

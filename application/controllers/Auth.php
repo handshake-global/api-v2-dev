@@ -35,6 +35,13 @@ class Auth extends REST_Controller {
                 $response = array('status'=>$status,'data'=>[]);
                 $this->response($response, $statusCode);  
             }
+            elseif(!is_object($response) && $response == 410){
+                $statusCode = parent::HTTP_OK;
+                $response= $this->clean_response($response);
+                $status = array('statusCode' => $statusCode,'message'=>'phoneNo already taken');
+                $response = array('status'=>$status,'data'=>[]);
+                $this->response($response, $statusCode);  
+            }
             elseif($response){
                 // Create a token from the user data and send it as reponse
                 $token = AUTHORIZATION::generateToken(['phoneNo' => $response->phoneNo]);
