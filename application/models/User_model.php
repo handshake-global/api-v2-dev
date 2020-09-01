@@ -25,6 +25,27 @@ class User_model extends CI_Model {
  		->get($this->profile)->row_array();
  		unset($profile['skills']);
  		$skills = $this->db->where($data)->get($this->skill_mapping)->result_array();
+
+ 		$percentage = 10;
+ 		$education = $this->db->where('userId',$data['userId'])->get('education')->num_rows();
+ 		if($education)
+ 			$percentage = $percentage+25;
+
+ 		$work = $this->db->where('userId',$data['userId'])->get('work_history')->num_rows();
+ 		if($work)
+ 			$percentage = $percentage+25;
+
+ 		if($profile['userPhoto']!=NULL && $profile['userPhoto']!='')
+ 			$percentage = $percentage + 5;
+
+ 		if($profile['bio']!=NULL && $profile['bio']!='')
+ 			$percentage = $percentage + 5;
+
+ 		if(!empty($skills))
+ 			$percentage = $percentage + 30;
+
+ 		$profile['profileCompleted'] = $percentage;
+
  		$clean = array_map(
 				    function (array $elem) {
 				 		unset($elem['updatedAt']);
