@@ -43,6 +43,7 @@ if ( ! function_exists('send_notification')){
         $json = $CI->fcm->getPush();
         pr($json);
         $p = $CI->fcm->send($token, $json);
+        echo $token;
         pr($p);
     }
 }    
