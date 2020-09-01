@@ -980,5 +980,27 @@ $config = array(
 		'rules' => 'required|numeric'
 		), 
 	),
+	'userIntroduction' => array(
+		array(
+		'field' => 'referToUserIds',
+		'label' => 'Refer To UserIds',
+		'rules' => 'required'
+		), 
+		array(
+		'field' => 'referToUserName',
+		'label' => 'Refer To UserName',
+		'rules' => 'required'
+		), 
+		array(
+		'field' => 'referFromUserId',
+		'label' => 'referFrom UserId',
+		'rules' => 'required|numeric'
+		), 
+		array(
+		'field' => 'referUserId',
+		'label' => 'Refer UserId',
+		'rules' => 'required|numeric'
+		), 
+	),
 	
 );

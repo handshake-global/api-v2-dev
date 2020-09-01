@@ -494,4 +494,62 @@ class User extends REST_Controller {
             }
         }
     }
+
+    /**
+     * insert testimonials to  database
+     *
+     * @access public
+     * @return json
+     */
+    public function userIntroduction_post(){
+    // Call the verification method and store the return value in the variable
+        $request = AUTHORIZATION::verify_request();
+              //create card using post data
+        if($this->form_validation->run('userIntroduction') == FALSE){
+          $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
+        }
+        else{
+            $this->userIntroductionNotification($_POST);
+            $statusCode = parent::HTTP_OK;
+            $status = array('statusCode' => $statusCode,'message'=>'sent');
+            $this->response(['status' =>$status,], parent::HTTP_OK);
+        }
+    }
+
+     private function userIntroductionNotification($data){
+       
+        $userDetails = get_userDetails($data['referFromUserId']);   
+        $userName = $userDetails->userName;
+        $userPhoto = $userDetails->userPhoto;
+        $userDesignation = $userDetails->designation;
+
+        $noteMe = array(
+          'userId'=>$data['referUserId'],
+          'notification'=>$userName.' sent you request.',
+          'type'=>'friendIntroduction',
+          'createdOn'=>date('Y/m/d h:i:s a', time()),
+          'userDetails'=>json_encode(
+                            array(
+                            'userName'=>$userName,
+                            'userPhoto'=>$userPhoto,
+                            'designation'=>$userDesignation,
+                            )
+                        ),
+                            
+        );
+        setNotification($noteMe);
+        
+        $token = get_token($data['referUserId']);
+        $notify = array(
+            'userId'=> $data['referFromUserId'],
+            'userName'=> $userName,
+            'type'=>'friendIntroduction'
+        );
+
+        send_notification(
+            $token ->token,
+            array('title'=>'RequestReceived','msg'=>$data,'img'=>''),
+            $notify
+        );
+    }
 }
