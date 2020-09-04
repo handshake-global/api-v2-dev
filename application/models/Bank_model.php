@@ -199,7 +199,7 @@ class Bank_model extends CI_Model
 			WHERE `card_bank`.`toUser` = '" . $data['userId'] . "'
 			AND `card_bank`.`status` = " . $status . " ";
             if($cardType!=NULL)
-                $myCard .=" and card_bank.cardType = $cardType ";
+                $otherCard .=" and card_bank.cardType = $cardType ";
 
             if ($search_keyword != '')
             {
