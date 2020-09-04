@@ -16,7 +16,7 @@ $config = array(
 		'label' => 'Email Address',
 		'rules' => 'valid_email|is_unique[users.email]',
 		"errors" => [
-            			'is_unique' => '%s is already taken.',
+            			'is_unique' => 'Email address already registered.',
         			]
 		),
 		array(

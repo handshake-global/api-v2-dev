@@ -32,14 +32,14 @@ class Auth extends REST_Controller {
                 $statusCode = parent::HTTP_OK;
                 $response= $this->clean_response($response);
                 $status = array('statusCode' => $statusCode,'message'=>'user already exist with social account');
-                $response = array('status'=>$status,'data'=>[]);
+                $response = array('status'=>$status,'data'=>NULL);
                 $this->response($response, $statusCode);  
             }
             elseif(!is_object($response) && $response == 410){
                 $statusCode = parent::HTTP_OK;
                 $response= $this->clean_response($response);
-                $status = array('statusCode' => $statusCode,'message'=>'phoneNo already taken');
-                $response = array('status'=>$status,'data'=>[]);
+                $status = array('statusCode' => $statusCode,'message'=>'Phone number already registered');
+                $response = array('status'=>$status,'data'=>NULL);
                 $this->response($response, $statusCode);  
             }
             elseif($response){
