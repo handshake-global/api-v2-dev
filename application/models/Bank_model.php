@@ -456,7 +456,7 @@ class Bank_model extends CI_Model
             ->group_by('card_bank.fromUser')
             ->get($this->table)
             ->result_array();
-
+            echo vd();
         $cardBankUserTo = $this
             ->db
             ->select("profile.userId as userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.connections,profile.designation")
