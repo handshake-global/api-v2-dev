@@ -173,6 +173,7 @@ class Bank_model extends CI_Model
 			LEFT JOIN `user_details` ON `card_bank`.`toUser`=`user_details`.`userId`
 			WHERE `card_bank`.`fromUser` = " . $data['userId'] . "
 			AND `card_bank`.`status` = " . $status . " ";
+            echo vd();
             if ($search_keyword != '')
             {
                 $myCard .= " AND (`users`.`firstName` LIKE '".$search_keyword."%' ESCAPE '!'
@@ -207,6 +208,7 @@ class Bank_model extends CI_Model
             $otherCard = $this
                 ->db
                 ->query($otherCard)->result_array();
+            echo vd();    
 		}	
 
             $request = array_merge($myCard, $otherCard);
