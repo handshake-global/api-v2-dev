@@ -60,7 +60,6 @@ class Bank_model extends CI_Model
                         ->where('toUser',$data['toUser'])
                         ->where('cardType',$data['cardType'])
                         ->where('status!=',3)
-                        ->where('status!=','-1')
                         ->get($this->table)
                         ->num_rows();
         if($ifRequested)
@@ -100,7 +99,7 @@ class Bank_model extends CI_Model
         {
             //iff  reqeuest accepted transfer atachement ot mes
             if($status==1){
-                $msgBank = $this->db->select('note,fromUser,toUser,attachment,attachmentType,createdAt')
+                $msgBank = $this->db->select('note,fromUser,toUser,attachment,attachmentType')
                            ->where('bankId', $data['bankId'])
                            ->get($this->table)
                            ->row_array();
@@ -110,9 +109,7 @@ class Bank_model extends CI_Model
                        'receiver'=>$msgBank['toUser'],     
                        'message'=>$msgBank['note'],     
                        'type'=>$msgBank['attachmentType'],     
-                       'file'=>$msgBank['attachment'],   
-                       'createdAt'=>$msgBank['createdAt'],   
-                       'updatedAt'=>$msgBank['createdAt'],   
+                       'file'=>$msgBank['attachment']     
                     ));           
             }
 
@@ -181,14 +178,13 @@ class Bank_model extends CI_Model
                 $myCard .= " AND (`users`.`firstName` LIKE '".$search_keyword."%' ESCAPE '!'
 				OR `users`.`lastName` LIKE '".$search_keyword."%' ESCAPE '!' ) ";
             }
-            //$myCard .= "GROUP BY `card_bank`.`cardId`
-            $myCard .= "
+            $myCard .= "GROUP BY `card_bank`.`cardId`
 				ORDER BY `users`.`firstName` 
 				LIMIT ".$this->limit." OFFSET ".$this->offset." ";
             $myCard = $this
                 ->db
                 ->query($myCard)->result_array();
-    
+ 
         $otherCard = array(); 
          
         if(count($myCard)<$this->limit){    
@@ -204,8 +200,7 @@ class Bank_model extends CI_Model
                 $otherCard .= " AND (`users`.`firstName` LIKE '".$search_keyword."%' ESCAPE '!'
 				OR `users`.`lastName` LIKE '".$search_keyword."%' ESCAPE '!') ";
             }
-            //$otherCard .= "GROUP BY `card_bank`.`cardId`
-            $otherCard .= " 
+            $otherCard .= "GROUP BY `card_bank`.`cardId`
 						ORDER BY `users`.`firstName`
 						LIMIT ".$this->limit." OFFSET ".$this->offset." ";
 
@@ -446,6 +441,36 @@ class Bank_model extends CI_Model
         return array_merge($cardBankUserTo, $cardBankUserFrom);
     }
 
+     public function getQrConnections($data = [])
+    {
+        if (empty($data)) return false;
+
+        $status = 4;
+        $cardBankUserFrom = $this
+            ->db
+            ->select("profile.userId as userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.connections,profile.designation")
+            ->where(array(
+            'card_bank.toUser' => $data['userId'],
+            'card_bank.status' => $status
+        ))->join('profile', 'card_bank.fromUser=profile.userId')
+            ->group_by('card_bank.fromUser')
+            ->get($this->table)
+            ->result_array();
+
+        $cardBankUserTo = $this
+            ->db
+            ->select("profile.userId as userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.connections,profile.designation")
+            ->where(array(
+            'card_bank.fromUser' => $data['userId'],
+            'card_bank.status' => $status
+        ))->join('profile', 'card_bank.toUser=profile.userId')
+            ->group_by('card_bank.toUser')
+            ->get($this->table)
+            ->result_array();
+
+        return array_merge($cardBankUserTo, $cardBankUserFrom);
+    }
+
     public function sentCardRequest($data=NULL){
         if($data == NULL)
             return false;
@@ -512,25 +537,16 @@ class Bank_model extends CI_Model
      * @return array ,card
      */
     public function deleteConnection($data = array())
-    {   
+    {
         if (empty($data)) return false;
-        $bank = $this->db->where('bankId',$data['bankId'])
-                        ->get($this->table)->row_array();
         if ($this
             ->db
             ->where(array(
             'bankId' => $data['bankId'],
-        ))->delete($this->table)){ 
-                if(!$this->db->affected_rows())
-                    return false;
-                $this->db->query("
-                  update messages set status = 5 where (sender = ".$bank['fromUser']." and receiver = ".$bank['toUser'].") OR (sender = ".$bank['toUser']." and receiver = ".$bank['fromUser'].")  
-                ");
-                return true;
-        }    
-        else {
-            return false;
-        }
+        ))->delete($this->table)) return $this
+            ->db
+            ->affected_rows();
+        else return false;
     }            
 }
 

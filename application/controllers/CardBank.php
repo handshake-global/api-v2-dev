@@ -411,6 +411,39 @@ class CardBank extends REST_Controller {
     }
 
     /**
+     * get connection list
+     *
+     * @access public
+     * @return json
+     */
+    public function getQrConnections_get(){
+    // Call the verification method and store the return value in the variable
+        $request = AUTHORIZATION::verify_request();
+        if(empty($this->get()))
+            $this->form_validation->set_data(['']);
+        else
+            $this->form_validation->set_data($this->get());
+        //create card using post data
+        if($this->form_validation->run('getConnections') == FALSE){
+          $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
+        }
+        else{
+            if($response = $this->bank_model->getQrConnections($this->get())){
+                // Prepare the response
+                $statusCode = parent::HTTP_OK;
+                $status = array('statusCode' => $statusCode,'message'=>'QR Connections');
+                $response = array('status'=>$status,'data'=>$response);
+                $this->response($response, $statusCode);  
+            }   
+            else{
+               $statusCode = parent::HTTP_OK;
+               $status = array('statusCode' => $statusCode,'error'=>'No connection found'); 
+               $this->response(['status' =>$status,], parent::HTTP_OK); 
+            }
+        }
+    }
+
+    /**
      * delete connection 
      *
      * @access public
