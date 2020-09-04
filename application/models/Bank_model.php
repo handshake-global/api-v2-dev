@@ -441,36 +441,6 @@ class Bank_model extends CI_Model
         return array_merge($cardBankUserTo, $cardBankUserFrom);
     }
 
-     public function getQrConnections($data = [])
-    {
-        if (empty($data)) return false;
-
-        $status = 4;
-        $cardBankUserFrom = $this
-            ->db
-            ->select("profile.userId as userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.connections,profile.designation")
-            ->where(array(
-            'card_bank.toUser' => $data['userId'],
-            'card_bank.status' => $status
-        ))->join('profile', 'card_bank.fromUser=profile.userId')
-            ->group_by('card_bank.fromUser')
-            ->get($this->table)
-            ->result_array();
-            echo vd();
-        $cardBankUserTo = $this
-            ->db
-            ->select("profile.userId as userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.connections,profile.designation")
-            ->where(array(
-            'card_bank.fromUser' => $data['userId'],
-            'card_bank.status' => $status
-        ))->join('profile', 'card_bank.toUser=profile.userId')
-            ->group_by('card_bank.toUser')
-            ->get($this->table)
-            ->result_array();
-
-        return array_merge($cardBankUserTo, $cardBankUserFrom);
-    }
-
     public function sentCardRequest($data=NULL){
         if($data == NULL)
             return false;

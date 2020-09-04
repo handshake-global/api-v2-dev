@@ -424,20 +424,20 @@ class CardBank extends REST_Controller {
         else
             $this->form_validation->set_data($this->get());
         //create card using post data
-        if($this->form_validation->run('getConnections') == FALSE){
+        if($this->form_validation->run('pendingCardRequest') == FALSE){
           $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
         }
         else{
-            if($response = $this->bank_model->getQrConnections($this->get())){
+            if($response = $this->bank_model->get_cardBank($this->get(),4)){
                 // Prepare the response
                 $statusCode = parent::HTTP_OK;
-                $status = array('statusCode' => $statusCode,'message'=>'QR Connections');
+                $status = array('statusCode' => $statusCode,'message'=>'Cards in Bank');
                 $response = array('status'=>$status,'data'=>$response);
                 $this->response($response, $statusCode);  
             }   
             else{
                $statusCode = parent::HTTP_OK;
-               $status = array('statusCode' => $statusCode,'error'=>'No connection found'); 
+               $status = array('statusCode' => $statusCode,'error'=>'No Cards Found in Bank'); 
                $this->response(['status' =>$status,], parent::HTTP_OK); 
             }
         }
