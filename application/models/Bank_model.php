@@ -135,7 +135,7 @@ class Bank_model extends CI_Model
         }
     }
 
-    public function get_cardBank($data = [], $status = 0)
+    public function get_cardBank($data = [], $status = 0,$cardType = NULL)
     {
         if (empty($data)) return false;
 
@@ -173,7 +173,9 @@ class Bank_model extends CI_Model
 			LEFT JOIN `user_details` ON `card_bank`.`toUser`=`user_details`.`userId`
 			WHERE `card_bank`.`fromUser` = " . $data['userId'] . "
 			AND `card_bank`.`status` = " . $status . " ";
-            echo vd();
+            if($cardType!=NULL)
+                $myCard .=" and card_bank.cardType = $cardType ";
+            
             if ($search_keyword != '')
             {
                 $myCard .= " AND (`users`.`firstName` LIKE '".$search_keyword."%' ESCAPE '!'
@@ -196,6 +198,9 @@ class Bank_model extends CI_Model
 			LEFT JOIN `user_details` ON `card_bank`.`toUser`=`user_details`.`userId`
 			WHERE `card_bank`.`toUser` = '" . $data['userId'] . "'
 			AND `card_bank`.`status` = " . $status . " ";
+            if($cardType!=NULL)
+                $myCard .=" and card_bank.cardType = $cardType ";
+
             if ($search_keyword != '')
             {
                 $otherCard .= " AND (`users`.`firstName` LIKE '".$search_keyword."%' ESCAPE '!'
@@ -208,7 +213,6 @@ class Bank_model extends CI_Model
             $otherCard = $this
                 ->db
                 ->query($otherCard)->result_array();
-            echo vd();    
 		}	
 
             $request = array_merge($myCard, $otherCard);
