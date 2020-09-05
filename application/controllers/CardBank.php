@@ -428,7 +428,7 @@ class CardBank extends REST_Controller {
           $this->response(['error' => $this->form_validation->error_array(),'statusCode' => parent::HTTP_UNPROCESSABLE_ENTITY], parent::HTTP_UNPROCESSABLE_ENTITY);  
         }
         else{
-            if($response = $this->bank_model->get_cardBank($this->get(),1,4)){
+            if($response = $this->bank_model->getQrConnections($this->get(),1,4)){
                 // Prepare the response
                 $statusCode = parent::HTTP_OK;
                 $status = array('statusCode' => $statusCode,'message'=>'Cards in Bank');

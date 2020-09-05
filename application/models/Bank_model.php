@@ -181,13 +181,13 @@ class Bank_model extends CI_Model
                 $myCard .= " AND (`users`.`firstName` LIKE '".$search_keyword."%' ESCAPE '!'
 				OR `users`.`lastName` LIKE '".$search_keyword."%' ESCAPE '!' ) ";
             }
-            $myCard .= " 
+            $myCard .= "GROUP BY `card_bank`.`cardId`
 				ORDER BY `users`.`firstName` 
 				LIMIT ".$this->limit." OFFSET ".$this->offset." ";
             $myCard = $this
                 ->db
                 ->query($myCard)->result_array();
-    echo vd();
+ 
         $otherCard = array(); 
          
         if(count($myCard)<$this->limit){    
@@ -206,7 +206,7 @@ class Bank_model extends CI_Model
                 $otherCard .= " AND (`users`.`firstName` LIKE '".$search_keyword."%' ESCAPE '!'
 				OR `users`.`lastName` LIKE '".$search_keyword."%' ESCAPE '!') ";
             }
-            $otherCard .= " 
+            $otherCard .= "GROUP BY `card_bank`.`cardId`
 						ORDER BY `users`.`firstName`
 						LIMIT ".$this->limit." OFFSET ".$this->offset." ";
 
@@ -214,7 +214,7 @@ class Bank_model extends CI_Model
                 ->db
                 ->query($otherCard)->result_array();
 		}	
-        echo vd();
+
             $request = array_merge($myCard, $otherCard);
         }
         if (!empty($request))
@@ -253,7 +253,6 @@ class Bank_model extends CI_Model
                 return strcmp($a['user']["firstName"], $b['user']["firstName"]);
             }
             usort($clean, 'compareByName');
-            pr($clean);
             return $clean;
         }
         else
@@ -261,6 +260,133 @@ class Bank_model extends CI_Model
             return false;
         }
     }
+
+     public function getQrConnections($data = [], $status = 0,$cardType = NULL)
+    {
+        if (empty($data)) return false;
+
+        if ($status == 0)
+        {   
+            if(isset($data['pageIndex']) && $data['pageIndex']!=0){
+                $this->offset = $data['pageIndex']* $this->limit;
+            }
+
+            $request = $this
+                ->db
+                ->select('card_bank.*,users.userId,
+                        users.firstName,users.lastName,users.email,users.phoneNo,users.countryCode,users.avatar,user_details.designation')
+                ->where(array(
+                'card_bank.toUser' => $data['userId'],
+                'card_bank.status' => $status
+            ))
+                ->join('users', 'card_bank.fromUser=users.userId')
+                ->join('user_details', 'card_bank.fromUser=user_details.userId','left')
+                ->order_by('users.firstName')
+                ->limit($this->limit,$this->offset)
+                ->get($this->table)
+                ->result_array(); 
+        }
+        else
+        {
+            if(isset($data['pageIndex']) && $data['pageIndex']!=0){
+                $this->offset = $data['pageIndex']* $this->limit;
+            }
+
+            $search_keyword = isset($data['keyword']) ? ($data['keyword']) : '';
+            $myCard = "SELECT `card_bank`.`bankId`, `card_bank`.`targetCardId` as `cardId`, `card_bank`.`status`, `card_bank`.`updatedBy`,`card_bank`.`updatedAt`, `card_bank`.`createdBy`, `card_bank`.`createdAt`, `card_bank`.`note`, `card_bank`.`attachment`,`users`.`userId`, `users`.`firstName`, `users`.`lastName`, `users`.`email`, `users`.`phoneNo`, `users`.`countryCode`, `users`.`avatar`, `user_details`.`designation`
+            FROM `card_bank`
+            JOIN `users` ON `card_bank`.`toUser`=`users`.`userId`
+            LEFT JOIN `user_details` ON `card_bank`.`toUser`=`user_details`.`userId`
+            WHERE `card_bank`.`fromUser` = " . $data['userId'] . "
+            AND `card_bank`.`status` = " . $status . " ";
+            if($cardType!=NULL)
+                $myCard .=" and card_bank.cardType = $cardType ";
+            
+            if ($search_keyword != '')
+            {
+                $myCard .= " AND (`users`.`firstName` LIKE '".$search_keyword."%' ESCAPE '!'
+                OR `users`.`lastName` LIKE '".$search_keyword."%' ESCAPE '!' ) ";
+            }
+            $myCard .= " 
+                ORDER BY `users`.`firstName` 
+                LIMIT ".$this->limit." OFFSET ".$this->offset." ";
+            $myCard = $this
+                ->db
+                ->query($myCard)->result_array();
+ 
+        $otherCard = array(); 
+         
+        if(count($myCard)<$this->limit){    
+            $this->limit = $this->limit-(int)count($myCard);    
+            $otherCard = "SELECT `card_bank`.`bankId`, `card_bank`.`cardId` as `cardId`, `card_bank`.`status`, `card_bank`.`updatedBy`,`card_bank`.`updatedAt`, `card_bank`.`createdBy`, `card_bank`.`createdAt`, `card_bank`.`note`, `card_bank`.`attachment`,`users`.`userId`, `users`.`firstName`, `users`.`lastName`, `users`.`email`, `users`.`phoneNo`, `users`.`countryCode`,`users`.`avatar`, `user_details`.`designation`
+            FROM `card_bank`
+            JOIN `users` ON `card_bank`.`fromUser`=`users`.`userId`
+            LEFT JOIN `user_details` ON `card_bank`.`toUser`=`user_details`.`userId`
+            WHERE `card_bank`.`toUser` = '" . $data['userId'] . "'
+            AND `card_bank`.`status` = " . $status . " ";
+            if($cardType!=NULL)
+                $otherCard .=" and card_bank.cardType = $cardType ";
+
+            if ($search_keyword != '')
+            {
+                $otherCard .= " AND (`users`.`firstName` LIKE '".$search_keyword."%' ESCAPE '!'
+                OR `users`.`lastName` LIKE '".$search_keyword."%' ESCAPE '!') ";
+            }
+            $otherCard .= " 
+                        ORDER BY `users`.`firstName`
+                        LIMIT ".$this->limit." OFFSET ".$this->offset." ";
+
+            $otherCard = $this
+                ->db
+                ->query($otherCard)->result_array();
+        }   
+
+            $request = array_merge($myCard, $otherCard);
+        }
+        if (!empty($request))
+        {
+            $clean = array_map(function (array $elem)
+            {
+                //filter user
+                $elem['user'] = array(
+                    'userId' => $elem['userId'],
+                    'firstName' => $elem['firstName'],
+                    'lastName' => $elem['lastName'],
+                    'email' => $elem['email'],
+                    'countryCode' => $elem['countryCode'],
+                    'phoneNo' => $elem['phoneNo'],
+                    'avatar' => $elem['avatar'],
+                    'designation' => $elem['designation'],
+                );
+                unset($elem['updatedBy']);
+                // unset($elem['updatedAt']);
+                unset($elem['createdBy']);
+                unset($elem['userId']);
+                unset($elem['designation']);
+                unset($elem['firstName']);
+                unset($elem['lastName']);
+                unset($elem['email']);
+                unset($elem['countryCode']);
+                unset($elem['phoneNo']);
+                unset($elem['avatar']);
+                // unset($elem['createdAt']);        // modify $elem
+                return $elem; // and return it to be put into the result
+                
+            }
+            , $request);
+            function compareByName($a, $b)
+            {
+                return strcmp($a['user']["firstName"], $b['user']["firstName"]);
+            }
+            usort($clean, 'compareByName');
+            return $clean;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
 
     public function shareCard()
     {
