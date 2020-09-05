@@ -175,7 +175,7 @@ class Bank_model extends CI_Model
 			AND `card_bank`.`status` = " . $status . " ";
             if($cardType!=NULL)
                 $myCard .=" and card_bank.cardType = $cardType ";
-            
+
             if ($search_keyword != '')
             {
                 $myCard .= " AND (`users`.`firstName` LIKE '".$search_keyword."%' ESCAPE '!'
@@ -187,7 +187,7 @@ class Bank_model extends CI_Model
             $myCard = $this
                 ->db
                 ->query($myCard)->result_array();
- 
+    echo vd();
         $otherCard = array(); 
          
         if(count($myCard)<$this->limit){    
@@ -214,7 +214,7 @@ class Bank_model extends CI_Model
                 ->db
                 ->query($otherCard)->result_array();
 		}	
-
+        echo vd();
             $request = array_merge($myCard, $otherCard);
         }
         if (!empty($request))
@@ -253,6 +253,7 @@ class Bank_model extends CI_Model
                 return strcmp($a['user']["firstName"], $b['user']["firstName"]);
             }
             usort($clean, 'compareByName');
+            pr($clean);
             return $clean;
         }
         else
