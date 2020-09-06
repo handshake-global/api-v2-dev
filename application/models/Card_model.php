@@ -132,7 +132,7 @@ class Card_model extends CI_Model {
 		if(isset($data['pageIndex']) && $data['pageIndex']!=0){
 			$this->offset = $data['pageIndex'] * $this->limit;
 		}
-		if($showcase==false){
+		if($showcase==false){	
 			$cards = $this->db->query("
 								 SELECT
 									card.cardId,
@@ -237,6 +237,14 @@ class Card_model extends CI_Model {
  			$connections = !empty($final_contacts['connections']) ? $final_contacts['connections'] : [];
  			$final_contacts = !empty($final_contacts['suggestions']) ? $final_contacts['suggestions'] : [];
 			$temp = [];
+
+			$location_ids = array();
+            if(isset($data['latitude']) && isset($data['longitude'])){
+                $distance = isset($data['distance']) ? $data['distance'] : 100;
+                $location_ids  = $this->getLocations($data['latitude'],$data['longitude'],$distance);
+            }
+
+
 			if(!empty($final_contacts)){
 				//getting mutuals
 					foreach ($final_contacts as $key => $value) {
@@ -251,12 +259,16 @@ class Card_model extends CI_Model {
 
 				$final_contacts = array_merge($temp,$final_contacts);
 
-				$users = $this->db->query("
-							SELECT userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
-							where userId in (".implode(',',$final_contacts).") and NOC !=0
-							order by NOC desc
-							LIMIT ".$this->limit." OFFSET ".$this->offset."
-						")
+				$query = "SELECT userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
+							where userId in (".implode(',',$final_contacts).") and NOC !=0 ";
+
+				if(!empty($location_ids))
+                	$query .= " AND userId in (".implode(',', $location_ids).") ";
+
+                $query .= "order by NOC desc
+							LIMIT ".$this->limit." OFFSET ".$this->offset."";
+
+				$users = $this->db->query($query)
 						->result_array();
 					$v = [];	
 					if(!empty($mutualsContacts) && !empty($users)){
@@ -304,21 +316,27 @@ class Card_model extends CI_Model {
 						}
 				}
 			else{
-				$users = $this->db->query("
-							SELECT  userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
-							where userId not in (".$data['userId'].") and NOC !=0
-							order by NOC desc
-							LIMIT ".$this->limit." OFFSET ".$this->offset."
-						")
+
+				$query = "SELECT userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
+							where userId not in (".$data['userId'].") and NOC !=0 ";
+
+				if(!empty($location_ids))
+                	$query .= " AND userId in (".implode(',', $location_ids).") ";
+
+                $query .= "order by NOC desc
+							LIMIT ".$this->limit." OFFSET ".$this->offset."";
+
+				$users = $this->db->query($query)
 						->result_array();
-					$temp = array();	
-					if(!empty($users))	
-						foreach($users as $user){	
-							$user['mutuals'] = [];
-							array_push($temp,$user);
-						}	
-					if(!empty($temp))
-						$users = $temp;	
+				 
+				$temp = array();	
+				if(!empty($users))	
+					foreach($users as $user){	
+						$user['mutuals'] = [];
+						array_push($temp,$user);
+					}	
+				if(!empty($temp))
+					$users = $temp;	
 				}				
 			}
 			return array_values($users);
@@ -361,6 +379,7 @@ class Card_model extends CI_Model {
 
 		return array('suggestions'=>$suggestion,'connections'=>$connections);
 	}
+
 	private function getMutuals($userId=NULL){
 		if($userId==NULL)
 			return [];
@@ -378,6 +397,21 @@ class Card_model extends CI_Model {
 		else
 			return [];
 	}
+
+	private function getLocations($latitude,$longitude,$distance=100){
+        $locations = $this->db->query("SELECT
+            DISTINCT(userId)
+        FROM
+        locations
+        WHERE
+            ACOS(
+                SIN(RADIANS(`latitude`)) * SIN(RADIANS(".$latitude.")) + COS(RADIANS(`latitude`)) * COS(RADIANS(".$latitude.")) * COS(
+                    RADIANS(`longitude`) - RADIANS(".$longitude.")
+                )
+            ) * 6380 < ".$distance." AND status = 1
+         ")->result_array();
+        return array_column($locations, 'userId');
+    }
 
 	public function check($array, $keys, $values) {
 	    foreach ($array as $item){
