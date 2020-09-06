@@ -198,6 +198,7 @@ class Bank_model extends CI_Model
             $myCard = $this
                 ->db
                 ->query($myCard)->result_array();
+                echo vd();
  
         $otherCard = array(); 
          
