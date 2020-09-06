@@ -191,7 +191,7 @@ class Bank_model extends CI_Model
             }
 
             if(!empty($location_ids)){
-                $myCard .= " AND card_bank.toUser in (".implode(',', $location_ids).") ";
+                $myCard .= " AND users.userId in (".implode(',', $location_ids).") ";
             }   
             
             $myCard .= "GROUP BY `card_bank`.`cardId`
@@ -222,7 +222,7 @@ class Bank_model extends CI_Model
             }
 
             if(!empty($location_ids)){
-                $otherCard .= " AND card_bank.toUser in (".implode(',', $location_ids).") ";
+                $otherCard .= " AND users.userId in (".implode(',', $location_ids).") ";
             }   
 
             $otherCard .= "GROUP BY `card_bank`.`cardId`
