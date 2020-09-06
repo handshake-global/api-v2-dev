@@ -163,7 +163,7 @@ class Bank_model extends CI_Model
         else
         {   
             $location_ids = array();
-            if($data['latitude']!='' && $data['longitute']!=''){
+            if(isset($data['latitude']) && isset($data['longitute']) && $data['latitude']!='' && $data['longitute']!=''){
                 $distance = isset($data['distance']) ? $data['distance'] : 100;
                 $location_ids  = $this->getLocations($data['latitude'],$data['longitute'],$distance);
             }
