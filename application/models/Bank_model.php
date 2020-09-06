@@ -164,9 +164,9 @@ class Bank_model extends CI_Model
         {   
             $location_ids = array();
             pr($data);
-            if(isset($data['latitude']) && isset($data['longitute'])){
+            if(isset($data['latitude']) && isset($data['longitude'])){
                 $distance = isset($data['distance']) ? $data['distance'] : 100;
-                $location_ids  = $this->getLocations($data['latitude'],$data['longitute'],$distance);
+                $location_ids  = $this->getLocations($data['latitude'],$data['longitude'],$distance);
                 echo vd();
             }
 
@@ -280,7 +280,7 @@ class Bank_model extends CI_Model
         }
     }
 
-    private function getLocations($latitude,$longitute,$distance=100){
+    private function getLocations($latitude,$longitude,$distance=100){
         $locations = $this->db->query("SELECT
             DISTINCT(userId)
         FROM
