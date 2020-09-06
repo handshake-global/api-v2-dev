@@ -161,15 +161,7 @@ class Bank_model extends CI_Model
                 ->result_array(); 
         }
         else
-        {   
-            $location_ids = array();
-            pr($data);
-            if(isset($data['latitude']) && isset($data['longitude'])){
-                $distance = isset($data['distance']) ? $data['distance'] : 100;
-                $location_ids  = $this->getLocations($data['latitude'],$data['longitude'],$distance);
-                echo vd();
-            }
-
+        {
         	if(isset($data['pageIndex']) && $data['pageIndex']!=0){
 				$this->offset = $data['pageIndex']* $this->limit;
 			}
@@ -189,18 +181,12 @@ class Bank_model extends CI_Model
                 $myCard .= " AND (`users`.`firstName` LIKE '".$search_keyword."%' ESCAPE '!'
 				OR `users`.`lastName` LIKE '".$search_keyword."%' ESCAPE '!' ) ";
             }
-
-            if(!empty($location_ids)){
-                $myCard .= " AND users.userId in (".implode(',', $location_ids).") ";
-            }   
-            
             $myCard .= "GROUP BY `card_bank`.`cardId`
 				ORDER BY `users`.`firstName` 
 				LIMIT ".$this->limit." OFFSET ".$this->offset." ";
             $myCard = $this
                 ->db
                 ->query($myCard)->result_array();
-                echo vd();
  
         $otherCard = array(); 
          
@@ -220,11 +206,6 @@ class Bank_model extends CI_Model
                 $otherCard .= " AND (`users`.`firstName` LIKE '".$search_keyword."%' ESCAPE '!'
 				OR `users`.`lastName` LIKE '".$search_keyword."%' ESCAPE '!') ";
             }
-
-            if(!empty($location_ids)){
-                $otherCard .= " AND users.userId in (".implode(',', $location_ids).") ";
-            }   
-
             $otherCard .= "GROUP BY `card_bank`.`cardId`
 						ORDER BY `users`.`firstName`
 						LIMIT ".$this->limit." OFFSET ".$this->offset." ";
@@ -278,21 +259,6 @@ class Bank_model extends CI_Model
         {
             return false;
         }
-    }
-
-    private function getLocations($latitude,$longitude,$distance=100){
-        $locations = $this->db->query("SELECT
-            DISTINCT(userId)
-        FROM
-        locations
-        WHERE
-            ACOS(
-                SIN(RADIANS(`latitude`)) * SIN(RADIANS(".$latitude.")) + COS(RADIANS(`latitude`)) * COS(RADIANS(".$latitude.")) * COS(
-                    RADIANS(`longitude`) - RADIANS(".$longitude.")
-                )
-            ) * 6380 < ".$distance." AND status = 1
-         ")->result_array();
-        return array_column($locations, 'userId');
     }
 
      public function getQrConnections($data = [], $status = 0,$cardType = NULL)
