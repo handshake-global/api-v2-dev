@@ -290,7 +290,7 @@ class Bank_model extends CI_Model
                 SIN(RADIANS(`latitude`)) * SIN(RADIANS(".$latitude.")) + COS(RADIANS(`latitude`)) * COS(RADIANS(".$latitude.")) * COS(
                     RADIANS(`longitude`) - RADIANS(".$longitude.")
                 )
-            ) * 6380 < ".$distance."
+            ) * 6380 < ".$distance." AND status = 1
          ")->result_array();
         return array_column($locations, 'userId');
     }
