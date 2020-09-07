@@ -243,7 +243,6 @@ class Card_model extends CI_Model {
                 $distance = isset($data['distance']) ? $data['distance'] : 100;
                 $location_ids  = $this->getLocations($data['latitude'],$data['longitude'],$distance);
             }
-            echo vd();
 
 
 			if(!empty($final_contacts)){
@@ -259,14 +258,12 @@ class Card_model extends CI_Model {
 		            }, array());
 
 				$final_contacts = array_merge($temp,$final_contacts);
+				$final_contacts = array_merge($final_contacts,$location_ids);
 
 				$query = "SELECT userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
 							where userId in (".implode(',',$final_contacts).") and NOC !=0 ";
 
-				if(!empty($location_ids))
-                	$query .= " AND userId in (".implode(',', $location_ids).") ";
-
-                $query .= "order by NOC desc
+				$query .= "order by NOC desc
 							LIMIT ".$this->limit." OFFSET ".$this->offset."";
 
 				$users = $this->db->query($query)
@@ -340,7 +337,6 @@ class Card_model extends CI_Model {
 					$users = $temp;	
 				}				
 			}
-			echo vd();
 			return array_values($users);
 	}
 
