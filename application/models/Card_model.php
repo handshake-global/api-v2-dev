@@ -243,6 +243,7 @@ class Card_model extends CI_Model {
                 $distance = isset($data['distance']) ? $data['distance'] : 100;
                 $location_ids  = $this->getLocations($data['latitude'],$data['longitude'],$distance);
             }
+            echo vd();
 
 
 			if(!empty($final_contacts)){
@@ -339,6 +340,7 @@ class Card_model extends CI_Model {
 					$users = $temp;	
 				}				
 			}
+			echo vd();
 			return array_values($users);
 	}
 
