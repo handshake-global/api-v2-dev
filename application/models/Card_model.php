@@ -408,7 +408,6 @@ class Card_model extends CI_Model {
                 )
             ) * 6380 < ".$distance." AND status = 1
          ")->result_array();
-        echo vd();
         return array_column($locations, 'userId');
     }
 
