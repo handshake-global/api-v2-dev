@@ -398,16 +398,29 @@ class Card_model extends CI_Model {
 
 	private function getLocations($latitude,$longitude,$distance=100){
         $locations = $this->db->query("SELECT
-            DISTINCT(userId)
-        FROM
-        locations
-        WHERE
-            ACOS(
-                SIN(RADIANS(`latitude`)) * SIN(RADIANS(".$latitude.")) + COS(RADIANS(`latitude`)) * COS(RADIANS(".$latitude.")) * COS(
-                    RADIANS(`longitude`) - RADIANS(".$longitude.")
-                )
-            ) * 6380 < ".$distance." AND status = 1
-         ")->result_array();
+		    settings.maxDistance,
+		    settings.userId,
+		    locations.area,
+		    ACOS(
+		        SIN(RADIANS(`latitude`)) * SIN(RADIANS(28.6550458)) + COS(RADIANS(`latitude`)) * COS(RADIANS(28.6550458)) * COS(
+		            RADIANS(`longitude`) - RADIANS(77.1888201)
+		        )
+		    ) * 6380 AS dist
+		FROM
+		    settings
+		LEFT JOIN
+		    locations
+		ON
+		    settings.userId = locations.userId
+		    
+		where 
+		 (
+		        (ACOS(
+		            SIN(RADIANS(`latitude`)) * SIN(RADIANS(".$latitude.")) + COS(RADIANS(`latitude`)) * COS(RADIANS(".$latitude.")) * COS(
+		                RADIANS(`longitude`) - RADIANS(".$longitude.")
+		            )
+        ) * 6380 <= settings.maxDistance) OR settings.global = 1 
+    ) ")->result_array();
         return array_column($locations, 'userId');
     }
 
