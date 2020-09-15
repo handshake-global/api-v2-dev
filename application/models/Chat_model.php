@@ -88,6 +88,7 @@ class Chat_model extends CI_Model {
 			         ->group_by('card_bank.fromUser')
 			         ->order_by('card_bank.cardId','desc')
 			         ->get($this->bank)->result_array();
+			         echo vd();
 
 			$cardBankUserTo = $this->db->select("`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,
   							  `users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation`, `card_bank`.`status`")
@@ -102,7 +103,7 @@ class Chat_model extends CI_Model {
 			         ->group_by('card_bank.toUser')
 			         ->order_by('card_bank.cardId','desc')
 			         ->get($this->bank)->result_array();         
-
+					echo vd();
 			$allConnections = array_merge($cardBankUserTo,$cardBankUserFrom);
 			
 			$receivers = array_merge(array_column($cardBankUserFrom, 'userId'),array_column($cardBankUserTo, 'userId'));
