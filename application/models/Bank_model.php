@@ -551,8 +551,8 @@
                 ->db
                 ->select("profile.userId as userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.connections,profile.designation")
                 ->where('card_bank.fromUser', $data['userId'])
-                 ->where_in('card_bank.status', [1,3])
-            ->join('profile', 'card_bank.toUser=profile.userId')
+                ->where_in('card_bank.status', [1,3])
+                ->join('profile', 'card_bank.toUser=profile.userId')
                 ->group_by('card_bank.toUser')
                 ->get($this->table)
                 ->result_array();
