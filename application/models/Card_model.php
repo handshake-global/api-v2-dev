@@ -271,6 +271,7 @@ class Card_model extends CI_Model {
 
 				$users = $this->db->query($query)
 						->result_array();
+				echo vd();		
 					$v = [];	
 					if(!empty($mutualsContacts) && !empty($users)){
 						foreach ($users as $key => $value) {
@@ -324,7 +325,7 @@ class Card_model extends CI_Model {
 				if (($key = array_search($data['userId'], $location_ids)) !== false) {
 				    unset($location_ids[$key]);
 				}
-							
+
 				if(!empty($location_ids))
                 	$query .= " AND userId in (".implode(',', $location_ids).") ";
 
