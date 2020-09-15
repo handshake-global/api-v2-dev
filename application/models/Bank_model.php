@@ -182,41 +182,29 @@
     				OR `users`.`lastName` LIKE '".$search_keyword."%' ESCAPE '!' ) ";
                 }
                 $myCard .= "GROUP BY `users`.`userId`
-    				ORDER BY `users`.`firstName` 
-    				LIMIT ".$this->limit." OFFSET ".$this->offset." ";
-                $myCard = $this
-                    ->db
-                    ->query($myCard)->result_array();
-     
-            $otherCard = array(); 
-             echo vd();
-            if(count($myCard)<$this->limit){    
-            	$this->limit = $this->limit-(int)count($myCard);    
-                $otherCard = "SELECT `card_bank`.`bankId`, `card_bank`.`cardId` as `cardId`, `card_bank`.`status`, `card_bank`.`updatedBy`,`card_bank`.`updatedAt`, `card_bank`.`createdBy`, `card_bank`.`createdAt`, `card_bank`.`note`, `card_bank`.`attachment`,`users`.`userId`, `users`.`firstName`, `users`.`lastName`, `users`.`email`, `users`.`phoneNo`, `users`.`countryCode`,`users`.`avatar`, `user_details`.`designation`
-    			FROM `card_bank`
-    			JOIN `users` ON `card_bank`.`fromUser`=`users`.`userId`
-    			LEFT JOIN `user_details` ON `card_bank`.`toUser`=`user_details`.`userId`
-    			WHERE `card_bank`.`toUser` = '" . $data['userId'] . "'
-    			AND `card_bank`.`status` = " . $status . " ";
-                if($cardType!=NULL)
-                    $otherCard .=" and card_bank.cardType = $cardType ";
+    				ORDER BY `users`.`firstName`";
+               
+            $otherCard = "SELECT `card_bank`.`bankId`, `card_bank`.`cardId` as `cardId`, `card_bank`.`status`, `card_bank`.`updatedBy`,`card_bank`.`updatedAt`, `card_bank`.`createdBy`, `card_bank`.`createdAt`, `card_bank`.`note`, `card_bank`.`attachment`,`users`.`userId`, `users`.`firstName`, `users`.`lastName`, `users`.`email`, `users`.`phoneNo`, `users`.`countryCode`,`users`.`avatar`, `user_details`.`designation`
+			FROM `card_bank`
+			JOIN `users` ON `card_bank`.`fromUser`=`users`.`userId`
+			LEFT JOIN `user_details` ON `card_bank`.`toUser`=`user_details`.`userId`
+			WHERE `card_bank`.`toUser` = '" . $data['userId'] . "'
+			AND `card_bank`.`status` = " . $status . " ";
+            if($cardType!=NULL)
+                $otherCard .=" and card_bank.cardType = $cardType ";
 
-                if ($search_keyword != '')
-                {
-                    $otherCard .= " AND (`users`.`firstName` LIKE '".$search_keyword."%' ESCAPE '!'
-    				OR `users`.`lastName` LIKE '".$search_keyword."%' ESCAPE '!') ";
-                }
-                $otherCard .= "GROUP BY `users`.`userId`
-    						ORDER BY `users`.`firstName`
-    						LIMIT ".$this->limit." OFFSET ".$this->offset." ";
+            if ($search_keyword != '')
+            {
+                $otherCard .= " AND (`users`.`firstName` LIKE '".$search_keyword."%' ESCAPE '!'
+				OR `users`.`lastName` LIKE '".$search_keyword."%' ESCAPE '!') ";
+            }
+            $otherCard .= "GROUP BY `users`.`userId`
+						ORDER BY `users`.`firstName`";
 
-                $otherCard = $this
-                    ->db
-                    ->query($otherCard)->result_array();
-                    echo vd();
-    		}	
+            $request = $this->query(."(".$myCard.") UNION (". $otherCard." ) LIMIT ".$this->limit." OFFSET ".$this->offset." " )
+                       ->result_array();
 
-                $request = array_merge($myCard, $otherCard);
+            echo vd();
             }
             if (!empty($request))
             {
