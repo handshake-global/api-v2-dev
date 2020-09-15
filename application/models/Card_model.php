@@ -259,6 +259,9 @@ class Card_model extends CI_Model {
 
 				$final_contacts = array_merge($temp,$final_contacts);
 				$final_contacts = array_merge($final_contacts,$location_ids);
+				if (($key = array_search($data['userId'], $final_contacts)) !== false) {
+				    unset($final_contacts[$key]);
+				}
 
 				$query = "SELECT userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
 							where userId in (".implode(',',$final_contacts).") and NOC !=0 ";
@@ -318,6 +321,10 @@ class Card_model extends CI_Model {
 				$query = "SELECT userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
 							where userId not in (".$data['userId'].") and NOC !=0 ";
 
+				if (($key = array_search($data['userId'], $location_ids)) !== false) {
+				    unset($location_ids[$key]);
+				}
+							
 				if(!empty($location_ids))
                 	$query .= " AND userId in (".implode(',', $location_ids).") ";
 
