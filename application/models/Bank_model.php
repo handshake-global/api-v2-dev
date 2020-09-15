@@ -204,7 +204,6 @@
             $request = $this->db->query("(".$myCard.") UNION (". $otherCard." ) LIMIT ".$this->limit." OFFSET ".$this->offset." " )
                        ->result_array();
 
-            echo vd();
             }
             if (!empty($request))
             {
