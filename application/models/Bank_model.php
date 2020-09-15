@@ -181,13 +181,13 @@ class Bank_model extends CI_Model
                 $myCard .= " AND (`users`.`firstName` LIKE '".$search_keyword."%' ESCAPE '!'
 				OR `users`.`lastName` LIKE '".$search_keyword."%' ESCAPE '!' ) ";
             }
-            $myCard .= "GROUP BY `card_bank`.`cardId`
+            $myCard .= "GROUP BY `users`.`userId`
 				ORDER BY `users`.`firstName` 
 				LIMIT ".$this->limit." OFFSET ".$this->offset." ";
             $myCard = $this
                 ->db
                 ->query($myCard)->result_array();
- echo vd();
+ 
         $otherCard = array(); 
          
         if(count($myCard)<$this->limit){    
@@ -206,10 +206,10 @@ class Bank_model extends CI_Model
                 $otherCard .= " AND (`users`.`firstName` LIKE '".$search_keyword."%' ESCAPE '!'
 				OR `users`.`lastName` LIKE '".$search_keyword."%' ESCAPE '!') ";
             }
-            $otherCard .= "GROUP BY `card_bank`.`cardId`
+            $otherCard .= "GROUP BY `users`.`userId`
 						ORDER BY `users`.`firstName`
 						LIMIT ".$this->limit." OFFSET ".$this->offset." ";
-            echo vd();            
+
             $otherCard = $this
                 ->db
                 ->query($otherCard)->result_array();
