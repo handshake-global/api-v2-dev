@@ -134,7 +134,14 @@ class Chat_model extends CI_Model {
 					$temp[$final['userId']] = $final;
 				}
 			}
-
+			//removing s1 and s2 columns
+			 $temp = array_map(function (array $elem)
+	            {
+	                unset($elem['s2']);
+	                unset($elem['s1']);
+	                return $elem; // and return it to be put into the result
+	            }
+	            , $temp);
 			$connectionWithNoMsg = array();
 			$i = 0;
 			foreach ($allConnections as $con) {
