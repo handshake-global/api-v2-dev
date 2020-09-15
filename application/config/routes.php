@@ -62,7 +62,7 @@ $route['defaultCard'] = 'card/defaultCard';
 $route['setCardDefault'] = 'card/setDefault';
 
 //card bank
-$route['getHomeConnections'] = 'CardBank/getConnections';
+$route['getHomeConnections'] = 'chat/getConnections';
 $route['sentCardRequest'] = 'CardBank/sentRequest';
 $route['deleteConnection'] = 'CardBank/deleteConnection';
 $route['getQrConnections'] = 'CardBank/getQrConnections';
