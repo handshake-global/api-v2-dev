@@ -120,7 +120,7 @@ class Chat_model extends CI_Model {
 			$finalConnectionUsers = array_unique(array_column($finalConnection, 'userId'));
 			$temp = array();
 			foreach ($finalConnection as $final) {
-				if($final['status']==1 || $final['status']==3)
+				if($con['s1']==1 || $con['s1']==3 || $con['s2']==1 || $con['s2']==3)
 					$final['hasConnection'] =1;
 				else	 
 					$final['hasConnection'] =0;
