@@ -88,7 +88,6 @@ class Chat_model extends CI_Model {
 			         ->group_by('card_bank.fromUser')
 			         ->order_by('card_bank.cardId','desc')
 			         ->get($this->bank)->result_array();
-			         echo vd();
 
 			$cardBankUserTo = $this->db->select("`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,
   							  `users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation`, `card_bank`.`status`")
@@ -103,12 +102,10 @@ class Chat_model extends CI_Model {
 			         ->group_by('card_bank.toUser')
 			         ->order_by('card_bank.cardId','desc')
 			         ->get($this->bank)->result_array();         
-					echo vd();
 			$allConnections = array_merge($cardBankUserTo,$cardBankUserFrom);
 			
 			$receivers = array_merge(array_column($cardBankUserFrom, 'userId'),array_column($cardBankUserTo, 'userId'));
 			$sentMgs = $this->db->query("SELECT tbl.messageId,tbl.message AS lastMessage,tbl.file AS fileUrl,tbl.createdAt AS lastMessageTime,tbl.status,'sent' AS 'msgType',`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,`users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation` ,(SELECT `card_bank`.`status` FROM card_bank WHERE card_bank.fromUser = 10005 AND card_bank.toUser = users.userId GROUP BY users.userId) s1, ( SELECT `card_bank`.`status` FROM card_bank WHERE card_bank.toUser = 10005 AND card_bank.fromUser = users.userId GROUP BY users.userId) s2 FROM (SELECT * FROM messages WHERE `sender`=".$data['userId']." GROUP BY messageId ORDER BY messageId DESC) AS tbl,users,user_details WHERE users .userId=tbl.receiver and user_details.userId = tbl.receiver GROUP BY tbl.receiver ORDER BY messageId DESC")->result_array();
-echo vd();
 			$untouchedConnections = array();
 			$untouchedConnections =  array_diff($receivers,array_column($sentMgs, 'userId'));
 
@@ -117,7 +114,6 @@ echo vd();
 			if(!empty($receivers))			
 				$receivedMsgs = $this->db->query("SELECT tbl.messageId,tbl.message AS lastMessage,tbl.file AS fileUrl,tbl.createdAt AS lastMessageTime,tbl.status,'received' AS 'msgType',`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,`users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation`,(SELECT `card_bank`.`status` FROM card_bank WHERE card_bank.fromUser = 10005 AND card_bank.toUser = users.userId GROUP BY users.userId) s1, ( SELECT `card_bank`.`status` FROM card_bank WHERE card_bank.toUser = 10005 AND card_bank.fromUser = users.userId GROUP BY users.userId) s2  FROM (SELECT * FROM messages WHERE `receiver`=".$data['userId']." AND `sender` IN (".implode(',',$receivers).") GROUP BY messageId ORDER BY messageId DESC) AS tbl,users,user_details WHERE users .userId=tbl.sender and user_details.userId = tbl.sender GROUP BY tbl.sender ORDER BY messageId DESC")->result_array(); 	
 
-			echo vd();
 			$untouchedConnections =  array_diff($untouchedConnections,array_column($receivedMsgs, 'userId'));
 			
 			$finalConnection = array_merge($sentMgs,$receivedMsgs);
@@ -152,7 +148,7 @@ echo vd();
 			 		$connectionWithNoMsg[$i]['userPhoto'] = $con['userPhoto'];
 			 		$connectionWithNoMsg[$i]['isLogin'] = $con['isLogin'];
 			 		$connectionWithNoMsg[$i]['designation'] = $con['designation'];
-			 		if($con['status']==1 || $con['status']==3)
+			 		if($con['s1']==1 || $con['s1']==3 || $con['s2']==1 || $con['s2']==3)
 						$connectionWithNoMsg[$i]['hasConnection'] =1;
 					else	 
 						$connectionWithNoMsg[$i]['hasConnection'] =0; 
