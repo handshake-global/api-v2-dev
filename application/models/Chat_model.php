@@ -148,7 +148,7 @@ class Chat_model extends CI_Model {
 			 		$connectionWithNoMsg[$i]['userPhoto'] = $con['userPhoto'];
 			 		$connectionWithNoMsg[$i]['isLogin'] = $con['isLogin'];
 			 		$connectionWithNoMsg[$i]['designation'] = $con['designation'];
-			 		if($con['s1']==1 || $con['s1']==3 || $con['s2']==1 || $con['s2']==3)
+			 		if($final['status']==1 || $final['status']==3)
 						$connectionWithNoMsg[$i]['hasConnection'] =1;
 					else	 
 						$connectionWithNoMsg[$i]['hasConnection'] =0; 
