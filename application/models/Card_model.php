@@ -263,15 +263,13 @@ class Card_model extends CI_Model {
 				    unset($final_contacts[$key]);
 				}
 
-				$query = "SELECT userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
-							where userId in (".implode(',',$final_contacts).") and NOC !=0 ";
+				$query = "SELECT `users`.`userId`, CONCAT( users.firstName, ' ', users.lastName) AS userName, `users`.`avatar` AS `userPhoto`, `users`.loggedIn AS `isLogin`, `user_details`.`designation`, `users`.`status`,( ( SELECT COUNT(DISTINCT `card_bank`.`toUser`) FROM `card_bank` WHERE ( ( `card_bank`.`fromUser` = `users`.`userId` ) AND(`card_bank`.`status` = 1) ) ) +( SELECT COUNT(DISTINCT `card_bank`.`fromUser`) FROM `card_bank` WHERE ( ( `card_bank`.`toUser` = `users`.`userId` ) AND(`card_bank`.`status` = 1) ) ) ) AS `connections` , user_details.location, user_details.designation, ROUND(AVG(`reviews`.`rating`), 1) AS `rating` FROM users LEFT JOIN card_bank ON users.userId=card_bank.fromUser JOIN card ON users.userId=card.userId LEFT JOIN user_details ON users.userId=user_details.userId LEFT JOIN reviews ON users.userId=reviews.toUser WHERE users.userId IN (".implode(',',$final_contacts).") and card.isDefault = 1 GROUP by users.userId HAVING COUNT(`card`.`cardId`) !=0 ";
 
-				$query .= "order by NOC desc
+				$query .= "order by users.userId desc 
 							LIMIT ".$this->limit." OFFSET ".$this->offset."";
 
 				$users = $this->db->query($query)
 						->result_array();
-				echo vd();		
 					$v = [];	
 					if(!empty($mutualsContacts) && !empty($users)){
 						foreach ($users as $key => $value) {
@@ -319,17 +317,18 @@ class Card_model extends CI_Model {
 				}
 			else{
 
-				$query = "SELECT userId,userName,isLogin,connections,userPhoto,location,designation,rating from profile
-							where userId not in (".$data['userId'].") and NOC !=0 ";
+				$query = "SELECT `users`.`userId`, CONCAT( users.firstName, ' ', users.lastName) AS userName, `users`.`avatar` AS `userPhoto`, `users`.loggedIn AS `isLogin`, `user_details`.`designation`, `users`.`status`,( ( SELECT COUNT(DISTINCT `card_bank`.`toUser`) FROM `card_bank` WHERE ( ( `card_bank`.`fromUser` = `users`.`userId` ) AND(`card_bank`.`status` = 1) ) ) +( SELECT COUNT(DISTINCT `card_bank`.`fromUser`) FROM `card_bank` WHERE ( ( `card_bank`.`toUser` = `users`.`userId` ) AND(`card_bank`.`status` = 1) ) ) ) AS `connections` , user_details.location, user_details.designation, ROUND(AVG(`reviews`.`rating`), 1) AS `rating` FROM users LEFT JOIN card_bank ON users.userId=card_bank.fromUser JOIN card ON users.userId=card.userId LEFT JOIN user_details ON users.userId=user_details.userId LEFT JOIN reviews ON users.userId=reviews.toUser WHERE users.userId NOT IN (".$data['userId'].") and card.isDefault = 1 ";
 
 				if (($key = array_search($data['userId'], $location_ids)) !== false) {
 				    unset($location_ids[$key]);
 				}
 
 				if(!empty($location_ids))
-                	$query .= " AND userId in (".implode(',', $location_ids).") ";
+                	$query .= " AND users.userId in (".implode(',', $location_ids).") ";
 
-                $query .= "order by NOC desc
+                $query .= "GROUP by users.userId  
+                			HAVING COUNT(`card`.`cardId`) !=0
+       						order by users.userId desc
 							LIMIT ".$this->limit." OFFSET ".$this->offset."";
 
 				$users = $this->db->query($query)
