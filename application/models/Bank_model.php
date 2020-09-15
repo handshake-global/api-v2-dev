@@ -201,7 +201,7 @@
             $otherCard .= "GROUP BY `users`.`userId`
 						ORDER BY `users`.`firstName`";
 
-            $request = $this->query("(".$myCard.") UNION (". $otherCard." ) LIMIT ".$this->limit." OFFSET ".$this->offset." " )
+            $request = $this->db->query("(".$myCard.") UNION (". $otherCard." ) LIMIT ".$this->limit." OFFSET ".$this->offset." " )
                        ->result_array();
 
             echo vd();
