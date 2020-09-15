@@ -179,7 +179,7 @@ class Chat_model extends CI_Model {
 					 )
 					 ->where("card_bank.status",1)
 			         ->join('users', 'card_bank.fromUser=users.userId')
-			         ->join('user_details', 'card_bank.fromUser=user_details.userId')
+			         ->join('user_details', 'card_bank.fromUser=user_details.userId','left')
 			         ->group_by('card_bank.fromUser')
 			         ->get($this->bank)->result_array();
 
@@ -192,7 +192,7 @@ class Chat_model extends CI_Model {
 					 )
 					 ->where("card_bank.status",1)
 			         ->join('users', 'card_bank.toUser=users.userId')
-			         ->join('user_details', 'card_bank.toUser=user_details.userId')
+			         ->join('user_details', 'card_bank.toUser=user_details.userId','left')
 			         ->group_by('card_bank.toUser')
 			         ->get($this->bank)->result_array();         
 
