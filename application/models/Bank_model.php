@@ -187,7 +187,7 @@ class Bank_model extends CI_Model
             $myCard = $this
                 ->db
                 ->query($myCard)->result_array();
- 
+ echo vd();
         $otherCard = array(); 
          
         if(count($myCard)<$this->limit){    
@@ -209,7 +209,7 @@ class Bank_model extends CI_Model
             $otherCard .= "GROUP BY `card_bank`.`cardId`
 						ORDER BY `users`.`firstName`
 						LIMIT ".$this->limit." OFFSET ".$this->offset." ";
-
+            echo vd();            
             $otherCard = $this
                 ->db
                 ->query($otherCard)->result_array();
