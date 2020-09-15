@@ -171,7 +171,7 @@ class Chat_model extends CI_Model {
 		 	
 		 	$status = 1;
 			$cardBankUserFrom = $this->db->select("`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,
-  							  `users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation`, `card_bank`.`status`, ((select count(distinct `card_bank`.`toUser`) from `card_bank` where ((`card_bank`.`fromUser` = `users`.`userId`) and (`card_bank`.`status` = 1))) + (select count(distinct `card_bank`.`fromUser`) from `card_bank` where ((`card_bank`.`toUser` = `users`.`userId`) and (`card_bank`.`status` = 1)))) AS `connections` ")
+  							  `users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation`, `card_bank`.`status`, ((select count(distinct `card_bank`.`toUser`) from `card_bank` where ((`card_bank`.`fromUser` = `users`.`userId`) and (`card_bank`.`status` = 1))) + (select count(distinct `card_bank`.`fromUser`) from `card_bank` where ((`card_bank`.`toUser` = `users`.`userId`) and (`card_bank`.`status` in (1,3)))) AS `connections` ")
 					 ->where(
 					 	array(
 					 		'card_bank.toUser'=>$data['userId'],
@@ -184,7 +184,7 @@ class Chat_model extends CI_Model {
 			         ->get($this->bank)->result_array();
 echo vd();
 			$cardBankUserTo = $this->db->select("`users`.`userId`,concat(users.firstName,' ',users.lastName) as userName,
-  							  `users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation`, `card_bank`.`status`, ((select count(distinct `card_bank`.`toUser`) from `card_bank` where ((`card_bank`.`fromUser` = `users`.`userId`) and (`card_bank`.`status` = 1))) + (select count(distinct `card_bank`.`fromUser`) from `card_bank` where ((`card_bank`.`toUser` = `users`.`userId`) and (`card_bank`.`status` = 1)))) AS `connections` ")
+  							  `users`.`avatar` as `userPhoto`,`users`.loggedIn as `isLogin`,`user_details`.`designation`, `card_bank`.`status`, ((select count(distinct `card_bank`.`toUser`) from `card_bank` where ((`card_bank`.`fromUser` = `users`.`userId`) and (`card_bank`.`status` = 1))) + (select count(distinct `card_bank`.`fromUser`) from `card_bank` where ((`card_bank`.`toUser` = `users`.`userId`) and (`card_bank`.`status` in (1,3))))) AS `connections` ")
 					 ->where(
 					 	array(
 					 		'card_bank.fromUser'=>$data['userId'],
