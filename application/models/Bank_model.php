@@ -540,8 +540,7 @@
             $cardBankUserFrom = $this
                 ->db
                 ->select("profile.userId as userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.connections,profile.designation")
-                ->where(array(
-                'card_bank.toUser' => $data['userId'])
+                ->where(array( 'card_bank.toUser' => $data['userId']))
                 ->where_in('card_bank.status' => [1,3])
             ))->join('profile', 'card_bank.fromUser=profile.userId')
                 ->group_by('card_bank.fromUser')
@@ -551,8 +550,7 @@
             $cardBankUserTo = $this
                 ->db
                 ->select("profile.userId as userId ,profile.userName, profile.userPhoto,profile.isLogin,profile.connections,profile.designation")
-                ->where(array(
-                'card_bank.fromUser' => $data['userId'])
+                ->where(array('card_bank.fromUser' => $data['userId']))
                  ->where_in('card_bank.status' => [1,3])
             ))->join('profile', 'card_bank.toUser=profile.userId')
                 ->group_by('card_bank.toUser')
