@@ -584,7 +584,7 @@ class User extends REST_Controller {
         $notify = array(
             'userId'=> $userId,
             'userName'=> $userByDetails->userName,
-            'type'=>'friendIntroduction'
+            'type'=>'leftSwiped'
         );
 
         send_notification(
