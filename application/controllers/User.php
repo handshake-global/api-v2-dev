@@ -580,7 +580,7 @@ class User extends REST_Controller {
         );
         setNotification($noteMe);
         
-        $token = get_token($user);
+        $token = get_token($userId);
         $notify = array(
             'userId'=> $userId,
             'userName'=> $userByDetails->userName,
