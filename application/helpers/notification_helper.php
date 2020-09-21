@@ -40,8 +40,10 @@ if ( ! function_exists('send_notification')){
         /**
          * Get the compiled notification data as an array
          */
-        $json = $CI->fcm->getPush();
+        echo $token;
+        echo $json = $CI->fcm->getPush();
         $p = $CI->fcm->send($token, $json);
+        pr($p);
     }
 }    
 
