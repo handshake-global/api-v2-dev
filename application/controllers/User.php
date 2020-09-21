@@ -450,6 +450,12 @@ class User extends REST_Controller {
         else{
             if($response = $this->user_model->setUserSwipe()){
                 $statusCode = parent::HTTP_OK;
+                if($_POST['type']==1){
+                    $swipes = explode(',', $_POST['swiped']);
+                    foreach($swipes as $swipe)
+                         $this->trackLeftSwipeNotification($swipe,$_POST['userId'],$_POST);
+                }
+
                 $status = array('statusCode' => $statusCode,'message'=>'User swipe tracked');
                 $response = array('status'=>$status,'data'=>$response);
                 $this->response($response, $statusCode);  
@@ -550,6 +556,40 @@ class User extends REST_Controller {
         send_notification(
             $token ->token,
             array('title'=>'Friend Introduction','msg'=>$data,'img'=>''),
+            $notify
+        );
+    }
+
+    private function trackLeftSwipeNotification($userId,$swipedBy,$data){
+       
+        $userByDetails = get_userDetails($swipedBy);
+        $noteMe = array(
+          'userId'=>$userId,
+          'notification'=>$userByDetails->userName.' viewed your profile.',
+          'type'=>'leftSwiped',
+          'createdOn'=>date('Y/m/d h:i:s a', time()),
+          'userDetails'=>json_encode(
+                            array(
+                            'userName'=>$userByDetails->userName,
+                            'userPhoto'=>$userByDetails->userPhoto,
+                            'designation'=>$userByDetails->designation,
+                            )
+                        ),
+          'data'=>json_encode($data),
+                            
+        );
+        setNotification($noteMe);
+        
+        $token = get_token($user);
+        $notify = array(
+            'userId'=> $userId,
+            'userName'=> $userByDetails->userName,
+            'type'=>'friendIntroduction'
+        );
+
+        send_notification(
+            $token ->token,
+            array('title'=>'Left Swiped','msg'=>$data,'img'=>''),
             $notify
         );
     }
